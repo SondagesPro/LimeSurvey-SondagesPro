@@ -110,6 +110,10 @@ function XMLImportGroup($sFullFilePath, $iNewSID)
             $newgid=getLastInsertID('{{groups}}');
             $aGIDReplacements[$oldgid]=$newgid; // add old and new qid to the mapping array
         }
+        if (isset($insertdata['gid']))
+        {
+            switchMSSQLIdentityInsert('groups',false);
+        }
     }
 
 
@@ -152,6 +156,10 @@ function XMLImportGroup($sFullFilePath, $iNewSID)
                     $ques->$k = $v;
                 }
             }
+ 		    if (isset($ques->qid))
+			{
+			     switchMSSQLIdentityInsert('questions',true);
+			}
             if (!$ques->save())
             {
                 $results['fatalerror'] = CHtml::errorSummary($ques,gT("The question could not be imported for the following reasons:"));
@@ -163,6 +171,10 @@ function XMLImportGroup($sFullFilePath, $iNewSID)
                 $aQIDReplacements[$oldqid]=$newqid; // add old and new qid to the mapping array
                 $results['questions']++;
             }
+    		if (isset($ques->qid))
+			{
+			     switchMSSQLIdentityInsert('questions',false);
+			}
         }
     }
 
@@ -447,6 +459,10 @@ function XMLImportQuestion($sFullFilePath, $iNewSID, $newgid)
                 $ques->$k = $v;
             }
         }
+  		if (isset($ques->qid)) // FvdS Identity insert was missing
+		{
+		     switchMSSQLIdentityInsert('questions',true);
+		}
         if (!$ques->save())
         {
             $results['fatalerror'] = CHtml::errorSummary($ques,gT("The question could not be imported for the following reasons:"));
@@ -457,6 +473,10 @@ function XMLImportQuestion($sFullFilePath, $iNewSID, $newgid)
             $newqid=getLastInsertID($ques->tableName());
             $aQIDReplacements[$oldqid]=$newqid; // add old and new qid to the mapping array
         }
+ 	    if (isset($ques->qid)) // FvdS
+		{
+		    switchMSSQLIdentityInsert('questions',false);
+		}
     }
 
     // Import subquestions --------------------------------------------------------------
@@ -494,6 +514,10 @@ function XMLImportQuestion($sFullFilePath, $iNewSID, $newgid)
                     $ques->$k = $v;
                 }
             }
+            if (isset($ques->qid))
+			{
+			     switchMSSQLIdentityInsert('questions',true);
+			}
             $result = $ques->save();
             if ($result)
             {
@@ -504,6 +528,10 @@ function XMLImportQuestion($sFullFilePath, $iNewSID, $newgid)
                 }
                 $results['subquestions']++;
             }
+            if (isset($ques->qid)) // FvdS
+			{
+	    	     switchMSSQLIdentityInsert('questions',false);
+			}
         }
     }
 
