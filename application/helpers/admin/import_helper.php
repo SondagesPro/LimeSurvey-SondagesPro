@@ -207,7 +207,7 @@ function XMLImportGroup($sFullFilePath, $iNewSID)
 
             $result = Yii::app()->db->createCommand()->insert('{{questions}}', $insertdata);
             $newsqid=getLastInsertID('{{questions}}');
-            if (isset($insertdata['qid'])) switchMSSQLIdentityInsert('questions',true);
+            if (isset($insertdata['qid'])) switchMSSQLIdentityInsert('questions',false);
 
             if (!isset($insertdata['qid']))
             {
