@@ -1757,7 +1757,7 @@ function tokensExport($iSurveyID)
     $bquery .= " ORDER BY tid";
     Yii::app()->loadHelper('database');
 
-    $bresult = Yii::app()->db->createCommand($bquery)->query(); //dbExecuteAssoc($bquery) is faster but deprecated!
+    $bresult = Yii::app()->db->createCommand($bquery)->query()->readAll(); //dbExecuteAssoc($bquery) is faster but deprecated!
     //HEADERS should be after the above query else timeout errors in case there are lots of tokens!
     header("Content-Disposition: attachment; filename=tokens_".$iSurveyID.".csv");
     header("Content-type: text/comma-separated-values; charset=UTF-8");
@@ -1782,7 +1782,7 @@ function tokensExport($iSurveyID)
     // Export token line by line and fill $aExportedTokens with token exported
     Yii::import('application.libraries.Date_Time_Converter', true);
     $aExportedTokens = array();
-    while ($brow = $bresult->read())
+    foreach($bresult as $brow)
     {
         if (trim($brow['validfrom']!=''))
         {
