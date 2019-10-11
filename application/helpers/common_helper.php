@@ -4028,8 +4028,8 @@ function SendEmailMessage($body, $subject, $to, $from, $sitename, $ishtml=false,
         $sender=$bouncemail;
     }
 
-    require_once(APPPATH.'/third_party/phpmailer/PHPMailerAutoload.php');
-    $mail = new PHPMailer;
+    require_once(APPPATH.'/third_party/phpmailer/load_phpmailer.php');
+    $mail = new PHPMailer\PHPMailer\PHPMailer;
 
     if (!$mail->SetLanguage($defaultlang,APPPATH.'/third_party/phpmailer/language/'))
     {
@@ -5787,7 +5787,9 @@ function getQuotaInformation($surveyid,$language,$iQuotaID=null)
 */
 function translateInsertansTags($newsid,$oldsid,$fieldnames)
 {
-    uksort($fieldnames, create_function('$a,$b', 'return strlen($a) < strlen($b);'));
+    uksort($fieldnames, function($a, $b) {
+        return strlen($a) < strlen($b);
+    });
 
     Yii::app()->loadHelper('database');
     $newsid=sanitize_int($newsid);
