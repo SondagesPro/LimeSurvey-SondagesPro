@@ -1139,16 +1139,15 @@ class SurveyRuntimeHelper {
             {
                 $this->createFullQuestionIndex($LEMsessid, $surveyMode);
             }
-
-            echo "<input type='hidden' name='thisstep' value='{$_SESSION[$LEMsessid]['step']}' id='thisstep' />\n";
-            echo "<input type='hidden' name='sid' value='$surveyid' id='sid' />\n";
-            echo "<input type='hidden' name='start_time' value='" . time() . "' id='start_time' />\n";
+            echo \CHtml::hiddenField('thisstep', $_SESSION[$LEMsessid]['step'], array('id'=>'thisstep'));
+            echo \CHtml::hiddenField('sid', $surveyid, array('id'=>'sid'));
+            echo \CHtml::hiddenField('start_time', time(), array('id'=>'start_time'));
             $_SESSION[$LEMsessid]['LEMpostKey'] = mt_rand();
-            echo "<input type='hidden' name='LEMpostKey' value='{$_SESSION[$LEMsessid]['LEMpostKey']}' id='LEMpostKey' />\n";
+            echo \CHtml::hiddenField('LEMpostKey', $_SESSION[$LEMsessid]['LEMpostKey'], array('id'=>'LEMpostKey'));
 
             if (isset($token) && !empty($token))
             {
-                echo "\n<input type='hidden' name='token' value='$token' id='token' />\n";
+                echo \CHtml::hiddenField('token', $token, array('id'=>'token'));
             }
         }
 
