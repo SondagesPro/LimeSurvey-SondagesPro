@@ -2379,18 +2379,18 @@ function display_first_page() {
     echo templatereplace(file_get_contents($sTemplateViewPath."navigator.pstpl"),array(),$redata,'frontend_helper[2767]');
 
 
-    echo "\n<input type='hidden' name='sid' value='$surveyid' id='sid' />\n";
-    if (isset($token) && !empty($token)) {
-        echo "\n<input type='hidden' name='token' value='$token' id='token' />\n";
+    echo \CHtml::hiddenField('sid', $surveyid, array('id'=>'sid'));
+    if (!empty($_SESSION['survey_'.$surveyid]['token'])) {
+        echo \CHtml::hiddenField('token', $_SESSION['survey_'.$surveyid]['token'], array('id'=>'token'));
     }
-    echo "\n<input type='hidden' name='lastgroupname' value='_WELCOME_SCREEN_' id='lastgroupname' />\n"; //This is to ensure consistency with mandatory checks, and new group test
+    echo \CHtml::hiddenField('lastgroupname', '_WELCOME_SCREEN_', array('id'=>'lastgroupname')); //This is to ensure consistency with mandatory checks, and new group test
     $loadsecurity = returnGlobal('loadsecurity',true);
     if (isset($loadsecurity)) {
-        echo "\n<input type='hidden' name='loadsecurity' value='$loadsecurity' id='loadsecurity' />\n";
+        echo \CHtml::hiddenField('loadsecurity', $loadsecurity, array('id'=>'loadsecurity'));
     }
     $_SESSION['survey_'.$surveyid]['LEMpostKey'] = mt_rand();
-    echo "<input type='hidden' name='LEMpostKey' value='{$_SESSION['survey_'.$surveyid]['LEMpostKey']}' id='LEMpostKey' />\n";
-    echo "<input type='hidden' name='thisstep' id='thisstep' value='0' />\n";
+    echo \CHtml::hiddenField('LEMpostKey', $_SESSION['survey_'.$surveyid]['LEMpostKey'], array('id'=>'LEMpostKey'));
+    echo CHtml::hiddenField('thisstep', 0, array('id'=>'thisstep'));
 
     echo "<!--frontendhelper --></form>";
     echo templatereplace(file_get_contents($sTemplateViewPath."endpage.pstpl"),array(),$redata,'frontend_helper[2782]');
