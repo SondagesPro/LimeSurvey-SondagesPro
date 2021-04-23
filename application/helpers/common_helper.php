@@ -4368,7 +4368,7 @@ function getQuotaInformation($surveyid,$deprecated=null,$iQuotaID=null)
 */
 function translateInsertansTags($newsid,$oldsid,$fieldnames)
 {
-    uksort($fieldnames, create_function('$a,$b', 'return strlen($a) < strlen($b);'));
+    uksort($fieldnames, function($a, $b) {return strlen($a) < strlen($b); });
 
     Yii::app()->loadHelper('database');
     $newsid=sanitize_int($newsid);

@@ -158,7 +158,7 @@
         {
             define('YII_DEBUG', true);
         if($aSettings['config']['debug']>1)
-        error_reporting(E_ALL);
+        error_reporting(E_ALL  & ~E_STRICT & ~E_DEPRECATED); 
         else
         error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
         }

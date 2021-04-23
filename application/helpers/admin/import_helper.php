@@ -980,9 +980,8 @@ function XMLImportSurvey($sFullFilePath,$sXMLdata=NULL,$sNewSurveyName=NULL,$iDe
         {
             unset($insertdata['surveyls_attributecaptions']);
         }
-
-
-
+        $aValidAttributes = SurveyLanguageSetting::model()->getAttributes();
+        $insertdata = array_intersect_key($insertdata, $aValidAttributes);
         $result = SurveyLanguageSetting::model()->insertNewSurvey($insertdata) or safeDie(gT("Error").": Failed to insert data [2]<br />");
     }
 
