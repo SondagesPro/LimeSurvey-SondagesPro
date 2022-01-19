@@ -2,7 +2,7 @@
 
 A fork of LimeSurvey 2.06 with PHP7 fix, security fix and some other little improvments.
 
-However updating to the official version 3.15.9 or higher is recommended.
+**However updating to the official version 3.15.9 or higher is recommended.**
 
 ## Installation ##
 - See [LimeSurvey manual](https://manual.limesurvey.org/Installation)
