@@ -17,4 +17,4 @@ A fork of LimeSurvey 2.06 with PHP7 fix, security fix and some other little impr
 - TradeMark: The name LimeSurvey™ and the logo is a registered trademark of Fa. Carsten Schmitz / Germany <https://www.limesurvey.org/about-limesurvey/license>
 
 ## Say thanks ##
-- You can use [liberapay](https://liberapay.com/SondagesPro) to help me to maintain 2.6lts.
+- Open a support ticket [liberapay](https://liberapay.com/SondagesPro). If you need bill, you can open a [donation support ticket](https://support.sondages.pro/open.php).
