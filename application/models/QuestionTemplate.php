@@ -140,7 +140,6 @@ class QuestionTemplate extends CFormModel
     public function getQuestionTemplateFolderName()
     {
         if ($this->sTemplateFolderName === null) {
-            $aQuestionAttributes = QuestionAttribute::model()->getQuestionAttributes($this->oQuestion->qid);
             /** @var string|null */
             $questionThemeName = $this->oQuestion->question_theme_name;
             $this->sTemplateFolderName = (!empty($questionThemeName) && $questionThemeName != 'core') ? $questionThemeName : false;

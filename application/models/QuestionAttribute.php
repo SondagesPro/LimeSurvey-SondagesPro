@@ -236,6 +236,13 @@ class QuestionAttribute extends LSActiveRecord
             if ($value !== false) {
                 return $value;
             }
+        } else {
+            static $aQuestionAttributesStatic = array();
+            // Limit the size of the attribute cache due to memory usage
+            $staticLang = $sLanguage ?? 'NULL';
+            if (isset($aQuestionAttributesStatic[$iQuestionID][$staticLang])) {
+                return $aQuestionAttributesStatic[$iQuestionID][$staticLang];
+            }
         }
 
         $oQuestion = Question::model()->find("qid=:qid", ['qid' => $iQuestionID]);
@@ -263,6 +270,8 @@ class QuestionAttribute extends LSActiveRecord
 
         if (EmCacheHelper::useCache()) {
             EmCacheHelper::set($cacheKey, $aAttributeValues);
+        } else {
+            $aQuestionAttributesStatic[$iQuestionID][$staticLang] = $aAttributeValues;
         }
 
         return $aAttributeValues;
