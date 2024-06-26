@@ -17,14 +17,14 @@ Advanced features like branching and multiple question types make it a valuable 
 ### Minimal
 The absolute minimal requirements are:
  - Apache >= 2.4 | nginx >= 1.1 | any other php-ready webserver
- - php >= 7.2.5
+ - 8.0 >= php >= 7.2.5 
     - with mbstring and pdo-database drivers
  - mysql >= 5.5.9 | pgsql >= 9 | mariadb >= 5.5  | mssql >= 2005
 
 ### Recommended
 We recommend the following setup
  - Web server: nginx (most recent stable version)
- - PHP (most recent stable version)
+ - PHP <= 8.0 (For php up to 8.0: debug mode muts not be activated. Bugs with php higher than 8.0 will not be fixed. Only pull request bugs will be taken into account.)
     - with php-fpm, mbstring, gd2 with freetype, imap, ldap, zip, zlib and database drivers
  - MariaDB or MySQL (most recent stable version)
 
