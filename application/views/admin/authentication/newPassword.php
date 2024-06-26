@@ -51,7 +51,7 @@ echo viewHelper::getViewTestTag('login');
                             </label>
                             <input type="text" class="form-control" readonly name="random_example_password" value="<?=htmlspecialchars($randomPassword)?>"/>
                         </div>
-                        <input type="hidden" name="validation_key" value="<?= $validationKey?>" >
+                        <input type="hidden" name="validation_key" value="<?= CHtml::encode($validationKey) ?>" >
                     </div>
                 </div>
 
