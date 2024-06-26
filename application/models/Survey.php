@@ -158,7 +158,7 @@ class Survey extends LSActiveRecord implements PermissionInterface
      *
      * @var array $findByPkCache
      */
-    protected $findByPkCache = array();
+    protected static $findByPkCache;
 
 
     // survey options
@@ -348,9 +348,7 @@ class Survey extends LSActiveRecord implements PermissionInterface
         }
 
         // Remove from cache
-        if (array_key_exists($this->sid, $this->findByPkCache)) {
-            unset($this->findByPkCache[$this->sid]);
-        }
+        $this->unsetFromStaticPkCache();
 
         return true;
     }
@@ -1002,12 +1000,12 @@ class Survey extends LSActiveRecord implements PermissionInterface
     {
         /** @var self $model */
         if (empty($condition) && empty($params)) {
-            if (array_key_exists($pk, $this->findByPkCache)) {
-                return $this->findByPkCache[$pk];
+            if (isset(self::$findByPkCache[$pk])) {
+                return self::$findByPkCache[$pk];
             } else {
                 $model = parent::findByPk($pk, $condition, $params);
                 if (!is_null($model)) {
-                    $this->findByPkCache[$pk] = $model;
+                    self::$findByPkCache[$pk] = $model;
                 }
                 return $model;
             }
@@ -1017,11 +1015,22 @@ class Survey extends LSActiveRecord implements PermissionInterface
     }
 
     /**
+     * Delete from static $findByPkCache
+     * return void
+     */
+    public function unsetFromStaticPkCache()
+    {
+        if (isset(self::$findByPkCache[$this->sid])) {
+            unset(self::$findByPkCache[$this->sid]);
+        }
+    }
+
+    /**
      * findByPk uses a cache to store a result. Use this method to force clearing that cache.
      */
     public function resetCache()
     {
-        $this->findByPkCache = array();
+        self::$findByPkCache = array();
     }
 
     /**
