@@ -1,33 +1,16 @@
-<img src="https://www.limesurvey.org/images/limesurvey/svg/logo_limesurvey_head.svg" width="600" alt='LimeSurvey Logo' />
-
 # Sophisticated online survey software
-![Build status](https://github.com/LimeSurvey/LimeSurvey/actions/workflows/main.yml/badge.svg)
-
+![Build status](https://github.com/SondagesPro/LimeSurvey-SondagesPro/actions/workflows/main.yml/badge.svg)
 
 ## About
 Limesurvey is the number one open-source survey software.
 
 Advanced features like branching and multiple question types make it a valuable partner for survey-creation.
 
-### Demo
-
-See our [Administration Demo](http://demo.limesurvey.org/index.php?r=admin/authentication/sa/login).
-The credentials are prefilled, just click **Log in**
-
-Or try taking one of our [test surveys](https://survey.limesurvey.org/index.php?sid=78184&lang=en)
-
+**This is an unoffical fork of LimeSurvey, use at your own risk**
 
 ## How to install
 
-### Release
-We release early and often.
-The latest stable release version is available for download at https://community.limesurvey.org/downloads/
-We recommend using those.
-
-### Repository
-You may want to use the plain repository, which is also possible.
-
-Please be advised, that we sometimes push development versions into the repository, which may not be working correctly.
+5.X branch are maintain on github, [see official LimeSurvey manual](https://manual.limesurvey.org/Installation_-_LimeSurvey_CE/en).
 
 ## Requirements
 
