@@ -448,7 +448,7 @@ class TemplateConfiguration extends TemplateConfig
     {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
-        $criteria = new CDbCriteria();
+        $criteria = new LSDbCriteria();
 
         $criteria->join = 'INNER JOIN {{templates}} AS template ON ' .
             App()->db->quoteColumnName("t.template_name") .
@@ -486,7 +486,7 @@ class TemplateConfiguration extends TemplateConfig
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $pageSizeTemplateView = App()->user->getState('pageSizeTemplateView', App()->params['defaultPageSize']);
-        $criteria = new CDbCriteria();
+        $criteria = new LSDbCriteria();
 
         $criteria->join = 'INNER JOIN {{templates}} AS template ON ' .
             App()->db->quoteColumnName("t.template_name") .

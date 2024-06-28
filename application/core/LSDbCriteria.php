@@ -33,9 +33,27 @@ class LSDbCriteria extends CDbCriteria
     public function compare($column, $value, $partialMatch = false, $operator = 'AND', $escape = true)
     {
         if ($partialMatch && Yii::app()->db->getDriverName() == 'pgsql') {
-            $this->addSearchCondition($column, $value, true, $operator, 'ILIKE');
+            $this->addSearchCondition($column, $escape, true, $operator, 'ILIKE');
         } else {
             parent::compare($column, $value, $partialMatch, $operator, $escape);
         }
+    }
+
+    /** inherit doc **/
+    public function addSearchCondition($column, $keyword, $escape = true, $operator = 'AND', $like = 'LIKE')
+    {
+        if ($keyword !== '' && $escape && in_array(App()->db->driverName, ['sqlsrv', 'dblib', 'mssql'])) {
+                /* Escape are bad in Yii1, fix it, issue #18550 */
+                $escapingReplacements = [
+                    '%' => '[%]',
+                    '_' => '[_]',
+                    '[' => '[[]',
+                    ']' => '[]]',
+                    '\\' => '[\\]',
+                ];
+                $keyword = '%' . strtr($keyword, $escapingReplacements) . '%';
+                $escape = false;
+        }
+        return parent::addSearchCondition($column, $keyword, $escape, $operator, $like);
     }
 }

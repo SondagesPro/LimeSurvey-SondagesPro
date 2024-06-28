@@ -388,7 +388,7 @@ class Permissiontemplates extends CActiveRecord
      */
     public function search()
     {
-        $criteria = new CDbCriteria();
+        $criteria = new LSDbCriteria();
 
         $criteria->compare('ptid', $this->ptid);
         $criteria->compare('name', $this->name, true);

@@ -296,7 +296,7 @@ class SurveyLink extends LSActiveRecord
      */
     public function search()
     {
-        $criteria = new CDbCriteria();
+        $criteria = new LSDbCriteria();
         $sort = new CSort();
 
         $criteria->compare('participant_id', $this->participant_id);

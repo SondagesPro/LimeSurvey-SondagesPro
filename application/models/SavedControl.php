@@ -191,7 +191,7 @@ class SavedControl extends LSActiveRecord
     public function search()
     {
         // @todo Please modify the following code to remove attributes that should not be searched.
-        $criteria = new CDbCriteria();
+        $criteria = new LSDbCriteria();
         $criteria->compare('sid', $this->sid, false); //will not be searchable
         $criteria->compare('srid', $this->srid, true);
         $criteria->compare('access_code', $this->access_code, true);
