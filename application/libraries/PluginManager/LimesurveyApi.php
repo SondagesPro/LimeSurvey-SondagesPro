@@ -23,7 +23,7 @@ class LimesurveyApi
      *
      * @param string $key          The key to search for in the application config
      * @param mixed  $defaultValue Value to return when not found, default is false
-     * @return string
+     * @return mixed
      */
     public function getConfigKey($key, $defaultValue = false)
     {
