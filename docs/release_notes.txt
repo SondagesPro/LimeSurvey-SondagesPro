@@ -34,8 +34,11 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
-Changes from 5.6.68 (build 240625) to 5.6.69 unoffical July 01, 2024
+Changes from 5.6.69 (unoffical) to 5.6.70 (SondagesPro) July 01, 2024
+- Fixed Issue #19147: XSS in Central participant management -> Add new Attribute
+- Fixed issue #19105: Store XSS in Central participant management
 
+Changes from 5.6.68 (build 240625) to 5.6.69 unoffical July 01, 2024
 - Fixed issue #19414: Roles management : No way to assign minimal roles by «admin user»
 - Fixed issue #18550: MSSQL Reponse filter with underscore or bracket not working
 - Fixed issue #19589: Multiple call of Survey->find a lot of time
