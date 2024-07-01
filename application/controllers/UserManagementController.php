@@ -1188,8 +1188,8 @@ class UserManagementController extends LSBaseController
      */
     public function actionBatchApplyRoles()
     {
-        foreach (App()->getConfig('minimalpermissiontoassignrole') as $permission => $crud ) {
-            if (!Permission::model()->hasGlobalPermission($permission,$crud, $this->managingUser->id)) {
+        foreach (App()->getConfig('minimalpermissiontoassignrole') as $permission => $crud) {
+            if (!Permission::model()->hasGlobalPermission($permission, $crud, $this->managingUser->id)) {
                 throw new CHttpException(403, gT("You do not have permission to access this page."));
             }
         }
