@@ -688,14 +688,14 @@ class User extends LSActiveRecord
             }
             return implode("", [
                 $iconBtnRow,
-                $editUserButton,
+                $userManager->canEdit() ? $editUserButton : '',
                 $editPermissionButton,
                 $userManager->canAssignRole() ? $addRoleButton : '',
                 "\n",
                 $userDetail,
                 $editTemplatePermissionButton,
                 $this->parent_id != Yii::app()->session['loginID'] ? $takeOwnershipButton : '',
-                $deleteUserButton,
+                $userManager->canEdit() ? $deleteUserButton : '',
                 $iconBtnRowEnd]);
         }
 

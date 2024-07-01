@@ -671,6 +671,15 @@ $config['proxy_host_port'] = 80;
  */
 $config['forcedsuperadmin'] = array(1);
 
+/** User permisison to assign role
+ * Allow to check multiple permission to read/create/update
+ * permission type are key , value the permission checked
+ * @var string[]
+ */
+$config['minimalpermissiontoassignrole'] = array(
+    'superadmin' => 'create'
+);
+
 /**
  * Set when install a post 4.0, mysql engine before was always MyIsam
  * Need to be set for old config.php file

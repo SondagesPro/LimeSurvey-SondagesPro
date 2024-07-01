@@ -1188,8 +1188,10 @@ class UserManagementController extends LSBaseController
      */
     public function actionBatchApplyRoles()
     {
-        if (!Permission::model()->hasGlobalPermission('superadmin', 'create')) {
-            throw new CHttpException(403, gT("You do not have permission to access this page."));
+        foreach (App()->getConfig('minimalpermissiontoassignrole') as $permission => $crud ) {
+            if (!Permission::model()->hasGlobalPermission($permission,$crud, $this->managingUser->id)) {
+                throw new CHttpException(403, gT("You do not have permission to access this page."));
+            }
         }
         $aItems = json_decode(Yii::app()->request->getPost('sItems', []));
         $aUserRoleIds = Yii::app()->request->getPost('roleselector');

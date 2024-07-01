@@ -63,8 +63,13 @@ class UserManager
         if (empty($this->managingUser)) {
             return false;
         }
-        /* roles can have superadmin permission, then need superadmin/create permission */
-        return Permission::model()->hasGlobalPermission('superadmin', 'create', $this->managingUser->id);
+        foreach (App()->getConfig('minimalpermissiontoassignrole') as $permission => $crud ) {
+            /* roles can have superadmin permission, then need superadmin/create permission, and can update via minimlassignrolepermission */
+            if (!Permission::model()->hasGlobalPermission($permission,$crud, $this->managingUser->id)) {
+                return false;
+            }
+        }
+        return $this->canEdit();
     }
 
     /**
