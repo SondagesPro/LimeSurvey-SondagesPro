@@ -1034,6 +1034,18 @@ class Survey extends LSActiveRecord implements PermissionInterface
     }
 
     /**
+     * @inheritdoc
+     * reset cache before and after
+     */
+    public function refresh()
+    {
+        $this->unsetFromStaticPkCache();
+        parent::refresh();
+        $this->unsetFromStaticPkCache();
+        return parent::refresh();
+    }
+
+    /**
      * Attribute renamed to questionindex in dbversion 169
      * Y maps to 1 otherwise 0;
      * @param string $value
