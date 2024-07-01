@@ -34,6 +34,9 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
+Changes from 5.6.70 (SondagesPro) to 5.6.71 (SondagesPro) July 01, 2024
+- Fixed Issue : 500 error whan save survey settings
+
 Changes from 5.6.69 (unoffical) to 5.6.70 (SondagesPro) July 01, 2024
 - Fixed Issue #19147: XSS in Central participant management -> Add new Attribute
 - Fixed issue #19105: Store XSS in Central participant management
