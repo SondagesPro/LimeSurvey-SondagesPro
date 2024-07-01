@@ -34,6 +34,15 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
+Changes from 5.6.68 (build 240625) to 5.6.69 unoffical July 01, 2024
+
+- Fixed issue #19414: Roles management : No way to assign minimal roles by «admin user»
+- Fixed issue #18550: MSSQL Reponse filter with underscore or bracket not working
+- Fixed issue #19589: Multiple call of Survey->find a lot of time
+- Fixed issue #19591: Multiple call of question_attribute for single question (public surey)
+- Fixed issue #19593: List with comment double encoding comment
+- Fixed issue [security] #19604: The reset password link is reusable after password change
+
 Changes from 5.6.67 (build 240612) to 5.6.68 (build 240625) June 24, 2024
 -Fixed issue #19608: [security] XSS under user management (thanks to OIZ Stadt Zürich and Protec7) (#3888) (Denis Chenu)
 -Fixed issue #19599: [security] Stored XSS through csv file upload (thanks to paoloelia ) (#3884) (Denis Chenu)
