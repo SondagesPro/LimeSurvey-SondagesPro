@@ -14,7 +14,7 @@
 $config['versionnumber'] = '5.6.71 (SondagesPro)';
 $config['dbversionnumber'] = 499;
 $config['buildnumber'] = '';
-$config['updatable'] = true;
+$config['updatable'] = false;
 $config['templateapiversion']  = 3;
 $config['assetsversionnumber'] = '30383';
 return $config;

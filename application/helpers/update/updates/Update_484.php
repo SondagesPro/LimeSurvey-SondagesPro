@@ -25,18 +25,18 @@ class Update_484 extends DatabaseUpdateBase
             $newCUPlugin = [
                 'name' => 'ComfortUpdateChecker',
                 'plugin_type' => 'core',
-                'active' => 1,
+                'active' => intval(Yii::app()->getConfig('updatable')),
                 'version' => '1.0.0'
             ];
             $this->db->createCommand()->insert('{{plugins}}', $newCUPlugin);
         }
         // remaining one
         if (count($comfortUpdatePlugins) > 0) {
-            // If disabled, enable it and if not marked as core, mark it as core.
-            if ($comfortUpdatePlugins[0]['active'] == 0 || $comfortUpdatePlugins[0]['plugin_type'] !== 'core') {
+            // If not marked as core, mark it as core.
+            if ($comfortUpdatePlugins[0]['plugin_type'] !== 'core') {
                 $this->db->createCommand()->update(
                     "{{plugins}}",
-                    ['plugin_type' => 'core', 'active' => 1],
+                    ['plugin_type' => 'core'],
                     'id=:id',
                     [':id' => $comfortUpdatePlugins[0]['id']]
                 );
