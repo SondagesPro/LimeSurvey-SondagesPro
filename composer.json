@@ -50,7 +50,8 @@
 		"mk-j/php_xlsxwriter": "^0.38.0",
 		"html2text/html2text": "^4.3",
 		"pear/ole": "1.*@dev",
-		"pear/spreadsheet_excel_writer": "^0.9.7"
+		"pear/spreadsheet_excel_writer": "^0.9.7",
+        "amphp/amp": "^2.0"
 	},
     "config": {
         "vendor-dir": "vendor",

@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'limesurvey/limesurvey',
-        'pretty_version' => '5.x-dev',
-        'version' => '5.9999999.9999999.9999999-dev',
-        'reference' => 'd573847e8a1964130aa936f2737909fc7f3a3775',
+        'pretty_version' => 'dev-5.x_PHP8.2',
+        'version' => 'dev-5.x_PHP8.2',
+        'reference' => '8a1f4582f6ff69f4575311df65bf6cfdd3686d53',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -17,7 +17,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../amphp/amp',
             'aliases' => array(),
-            'dev_requirement' => true,
+            'dev_requirement' => false,
         ),
         'amphp/byte-stream' => array(
             'pretty_version' => 'v1.8.2',
@@ -134,9 +134,9 @@
             'dev_requirement' => false,
         ),
         'limesurvey/limesurvey' => array(
-            'pretty_version' => '5.x-dev',
-            'version' => '5.9999999.9999999.9999999-dev',
-            'reference' => 'd573847e8a1964130aa936f2737909fc7f3a3775',
+            'pretty_version' => 'dev-5.x_PHP8.2',
+            'version' => 'dev-5.x_PHP8.2',
+            'reference' => '8a1f4582f6ff69f4575311df65bf6cfdd3686d53',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
