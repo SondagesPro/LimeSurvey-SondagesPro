@@ -3405,8 +3405,8 @@ class LimeExpressionManager
             $grelevance = (isset($fielddata['grelevance'])) ? trim($fielddata['grelevance']) : 1;
             $hidden = (isset($qattr[$questionNum]['hidden'])) ? ($qattr[$questionNum]['hidden'] == '1') : false;
             $scale_id = (isset($fielddata['scale_id'])) ? $fielddata['scale_id'] : '0';
-            $preg = (isset($fielddata['preg'])) ? $fielddata['preg'] : null; // a perl regular exrpession validation function
-            $defaultValue = (isset($fielddata['defaultvalue']) ? $fielddata['defaultvalue'] : null);
+            $preg = (!empty($fielddata['preg'])) ? $fielddata['preg'] : ''; // a perl regular exrpession validation function
+            $defaultValue = (!empty($fielddata['defaultvalue']) ? $fielddata['defaultvalue'] : '');
             if (trim($preg) == '') {
                 $preg = null;
             }

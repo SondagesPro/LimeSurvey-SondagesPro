@@ -68,7 +68,7 @@ class RenderLongFreeText extends QuestionBaseRenderer
             $extraclass .= " ls-input-sized";
         }
 
-        if (trim($this->getQuestionAttribute('placeholder', $this->sLanguage)) != '') {
+        if (!empty($this->getQuestionAttribute('placeholder', $this->sLanguage)) && trim($this->getQuestionAttribute('placeholder', $this->sLanguage)) != '') {
             $placeholder = $this->getQuestionAttribute('placeholder', $this->sLanguage);
         }
 

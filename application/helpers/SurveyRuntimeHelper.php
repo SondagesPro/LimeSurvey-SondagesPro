@@ -178,6 +178,9 @@ class SurveyRuntimeHelper
     private $groupname;
     private $groupdescription;
 
+    // Extra
+    private $thissurvey;
+
     /**
      * Main function
      *

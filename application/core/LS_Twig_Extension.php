@@ -134,6 +134,9 @@ class LS_Twig_Extension extends Twig_Extension
      */
     public static function json_decode($json, $assoc = true)
     {
+        if (empty($json)) {
+            return [];
+        }
         return (array) json_decode($json, $assoc);
     }
 

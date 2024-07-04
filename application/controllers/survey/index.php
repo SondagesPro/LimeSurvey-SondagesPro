@@ -48,7 +48,7 @@ class Index extends CAction
         }
 
         /* Get client token by POST or GET value */
-        $clienttoken = trim($param['token']);
+        $clienttoken = trim(strval($param['token']));
         /* If not set : get by SESSION to avoid multiple submit of same token in different navigator */
         if (empty($clienttoken) && !empty($_SESSION['survey_' . $surveyid]['token'])) {
             $clienttoken = $_SESSION['survey_' . $surveyid]['token'];

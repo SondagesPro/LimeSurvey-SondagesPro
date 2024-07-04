@@ -20,14 +20,17 @@ class SurveymenuEntryData extends CFormModel
     {
         $this->surveyid = $surveyid;
         $this->menuEntry = $menuEntry;
-
-        $oData = json_decode(stripcslashes($this->menuEntry->data));
-        $jsonError = json_last_error();
-        if ($jsonError) {
+        if (is_null($this->menuEntry->data)) {
             $this->rawData = [];
         } else {
-            $this->rawData = $oData;
-            $this->parseDataAttribute();
+            $oData = json_decode(stripcslashes($this->menuEntry->data));
+            $jsonError = json_last_error();
+            if ($jsonError) {
+                $this->rawData = [];
+            } else {
+                $this->rawData = $oData;
+                $this->parseDataAttribute();
+            }
         }
         $this->parseLink();
     }

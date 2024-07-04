@@ -4742,7 +4742,7 @@ function getMaximumFileUploadSize()
  */
 function decodeTokenAttributes($oTokenAttributeData)
 {
-    if (trim($oTokenAttributeData) == '') {
+    if (empty($oTokenAttributeData) || trim($oTokenAttributeData) == '') {
         return array();
     }
     if (substr($oTokenAttributeData, 0, 1) != '{' && substr($oTokenAttributeData, 0, 1) != '[') {

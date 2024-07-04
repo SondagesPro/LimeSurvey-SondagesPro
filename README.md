@@ -7,6 +7,7 @@ Limesurvey is the number one open-source survey software.
 Advanced features like branching and multiple question types make it a valuable partner for survey-creation.
 
 **This is an unoffical fork of LimeSurvey, use at your own risk**
+**This branch is to get a PHP8.2 compatibel version, use at your own risk**
 
 ## How to install
 
@@ -24,7 +25,7 @@ The absolute minimal requirements are:
 ### Recommended
 We recommend the following setup
  - Web server: nginx (most recent stable version)
- - PHP <= 8.0 (For php up to 8.0: debug mode muts not be activated. Bugs with php higher than 8.0 will not be fixed. Only pull request bugs will be taken into account.)
+ - PHP >= 7.4
     - with php-fpm, mbstring, gd2 with freetype, imap, ldap, zip, zlib and database drivers
  - MariaDB or MySQL (most recent stable version)
 

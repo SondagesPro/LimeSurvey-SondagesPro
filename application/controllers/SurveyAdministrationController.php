@@ -2828,7 +2828,7 @@ class SurveyAdministrationController extends LSBaseController
         }
 
         $dateformatdetails = getDateFormatData(Yii::app()->session['dateformat']);
-        if (trim($oSurvey->startdate) != '') {
+        if ($oSurvey->startdate) {
             Yii::import('application.libraries.Date_Time_Converter');
             $datetimeobj = new Date_Time_Converter($oSurvey->startdate, 'Y-m-d H:i:s');
             $aData['startdate'] = $datetimeobj->convert($dateformatdetails['phpdate'] . ' H:i');
@@ -2836,7 +2836,7 @@ class SurveyAdministrationController extends LSBaseController
             $aData['startdate'] = "-";
         }
 
-        if (trim($oSurvey->expires) != '') {
+        if ($oSurvey->expires) {
             Yii::import('application.libraries.Date_Time_Converter');
             $datetimeobj = new Date_Time_Converter($oSurvey->expires, 'Y-m-d H:i:s');
             $aData['expdate'] = $datetimeobj->convert($dateformatdetails['phpdate'] . ' H:i');
