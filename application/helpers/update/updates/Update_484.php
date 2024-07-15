@@ -25,7 +25,7 @@ class Update_484 extends DatabaseUpdateBase
             $newCUPlugin = [
                 'name' => 'ComfortUpdateChecker',
                 'plugin_type' => 'core',
-                'active' => intval(Yii::app()->getConfig('updatable')),
+                'active' => intval(\Yii::app()->getConfig('updatable')),
                 'version' => '1.0.0'
             ];
             $this->db->createCommand()->insert('{{plugins}}', $newCUPlugin);
