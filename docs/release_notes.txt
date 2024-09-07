@@ -34,6 +34,16 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
+Changes from 5.6.70 (SondagesPro) to 5.6.72 (SondagesPro) September 07, 2024
+- Fixed issue [security] #19734: XSS by simple user in image select themes
+- Fixed issue #19733: XSS by simple user with end url
+- Fixed issue #19729 [security] : XSS on time_limit
+- Fixed issue: Database not shown in DB upgrade dialog when using MSSQL
+- Fixed issue #19578: DB default value not set with MSSQL
+- Fixed issue #19110: Using MSSQL unable to activate survey a second time
+- Fixed issue #19702 [security]: Prototype pollution in jquery-bbq
+- New feature #19722: Unable to use ExpressionScript code when export by remote control
+
 Changes from 5.6.70 (SondagesPro) to 5.6.71 (SondagesPro) July 01, 2024
 - Fixed Issue : 500 error whan save survey settings
 
