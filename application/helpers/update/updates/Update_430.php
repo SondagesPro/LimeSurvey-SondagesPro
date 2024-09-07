@@ -13,7 +13,7 @@ class Update_430 extends DatabaseUpdateBase
                 [
                     'name' => 'ComfortUpdateChecker',
                     'plugin_type' => 'core',
-                    'active' => intval(Yii::app()->getConfig('updatable')),
+                    'active' => intval(\Yii::app()->getConfig('updatable')),
                     'version' => '1.0.0',
                     'load_error' => 0,
                     'load_error_message' => null

@@ -346,9 +346,9 @@ function mssql_drop_coulmn_with_constraints($tablename, $columnname)
     FROM information_schema.constraint_column_usage
     WHERE table_name = '" . $tablename . "' AND column_name = '" . $columnname . "'";
 
-    $result = Yii::app()->db->createCommand($pkquery)->queryAll();
+    $result = Yii::app()->db->createCommand($pkquery)->queryColumn();
     foreach ($result as $constraintName) {
-        Yii::app()->db->createCommand('alter table [' . $tablename . '] drop constraint "' . $constraintName['constraint_name'] . '"')->execute();
+        Yii::app()->db->createCommand('ALTER TABLE [' . $tablename . '] DROP CONSTRAINT "' . $constraintName . '"')->execute();
     }
     $success = Yii::app()->db->createCommand('ALTER TABLE [' . $tablename . '] DROP COLUMN "' . $columnname . '"')->execute();
     return $success;

@@ -11,9 +11,10 @@
  * See COPYRIGHT.php for copyright notices and details.
  */
 
-$config['versionnumber'] = '5.6.71';
+
+$config['versionnumber'] = '5.6.73.php8 (SondagesPro)';
 $config['dbversionnumber'] = 499;
-$config['buildnumber'] = 'SondagesPro-1';
+$config['buildnumber'] = '';
 $config['updatable'] = false;
 $config['templateapiversion']  = 3;
 $config['assetsversionnumber'] = '30383';
