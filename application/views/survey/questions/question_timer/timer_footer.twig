@@ -1,5 +1,4 @@
-<?php
-/**
+{#
  * This file render the footer of the timed question
  *
  * TODO : replace php variable by hidden input or javascript var
@@ -13,9 +12,8 @@
  * @var $time_limit_warning_display_time
  * @var $time_limit_warning_2_display_time
  * @var $disable
- */
-Yii::app()->getClientScript()->registerScript("TimerQuestion".$iQid, "
-    countdown($iQid, $iSid, $time_limit, $time_limit_action, $time_limit_warning, $time_limit_warning_2, $time_limit_warning_display_time, $time_limit_warning_2_display_time, '$disable');
-", LSYii_ClientScript::POS_POSTSCRIPT);
-?>
+#}
+<script>
+    countdown({{ iQid }}, {{ iSid }}, {{ time_limit }}, {{ time_limit_action }}, {{ time_limit_warning }}, {{ time_limit_warning_2 }}, {{ time_limit_warning_display_time }}, {{ time_limit_warning_2_display_time }}, '{{ disable }}');
+</script>
 </div>

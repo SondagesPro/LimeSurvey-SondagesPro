@@ -372,7 +372,10 @@ function file_validation_popup($ia, $filenotvalidated = null)
 function return_timer_script($aQuestionAttributes, $ia, $disable = null)
 {
     global $thissurvey;
-
+    $time_limit = intval($aQuestionAttributes['time_limit']);
+    if($time_limit <= 0) {
+        return;
+    }
     Yii::app()->getClientScript()->registerScriptFile(Yii::app()->getConfig("generalscripts") . 'coookies.js', CClientScript::POS_BEGIN);
     Yii::app()->getClientScript()->registerPackage('timer-addition');
 
@@ -394,28 +397,26 @@ function return_timer_script($aQuestionAttributes, $ia, $disable = null)
 
     //Used to count how many timer questions in a page, and ensure scripts only load once
     $thissurvey['timercount'] = (isset($thissurvey['timercount'])) ? $thissurvey['timercount']++ : 1;
-
-    $time_limit = $aQuestionAttributes['time_limit'];
     $disable_next = trim($aQuestionAttributes['time_limit_disable_next']) != '' ? $aQuestionAttributes['time_limit_disable_next'] : 0;
     $disable_prev = trim($aQuestionAttributes['time_limit_disable_prev']) != '' ? $aQuestionAttributes['time_limit_disable_prev'] : 0;
     $time_limit_action = trim($aQuestionAttributes['time_limit_action']) != '' ? $aQuestionAttributes['time_limit_action'] : 1;
     $time_limit_message = trim($aQuestionAttributes['time_limit_message'][$_SESSION['survey_' . Yii::app()->getConfig('surveyID')]['s_lang']]) != '' ? htmlspecialchars($aQuestionAttributes['time_limit_message'][$_SESSION['survey_' . Yii::app()->getConfig('surveyID')]['s_lang']], ENT_QUOTES) : gT("Your time to answer this question has expired");
-    $time_limit_warning = trim($aQuestionAttributes['time_limit_warning']) != '' ? $aQuestionAttributes['time_limit_warning'] : 0;
-    $time_limit_warning_2 = trim($aQuestionAttributes['time_limit_warning_2']) != '' ? $aQuestionAttributes['time_limit_warning_2'] : 0;
+    $time_limit_warning = trim($aQuestionAttributes['time_limit_warning']) != '' ? intval($aQuestionAttributes['time_limit_warning']) : 0;
+    $time_limit_warning_2 = trim($aQuestionAttributes['time_limit_warning_2']) != '' ? intval($aQuestionAttributes['time_limit_warning_2']) : 0;
     $time_limit_countdown_message = trim($aQuestionAttributes['time_limit_countdown_message'][$_SESSION['survey_' . Yii::app()->getConfig('surveyID')]['s_lang']]) != '' ? htmlspecialchars($aQuestionAttributes['time_limit_countdown_message'][$_SESSION['survey_' . Yii::app()->getConfig('surveyID')]['s_lang']], ENT_QUOTES) : gT("Time remaining");
     $time_limit_warning_message = trim($aQuestionAttributes['time_limit_warning_message'][$_SESSION['survey_' . Yii::app()->getConfig('surveyID')]['s_lang']]) != '' ? htmlspecialchars($aQuestionAttributes['time_limit_warning_message'][$_SESSION['survey_' . Yii::app()->getConfig('surveyID')]['s_lang']], ENT_QUOTES) : gT("Your time to answer this question has nearly expired. You have {TIME} remaining.");
 
     //Render timer
-    $timer_html = doRender('/survey/questions/question_timer/timer', array('iQid' => $ia[0], 'sWarnId' => ''), true);
+    $timer_html = Yii::app()->twigRenderer->renderQuestion('/survey/questions/question_timer/timer', array('iQid' => $ia[0], 'sWarnId' => ''), true);
     $time_limit_warning_message = str_replace("{TIME}", $timer_html, $time_limit_warning_message);
-    $time_limit_warning_display_time = trim($aQuestionAttributes['time_limit_warning_display_time']) != '' ? $aQuestionAttributes['time_limit_warning_display_time'] + 1 : 0;
+    $time_limit_warning_display_time = trim($aQuestionAttributes['time_limit_warning_display_time']) != '' ? intval($aQuestionAttributes['time_limit_warning_display_time']) + 1 : 0;
     $time_limit_warning_2_message = trim($aQuestionAttributes['time_limit_warning_2_message'][$_SESSION['survey_' . Yii::app()->getConfig('surveyID')]['s_lang']]) != '' ? htmlspecialchars($aQuestionAttributes['time_limit_warning_2_message'][$_SESSION['survey_' . Yii::app()->getConfig('surveyID')]['s_lang']], ENT_QUOTES) : gT("Your time to answer this question has nearly expired. You have {TIME} remaining.");
 
     //Render timer 2
-    $timer_html = doRender('/survey/questions/question_timer/timer', array('iQid' => $ia[0], 'sWarnId' => '_Warning_2'), true);
-    $time_limit_message_delay = trim($aQuestionAttributes['time_limit_message_delay']) != '' ? $aQuestionAttributes['time_limit_message_delay'] * 1000 : 1000;
+    $timer_html = Yii::app()->twigRenderer->renderQuestion('/survey/questions/question_timer/timer', array('iQid' => $ia[0], 'sWarnId' => '_Warning_2'), true);
+    $time_limit_message_delay = trim($aQuestionAttributes['time_limit_message_delay']) != '' ? intval($aQuestionAttributes['time_limit_message_delay']) * 1000 : 1000;
     $time_limit_warning_2_message = str_replace("{TIME}", $timer_html, $time_limit_warning_2_message);
-    $time_limit_warning_2_display_time = trim($aQuestionAttributes['time_limit_warning_2_display_time']) != '' ? $aQuestionAttributes['time_limit_warning_2_display_time'] + 1 : 0;
+    $time_limit_warning_2_display_time = trim($aQuestionAttributes['time_limit_warning_2_display_time']) != '' ? intval($aQuestionAttributes['time_limit_warning_2_display_time']) + 1 : 0;
     $time_limit_message_style = trim($aQuestionAttributes['time_limit_message_style']) != '' ? $aQuestionAttributes['time_limit_message_style'] : "";
     $time_limit_message_class = "hidden ls-timer-content ls-timer-message ls-no-js-hidden";
     $time_limit_warning_style = trim($aQuestionAttributes['time_limit_warning_style']) != '' ? $aQuestionAttributes['time_limit_warning_style'] : "";
@@ -430,7 +431,7 @@ function return_timer_script($aQuestionAttributes, $ia, $disable = null)
         $time_limit = $_SESSION['survey_' . Yii::app()->getConfig('surveyID')][$timersessionname];
     }
 
-    $output = doRender('/survey/questions/question_timer/timer_header', array('timersessionname' => $timersessionname, 'time_limit' => $time_limit), true);
+    $output = Yii::app()->twigRenderer->renderQuestion('/survey/questions/question_timer/timer_header', array('timersessionname' => $timersessionname, 'time_limit' => $time_limit), true);
 
     if ($thissurvey['timercount'] < 2) {
         $iAction = '';
@@ -455,7 +456,7 @@ function return_timer_script($aQuestionAttributes, $ia, $disable = null)
             $iAction = '3';
         }
 
-        $output .= doRender('/survey/questions/question_timer/timer_javascript', array(
+        $output .= Yii::app()->twigRenderer->renderQuestion('/survey/questions/question_timer/timer_javascript', array(
             'timersessionname' => $timersessionname,
             'time_limit' => $time_limit,
             'iAction' => $iAction,
@@ -466,7 +467,7 @@ function return_timer_script($aQuestionAttributes, $ia, $disable = null)
             ), true);
     }
 
-    $output .= doRender(
+    $output .= Yii::app()->twigRenderer->renderQuestion(
         '/survey/questions/question_timer/timer_content',
         array(
             'iQid' => $ia[0],
@@ -485,7 +486,7 @@ function return_timer_script($aQuestionAttributes, $ia, $disable = null)
         true
     );
 
-    $output .= doRender(
+    $output .= Yii::app()->twigRenderer->renderQuestion(
         '/survey/questions/question_timer/timer_footer',
         array(
             'iQid' => $ia[0],
