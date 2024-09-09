@@ -14,7 +14,7 @@ class Update_259 extends DatabaseUpdateBase
                     'entity_id' => 'integer NOT NULL',
                     'title' => 'string NOT NULL', // varchar(255) in postgres
                     'message' => 'text NOT NULL',
-                    'status' => "string(15) nNOT NULL DEFAULT 'new' ",
+                    'status' => "string(15) NOT NULL DEFAULT 'new' ",
                     'importance' => 'integer NOT NULL DEFAULT 1',
                     'display_class' => "string(31) DEFAULT 'default'",
                     'created' => 'datetime',
