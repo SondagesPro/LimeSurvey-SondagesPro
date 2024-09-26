@@ -4644,11 +4644,14 @@ class LimeExpressionManager
                         $value = null;  // can't upload a file via GET
                         break;
                 }
-                $_SESSION[$LEM->sessid][$knownVar['sgqa']] = $value;
-                $LEM->updatedValues[$knownVar['sgqa']] = [
-                    'type'  => $knownVar['type'],
-                    'value' => $value,
-                ];
+                /* Validate validity of startingValues : do not show error */
+                if (self::checkValidityAnswer($knownVar['type'], $value, $knownVar['sgqa'], $LEM->questionSeq2relevance[$knownVar['qseq']], false)) {
+                    $_SESSION[$LEM->sessid][$knownVar['sgqa']] = $value;
+                    $LEM->updatedValues[$knownVar['sgqa']] = [
+                        'type'  => $knownVar['type'],
+                        'value' => $value,
+                    ];
+                }
             }
             $LEM->_UpdateValuesInDatabase();
         }
@@ -9747,7 +9750,7 @@ report~numKids > 0~message~{name}, you said you are {age} and that you have {num
                 break;
             case '!': //List - dropdown
             case 'L': //LIST drop-down/radio-button list
-                if (substr($sgq, -5) != 'other') {
+                if ($sgq != $LEM->getLEMsurveyId() . 'X' . $qinfo['gid'] . 'X' . $qinfo['qid'] . 'other') { // Check only not other
                     if ($value == "-oth-") {
                         if ($other != 'Y') {
                             $LEM->addValidityString($sgq, $value, gT("%s is an invalid value for this question"), $set);
@@ -9868,13 +9871,20 @@ report~numKids > 0~message~{name}, you said you are {age} and that you have {num
                 /* No validty control ? size ? */
                 break;
             case 'M':
-                if ($value != "Y" && (substr($sgq, -5) != 'other' && $other == 'Y')) {
+                if (
+                    $value != "Y" // Y is always valid
+                    && !( $other == 'Y' && $sgq == $LEM->getLEMsurveyId() . 'X' . $qinfo['gid'] . 'X' . $qinfo['qid'] . 'other') // It's not other SGQA
+                ) {
                     $LEM->addValidityString($sgq, $value, gT("%s is an invalid value for this question"), $set);
                     return false;
                 }
                 break;
             case 'P':
-                if (substr($sgq, -7) != 'comment' && $value != "Y" && (substr($sgq, -5) != 'other' && $other == 'Y')) {
+                if (
+                    $value != "Y" // Y is always valid
+                    && !( $other == 'Y' && $sgq == $LEM->getLEMsurveyId() . 'X' . $qinfo['gid'] . 'X' . $qinfo['qid'] . 'other') // It's not other SGQA
+                    && substr($sgq, -7) != 'comment' // It's not a comment SGQA
+                ) {
                     $LEM->addValidityString($sgq, $value, gT("%s is an invalid value for this question"), $set);
                     return false;
                 }
