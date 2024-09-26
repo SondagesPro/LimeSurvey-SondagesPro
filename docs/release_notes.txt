@@ -34,7 +34,7 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
-Changes from 5.6.70 (SondagesPro) to 5.6.72 (SondagesPro) September 07, 2024
+Changes from 5.6.70 (SondagesPro) to 5.6.73 (SondagesPro) September 09, 2024
 - Fixed issue [security] #19734: XSS by simple user in image select themes
 - Fixed issue #19733: XSS by simple user with end url
 - Fixed issue #19729 [security] : XSS on time_limit
