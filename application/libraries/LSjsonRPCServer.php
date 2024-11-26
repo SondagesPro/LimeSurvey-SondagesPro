@@ -59,8 +59,10 @@ class LSjsonRPCServer extends jsonRPCServer
 
         // output the response
         if (is_null($request) || !empty($request['id'])) {
-// notifications don't want response
-            header('content-type: application/json');
+            // notifications don't want response
+            /* Allow to set header */
+            $jsonRpcContentType = App()->getConfig('jsonRpcContentType', 'application/json');
+            header('content-type: ' . $jsonRpcContentType);
             BigData::json_echo($response);
         }
 
