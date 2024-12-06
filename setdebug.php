@@ -1,5 +1,9 @@
 <?php
 
+if (!defined('BASEPATH')) {
+    http_response_code(403);
+    exit('No direct script access allowed');
+}
 /*
  * ------------------------------------------------------------------
  *  Setup YII_DEBUG constant and error reporting according to config

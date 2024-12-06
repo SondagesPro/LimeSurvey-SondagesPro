@@ -12,8 +12,14 @@
     RewriteCond %{REQUEST_URI} !^/\.well-known
     RewriteRule ^(.*/)?\.+ - [F]
 
-    # deny access to composer.json that is used for remote fingerprinting
-    RewriteRule ^composer.json - [F]
+    # Specific files in home directory (include git version only files)
+    RewriteRule ^([A-Za-z0-9_]*).json - [F]
+    RewriteRule ^([A-Za-z0-9_]*).xml - [F]
+    RewriteRule ^([A-Za-z0-9_]*).yml - [F]
+    RewriteRule ^([A-Za-z0-9_]*).lock - [F]
+    RewriteRule ^([A-Za-z0-9_]*).properties - [F]
+    RewriteRule ^([A-Za-z0-9_]*).md - [F]
+    RewriteRule ^setdebug.php - [F]
 </IfModule>
 
 # deny access to hidden files and directories without mod_rewrite
