@@ -34,6 +34,18 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
+Changes from 5.6.75 (SondagesPro) to 5.6.76 (SondagesPro) December 13, 2024
+- Fixed issue #19888: Check Remote Control API Log off admin
+- Fixed issue #19859: Some broken LSA can not be imported
+- Fixed issue #19661: Data inconsistency in responses after importing LSA files
+- Fixed issue [security] #19872: Bad permission check on copy_survey (Remote Control)
+- Fixed issue [security] #19870: Any user with survey create permission can activate tokens on any survey (Remote Control)
+- Fixed issue [security] #19873: Any user can create or update any participant in CPDB (Remote Control)
+- Fixed issue [security] #19869: All group deletion accessible by any admin with one survey access (Remote Control)
+- Fixed issue [security] #19864: Export question and group are not restricted (Remote Control)
+- Fixed issue [security] #19865: Stack trace with directory with setdebug.php url
+- New feature : Allow to set Json rpc content type
+
 Changes from 5.6.73 (SondagesPro) to 5.6.75 (SondagesPro) September 09, 2024
 - Fixed issue #19700: [security] Invalid DB value can be entered with start URL
 - Fixed issue #19015: User with superadmin role does not get superadmin privileges
