@@ -2424,7 +2424,7 @@ function XMLImportResponses($sFullFilePath, $iSurveyID, $aFieldReMap = array())
     switchMSSQLIdentityInsert('survey_' . $iSurveyID, true);
     $results = [];
     $results['responses'] = 0;
-
+    $results['warnings'] = [];
     if (\PHP_VERSION_ID < 80000) {
         libxml_disable_entity_loader(false);
     }
@@ -2433,6 +2433,7 @@ function XMLImportResponses($sFullFilePath, $iSurveyID, $aFieldReMap = array())
     if (\PHP_VERSION_ID < 80000) {
         libxml_disable_entity_loader(true);
     }
+    SurveyDynamic::model($iSurveyID)->refreshMetadata();
     if (Yii::app()->db->schema->getTable($survey->responsesTableName) !== null) {
         $DestinationFields = Yii::app()->db->schema->getTable($survey->responsesTableName)->getColumnNames();
         while ($oXMLReader->read()) {
@@ -2469,16 +2470,32 @@ function XMLImportResponses($sFullFilePath, $iSurveyID, $aFieldReMap = array())
                                 }
                             }
                         }
-                        if (!SurveyDynamic::model($iSurveyID)->insertRecords($aInsertData)) {
-                            throw new Exception(gT("Error") . ": Failed to insert data in response table<br />");
+                        tracevar($aInsertData);
+                        SurveyDynamic::sid($iSurveyID);
+                        $response = new SurveyDynamic();
+                        $response->setAttributes($aInsertData, false);
+                        try {
+                            if ($response->encryptSave()) {
+                                $results['responses']++;
+                            } else {
+                                if (!empty($aInsertData['id'])) {
+                                    $results['warnings'][] = CHtml::errorSummary($response, "<div>" . sprintf(gT("Failed to save response data : response id %s"), 'unescaped'). "</div>");
+                                } else {
+                                    $results['warnings'][] = CHtml::errorSummary($response, "<div>" . gT("Failed to save response data : no response id") . "</div>");
+                                }
+                            }
+                        } catch (Exception $e) {
+                            if (!empty($aInsertData['id'])) {
+                                $results['warnings'][] = sprintf(gT("Failed to save response data : response id %s : %s", 'unescaped'), $aInsertData['id'], $e->getMessage());
+                            } else {
+                                $results['warnings'][] = sprintf(gT("Failed to save response data : no response id : %s", 'unescaped'), $e->getMessage());
+                            }
                         }
-                        $results['responses']++;
                     }
                 }
             }
         }
         $oXMLReader->close();
-
         switchMSSQLIdentityInsert('survey_' . $iSurveyID, false);
         if (Yii::app()->db->getDriverName() == 'pgsql') {
             try {
@@ -2486,7 +2503,6 @@ function XMLImportResponses($sFullFilePath, $iSurveyID, $aFieldReMap = array())
             } catch (Exception $oException) {
             };
         }
-        $results['warnings'] = [];
         return $results;
     } else {
         $results['warnings'][] = gT("The survey response table could not be created.") . '<br>' . gT("Usually this is caused by having too many (sub-)questions in your survey. Please try removing questions from your survey.");
