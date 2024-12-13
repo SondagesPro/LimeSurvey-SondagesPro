@@ -2434,6 +2434,7 @@ function XMLImportResponses($sFullFilePath, $iSurveyID, $aFieldReMap = array())
         libxml_disable_entity_loader(true);
     }
     SurveyDynamic::model($iSurveyID)->refreshMetadata();
+    $survey = Survey::model()->findByAttributes(['sid' => $iSurveyID]); // Avoid caching
     if (Yii::app()->db->schema->getTable($survey->responsesTableName) !== null) {
         $DestinationFields = Yii::app()->db->schema->getTable($survey->responsesTableName)->getColumnNames();
         while ($oXMLReader->read()) {
@@ -2470,7 +2471,12 @@ function XMLImportResponses($sFullFilePath, $iSurveyID, $aFieldReMap = array())
                                 }
                             }
                         }
-                        tracevar($aInsertData);
+                        if ($survey->datestamp == "Y" && empty($aInsertData['startdate'])) {
+                            $aInsertData['startdate'] = "1980-01-01";
+                        }
+                        if (empty($aInsertData['startlanguage'])) {
+                            $aInsertData['startlanguage'] = $survey->language;
+                        }
                         SurveyDynamic::sid($iSurveyID);
                         $response = new SurveyDynamic();
                         $response->setAttributes($aInsertData, false);
