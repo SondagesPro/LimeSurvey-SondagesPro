@@ -46,12 +46,12 @@ class GenerateSimpleStatisticsTest extends TestBaseClass
         $questionId3 = $allQuestions[2]->qid;
 
         $this->assertStringContainsString("['quid'+'" . $questionId1 . "']", $scriptQ1, 'The statistics do not contain the correct question id.');
-        $this->assertStringContainsString("[2,2,4,0]", $scriptQ1, 'The statistics values are not correct.');
+        $this->assertStringContainsString("[2,2,4,2]", $scriptQ1, 'The statistics values are not correct.');
 
         $this->assertStringContainsString("['quid'+'" . $questionId2 . "']", $scriptQ2, 'The statistics do not contain the correct question id.');
-        $this->assertStringContainsString("[5,3,1,0]", $scriptQ2, 'The statistics values are not correct.');
+        $this->assertStringContainsString("[5,3,1,1]", $scriptQ2, 'The statistics values are not correct.');
 
         $this->assertStringContainsString("['quid'+'" . $questionId3 . "']", $scriptQ3, 'The statistics do not contain the correct question id.');
-        $this->assertStringContainsString("[1,5,3,0]", $scriptQ3, 'The statistics values are not correct.');
+        $this->assertStringContainsString("[1,5,3,1]", $scriptQ3, 'The statistics values are not correct.');
     }
 }
