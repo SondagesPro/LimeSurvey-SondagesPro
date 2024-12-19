@@ -1698,6 +1698,7 @@ class QuestionAdministrationController extends LSBaseController
                     $newQuestionPosition = 1;
                     break;
                 default: //all other cases means after question X (the value coming from frontend is already correct)
+                    Question::increaseAllOrderNumbersForGroup($questionGroupId, $questionPosition);
                     $newQuestionPosition = $questionPosition;
             }
             $copyQuestionValues->setQuestionPositionInGroup($newQuestionPosition);
