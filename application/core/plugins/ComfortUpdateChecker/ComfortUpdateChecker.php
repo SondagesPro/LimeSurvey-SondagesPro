@@ -40,8 +40,7 @@ class ComfortUpdateChecker extends PluginBase
 
     public function init()
     {
-        Yii::setPathOfAlias(get_class($this), dirname(__FILE__));
-        $this->subscribe('beforeAdminMenuRender');
+        // Deactivate Comfort Updater
     }
 
     /**
