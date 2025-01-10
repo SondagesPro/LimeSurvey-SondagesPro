@@ -148,7 +148,6 @@ class Expressions extends SurveyCommonAction
         }
 
         App()->getClientScript()->registerPackage('decimal');
-        App()->getClientScript()->registerScriptFile('SCRIPT_PATH', 'survey_runtime.js');
         App()->getClientScript()->registerPackage('expressions');/* Why we need it ? */
         App()->getClientScript()->registerPackage('expression-extend');
         App()->getClientScript()->registerCssFile(Yii::app()->getConfig('publicstyleurl') . 'expressionlogicfile.css');
@@ -195,7 +194,6 @@ class Expressions extends SurveyCommonAction
         $aData['surveylist'] = getSurveyList();
 
         App()->getClientScript()->registerPackage('decimal');
-        App()->getClientScript()->registerScriptFile('SCRIPT_PATH', 'survey_runtime.js');
         App()->getClientScript()->registerPackage('expressions');
         App()->getClientScript()->registerPackage('expression-extend');
 
