@@ -151,6 +151,7 @@ class SaveQuestionAttributesTest extends TestBaseClassWeb
 
     protected function importDemoPlugin()
     {
+        App()->setConfig('disablePluginUpload', false);
         // Delete demo plugin if it exists
         $uploadedPluginsDir = \Yii::getPathOfAlias('uploaddir.plugins');
         $pluginDir = $uploadedPluginsDir . '/NewQuestionAttributesPlugin';
