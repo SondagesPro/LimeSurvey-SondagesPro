@@ -762,7 +762,7 @@ class Permission extends LSActiveRecord
      */
     public static function getUserRole($iUserID)
     {
-        if (App()->getConfig('DBVersion') < 419 ) {
+        if (App()->getConfig('DBVersion') < 419) {
             return [];
         }
         return UserInPermissionrole::model()->getRoleForUser($iUserID);
