@@ -34,6 +34,13 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
+Changes from 5.6.76 (SondagesPro) to 5.6.77 (SondagesPro) february 03, 2025
+- Fixed issue #19899: Order of question when copying are bad
+- Fixed issue : Deactivate Comfort Update Checker plugin
+- Fixed issue : Remove broken registerScript in survey logic
+- Fixed issue : Unable to update with pre 419 with debug mode
+
+------------------------------------------------------
 Changes from 5.6.75 (SondagesPro) to 5.6.76 (SondagesPro) December 13, 2024
 - Fixed issue #19888: Check Remote Control API Log off admin
 - Fixed issue #19859: Some broken LSA can not be imported
