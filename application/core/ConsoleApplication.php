@@ -47,7 +47,11 @@ class ConsoleApplication extends CConsoleApplication
         parent::__construct($aApplicationConfig);
 
         // Set webroot alias.
-        Yii::setPathOfAlias('webroot', realpath(Yii::getPathOfAlias('application') . '/../'));
+        if (isset($baseConfig['webroot']) && is_dir($baseConfig['webroot']) ) {
+            Yii::setPathOfAlias('webroot', $baseConfig['webroot']);
+        } else {
+            Yii::setPathOfAlias('webroot', realpath(Yii::getPathOfAlias('application') . '/../'));
+        }
         /* Because we have app now : we have to call again the config : can be done before : no real usage of url in console, but usage of getPathOfAlias */
         $coreConfig = require(__DIR__ . '/../config/config-defaults.php');
         $consoleConfig = require(__DIR__ . '/../config/console.php'); // Only for console : replace some config-defaults
