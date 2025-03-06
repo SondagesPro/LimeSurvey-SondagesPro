@@ -1682,6 +1682,13 @@ class SurveyAdministrationController extends LSBaseController
 
         $iSurveyID = (int) $iSurveyID;
         $survey = Survey::model()->findByPk($iSurveyID);
+        /* Check if table exist, if yes : redirect to deactivate */
+        if ($survey->active == "N" && $survey->getHasResponsesTable()) {
+            $survey->active = "Y";
+            $survey->update(['active']);
+            App()->user->setFlash('warning', gT("Survey still have response table, redirect to deactivation."));
+            $this->redirect(["surveyAdministration/deactivate", 'surveyid' => $iSurveyID]);
+        }
         $surveyActivator = new SurveyActivator($survey);
 
         Yii::app()->user->setState('sql_' . $iSurveyID, ''); //If user has set some filters for responses from statistics on a previous activation, it must be wiped out
