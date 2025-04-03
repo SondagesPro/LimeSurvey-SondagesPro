@@ -1349,6 +1349,7 @@ class quexmlpdf extends pdf
      */
     public function setStyle($style)
     {
+        $style = htmlspecialchars($style, ENT_NOQUOTES); // Allow  background url src
         $this->style = "<style>" . $style . "</style>";
     }
 
