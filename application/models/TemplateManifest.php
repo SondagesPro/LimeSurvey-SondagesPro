@@ -1476,7 +1476,7 @@ class TemplateManifest extends TemplateConfiguration
           // If wrong Twig in manifest, we don't want to block the whole list rendering
           // Note: if no twig statement in the description, twig will just render it as usual
         try {
-            $sDescription = App()->twigRenderer->convertTwigToHtml($this->config->metadata->description);
+            $sDescription = viewHelper::purified($sDescription);
         } catch (\Exception $e) {
           // It should never happen, but let's avoid to anoy final user in production mode :)
             if (YII_DEBUG) {
