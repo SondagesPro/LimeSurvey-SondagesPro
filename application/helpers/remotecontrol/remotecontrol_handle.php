@@ -1659,7 +1659,7 @@ class remotecontrol_handle
 
             $iSurveyID = $oQuestion->sid;
 
-            if (Permission::model()->hasSurveyPermission($iSurveyID, 'survey', 'read')) {
+            if (Permission::model()->hasSurveyPermission($iSurveyID, 'surveycontent', 'read')) {
                 if (is_null($sLanguage)) {
                     $sLanguage = Survey::model()->findByPk($iSurveyID)->language;
                 }
