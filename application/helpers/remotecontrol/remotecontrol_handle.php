@@ -1318,7 +1318,7 @@ class remotecontrol_handle
             if (is_null($oGroup)) {
                 return array('status' => 'Error: Invalid group ID');
             }
-            if (Permission::model()->hasSurveyPermission($oGroup->sid, 'survey', 'update')) {
+            if (Permission::model()->hasSurveyPermission($oGroup->sid, 'surveycontent', 'update')) {
                 $aResult = array();
                 // Remove fields that may not be modified
                 unset($aGroupData['sid']);
@@ -1420,10 +1420,10 @@ class remotecontrol_handle
                 }
                 return $aResult;
             } else {
-                            return array('status' => 'No permission');
+                return array('status' => 'No permission');
             }
         } else {
-                    return array('status' => self::INVALID_SESSION_KEY);
+            return array('status' => self::INVALID_SESSION_KEY);
         }
     }
 
@@ -1844,23 +1844,23 @@ class remotecontrol_handle
             $iQuestionID = (int) $iQuestionID;
             $oQuestion = Question::model()->findByAttributes(array('qid' => $iQuestionID));
             if (is_null($oQuestion)) {
-                            return array('status' => 'Error: Invalid group ID');
+                return array('status' => 'Error: Invalid group ID');
             }
 
             $iSurveyID = $oQuestion->sid;
 
-            if (Permission::model()->hasSurveyPermission($iSurveyID, 'survey', 'update')) {
+            if (Permission::model()->hasSurveyPermission($iSurveyID, 'surveycontent', 'update')) {
                 if (is_null($sLanguage)) {
-                                    $sLanguage = Survey::model()->findByPk($iSurveyID)->language;
+                    $sLanguage = Survey::model()->findByPk($iSurveyID)->language;
                 }
 
                 if (!array_key_exists($sLanguage, getLanguageDataRestricted())) {
-                                    return array('status' => 'Error: Invalid language');
+                    return array('status' => 'Error: Invalid language');
                 }
 
                 $oQuestion = Question::model()->findByAttributes(array('qid' => $iQuestionID));
                 if (!isset($oQuestion)) {
-                                    return array('status' => 'Error: Invalid questionid');
+                    return array('status' => 'Error: Invalid questionid');
                 }
 
                 // Remove fields that may not be modified
@@ -1876,7 +1876,7 @@ class remotecontrol_handle
                 $aQuestionAttributes = $oQuestion->getAttributes();
 
                 if (empty($aQuestionData)) {
-                                    return array('status' => 'No valid Data');
+                    return array('status' => 'No valid Data');
                 }
 
                 foreach ($aQuestionData as $sFieldName => $sValue) {
@@ -1907,10 +1907,10 @@ class remotecontrol_handle
                 }
                 return $aResult;
             } else {
-                            return array('status' => 'No permission');
+                return array('status' => 'No permission');
             }
         } else {
-                    return array('status' => self::INVALID_SESSION_KEY);
+            return array('status' => self::INVALID_SESSION_KEY);
         }
     }
 
