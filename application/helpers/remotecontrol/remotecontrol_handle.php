@@ -902,7 +902,7 @@ class remotecontrol_handle
             if (!isset($oSurvey)) {
                 return array('status' => 'Error: Invalid survey ID');
             }
-            if (Permission::model()->hasSurveyPermission($iSurveyID, 'surveysettings', 'read')) {
+            if (Permission::model()->hasSurveyPermission($iSurveyID, 'surveylocale', 'read')) {
                 $aBasicDestinationFields = SurveyLanguageSetting::model()->tableSchema->columnNames;
                 if (!empty($aSurveyLocaleSettings)) {
                     $aSurveyLocaleSettings = array_intersect($aSurveyLocaleSettings, $aBasicDestinationFields);
@@ -919,7 +919,7 @@ class remotecontrol_handle
                 $aResult = array();
 
                 if (empty($aSurveyLocaleSettings)) {
-                                    return array('status' => 'No valid Data');
+                    return array('status' => 'No valid Data');
                 }
 
                 foreach ($aSurveyLocaleSettings as $sPropertyName) {
@@ -928,10 +928,10 @@ class remotecontrol_handle
                 }
                 return $aResult;
             } else {
-                            return array('status' => 'No permission');
+                return array('status' => 'No permission');
             }
         } else {
-                    return array('status' => self::INVALID_SESSION_KEY);
+            return array('status' => self::INVALID_SESSION_KEY);
         }
     }
 
