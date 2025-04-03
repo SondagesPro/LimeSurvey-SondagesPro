@@ -2733,9 +2733,12 @@ function tsvSurveyExport($surveyid)
         $defaultvalues_data = array();
     }
     // insert translations to defaultvalues_datas
+    $defaultvalues_datas = [];
     if (array_key_exists('defaultvalue_l10ns', $xmlData)) {
         $defaultvalues_l10ns_data = $xmlData['defaultvalue_l10ns']['rows']['row'];
-        $defaultvalues_datas = [];
+        if (!array_key_exists('0', $defaultvalues_l10ns_data)) {
+            $defaultvalues_l10ns_data = array($defaultvalues_l10ns_data);
+        }
         foreach ($defaultvalues_l10ns_data as $defaultvalue_l10ns_key => $defaultvalue_l10ns_data) {
             foreach ($defaultvalues_data as $defaultvalue_key => $defaultvalue_data) {
                 if ($defaultvalue_l10ns_data['dvid'] === $defaultvalue_data['dvid']) {
@@ -2818,7 +2821,12 @@ function tsvSurveyExport($surveyid)
         }
 
         // subquestions data
+        $subquestions_data = [];
         if (array_key_exists('subquestions', $xmlData)) {
+            if (isset($xmlData['subquestions']['rows']['row']['qid'])) {
+                // Only one subquestion then one row : set as array like we have multiple rows
+                $xmlData['subquestions']['rows']['row'] = [$xmlData['subquestions']['rows']['row']];
+            }
             foreach ($xmlData['subquestions']['rows']['row'] as $subquestion) {
                 $subquestions_data[$subquestion['qid']] = $subquestion;
             }
@@ -2833,8 +2841,6 @@ function tsvSurveyExport($surveyid)
                     }
                 }
             }
-        } else {
-            $subquestions_data = array();
         }
 
         // answers data
