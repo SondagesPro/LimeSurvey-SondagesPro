@@ -2474,35 +2474,34 @@ class remotecontrol_handle
     {
         if ($this->_checkSessionKey($sSessionKey)) {
             $oSurvey = new Survey();
-            if (!Permission::model()->hasGlobalPermission('superadmin', 'read') && ($sUsername == null)) {
-                $oSurvey->permission(Yii::app()->user->getId());
-            } elseif ($sUsername != null) {
+            $oSurvey->permission(Yii::app()->user->getId());
+            if ($sUsername != null) {
                 $aUserData = User::model()->findByAttributes(array('users_name' => (string) $sUsername));
                 if (!isset($aUserData)) {
-                                    return array('status' => 'Invalid user');
+                    return array('status' => 'Invalid user');
                 } else {
-                                    $sUid = $aUserData->attributes['uid'];
+                    $sUid = $aUserData->attributes['uid'];
                 }
                 $oSurvey->permission($sUid);
             }
 
             $aUserSurveys = $oSurvey->with(array('languagesettings' => array('condition' => 'surveyls_language=language'), 'owner'))->findAll();
             if (count($aUserSurveys) == 0) {
-                            return array('status' => 'No surveys found');
+                return array('status' => 'No surveys found');
             }
 
             foreach ($aUserSurveys as $oSurvey) {
                 $oSurveyLanguageSettings = SurveyLanguageSetting::model()->findByAttributes(array('surveyls_survey_id' => $oSurvey->primaryKey, 'surveyls_language' => $oSurvey->language));
                 if (!isset($oSurveyLanguageSettings)) {
-                                    $aSurveyTitle = '';
+                    $aSurveyTitle = '';
                 } else {
-                                    $aSurveyTitle = $oSurveyLanguageSettings->attributes['surveyls_title'];
+                    $aSurveyTitle = $oSurveyLanguageSettings->attributes['surveyls_title'];
                 }
                 $aData[] = array('sid' => $oSurvey->primaryKey, 'surveyls_title' => $aSurveyTitle, 'startdate' => $oSurvey->attributes['startdate'], 'expires' => $oSurvey->attributes['expires'], 'active' => $oSurvey->attributes['active']);
             }
             return $aData;
         } else {
-                    return array('status' => self::INVALID_SESSION_KEY);
+            return array('status' => self::INVALID_SESSION_KEY);
         }
     }
 
