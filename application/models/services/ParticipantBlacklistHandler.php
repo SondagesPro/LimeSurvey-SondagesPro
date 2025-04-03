@@ -53,8 +53,8 @@ class ParticipantBlacklistHandler
             return new BlacklistResult(false, gT("You are not globally blacklisted on this site."));
         }
 
-        // Remove participant from the blacklist
-        $participant->blacklisted == 'N';
+        // Remove participant from the blocklist
+        $participant->blacklisted = 'N';
         $participant->save();
 
         $result = new BlacklistResult(false, gT("You have been added back to the central participants list for this site."));
