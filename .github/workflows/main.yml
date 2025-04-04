@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         # Specify what versions of php you want to test
-        php-versions: ['7.4']
+        php-versions: ['7.4','8.0']
       cancel-in-progress: true # Cancel in-progress jobs if a new job is triggered     
     concurrency:
       group: ${{ github.ref_name }}-${{ matrix.php-versions }}-main # Groups by branch, PHP version, and job name
@@ -38,7 +38,8 @@ jobs:
           sudo apt -y install php${{ matrix.php-versions }}
           sudo apt-get update > /dev/null
           sudo apt --fix-broken install php php7.4-ldap php7.4-gd php7.4-intl php7.4-zip php7.4-mysql php7.4-xml php7.4-curl php7.4-mbstring libapache2-mod-php7.4 -y
-          sudo update-alternatives --set php /usr/bin/php7.4
+          sudo apt --fix-broken install php php8.0-ldap php8.0-gd php8.0-intl php8.0-zip php8.0-mysql php8.0-xml php8.0-curl php8.0-mbstring libapache2-mod-php8.0 -y
+          sudo update-alternatives --set php /usr/bin/php8.0
 
       # Start the MySQL service - https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu1804-README.md#mysql
       - name: Start the MySQL service
@@ -88,7 +89,6 @@ jobs:
           # InnoDB needs large_file_prefix & Barracuda file format
           # https://discuss.gogs.io/t/solved-mysql-error-1064-while-running-first-install/1604
           # InnoDB variables ARE already set to desired values in Github runner (ubuntu-18.04)
-
           sudo systemctl start mysql
           sudo service mysql status
           mysql -uroot -proot -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';" || true
@@ -116,6 +116,7 @@ jobs:
           #sudo tail -n 500 /var/log/apache2/error.log || true
           #sudo tail -n 500 /var/log/nginx/error.log || true
           #sudo tail -n 500 /var/log/php7.4-fpm.log || true
+          #sudo tail -n 500 /var/log/php8.0-fpm.log || true
           # NOTE: php --version might not be the same as setup in apache. Use fwrite(STDERR, phpversion()); in index.php to be sure.
           #which php
           #php --version
