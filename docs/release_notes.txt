@@ -34,6 +34,21 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
+Changes from 5.6.77 (SondagesPro) to 5.6.78 (SondagesPro) april 04, 2025
+- Fixed issue #19750: [security] Server-Side Request Forgery attack on SPSS export style settings
+- Fixed issue #19694: [security] Update jQuery UI
+- Fixed issue #19957: wrong operator in remove from block list
+- Fixed issue #19994: Unable to get to dashboard in some condition
+- Fixed issue #20000: Special characters in question text not properly shown in column selector on export
+- Fixed issue #19947: Exporting to tab-separated-values error
+- Fixed issue #19997: potential Bad HTML on theme list
+- Fixed issue #20008: XSS on survey theme description
+- Fixed issue #19980: RemoteControl export_responses doesn't support 0 for answercodes
+- Fixed issue (#19878,19874,19879): Bad permission check on remote control
+- Fixed issue #19905: [security] Any user can get any user SurveyList
+- Fixed issue : unable to activate survey if response table still exist
+
+------------------------------------------------------
 Changes from 5.6.76 (SondagesPro) to 5.6.77 (SondagesPro) february 03, 2025
 - Fixed issue #19899: Order of question when copying are bad
 - Fixed issue : Deactivate Comfort Update Checker plugin
