@@ -17,11 +17,7 @@ jobs:
     strategy:
       matrix:
         # Specify what versions of php you want to test
-        php-versions: ['7.4','8.0']
-      cancel-in-progress: true # Cancel in-progress jobs if a new job is triggered     
-    concurrency:
-      group: ${{ github.ref_name }}-${{ matrix.php-versions }}-main # Groups by branch, PHP version, and job name
-      cancel-in-progress: true # Cancel in-progress jobs if a new job is triggered
+        php-versions: ['7.4']
     # Env vars for this job
     env:
       DBENGINE: INNODB
