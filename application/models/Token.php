@@ -306,10 +306,13 @@ abstract class Token extends Dynamic
     /**
      * Sanitize token show to the user (replace sanitize_helper sanitize_token)
      * @param string $token to sanitize
-     * @return string sanitized token
+     * @return string|null sanitized token
      */
     public static function sanitizeToken($token)
     {
+        if (is_null($token)) {
+            return "";
+        }
         // According to Yii doc : http://www.yiiframework.com/doc/api/1.1/CSecurityManager#generateRandomString-detail
         return preg_replace('/[^0-9a-zA-Z_~]/', '', $token);
     }
