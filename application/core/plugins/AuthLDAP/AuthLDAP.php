@@ -224,6 +224,8 @@ class AuthLDAP extends LimeSurvey\PluginManager\AuthPluginBase
         $fullnameattribute = $this->get('fullnameattribute');
         $suffix             = $this->get('domainsuffix');
         $prefix             = $this->get('userprefix');
+        /* @var string usernam ro be used in LDAP request*/
+        $escapedusername = ldap_escape($new_user, "", LDAP_ESCAPE_FILTER);
 
         // Try to connect
         $ldapconn = $this->createConnection();
@@ -237,7 +239,7 @@ class AuthLDAP extends LimeSurvey\PluginManager\AuthPluginBase
         // Search email address and full name
         if (empty($ldapmode) || $ldapmode == 'simplebind') {
             // Use the user's account for LDAP search
-            $ldapbindsearch = @ldap_bind($ldapconn, $prefix . $new_user . $suffix, $password);
+            $ldapbindsearch = @ldap_bind($ldapconn, $prefix . $escapedusername . $suffix, $password);
         } elseif (empty($binddn)) {
             // There is no account defined to do the LDAP search,
             // let's use anonymous bind instead
@@ -255,9 +257,9 @@ class AuthLDAP extends LimeSurvey\PluginManager\AuthPluginBase
         }
         // Now prepare the search fitler
         if ($extrauserfilter != "") {
-            $usersearchfilter = "(&($searchuserattribute=$new_user)$extrauserfilter)";
+            $usersearchfilter = "(&($searchuserattribute=$escapedusername)$extrauserfilter)";
         } else {
-            $usersearchfilter = "($searchuserattribute=$new_user)";
+            $usersearchfilter = "($searchuserattribute=$escapedusername)";
         }
         // Search for the user
         $userentry = false;
@@ -476,7 +478,8 @@ class AuthLDAP extends LimeSurvey\PluginManager\AuthPluginBase
         $bindpwd = $this->get('bindpwd');
         $groupsearchbase        = $this->get('groupsearchbase');
         $groupsearchfilter      = $this->get('groupsearchfilter');
-
+        /* @var string usernam ro be used in LDAP request*/
+        $escapedusername = ldap_escape($username, "", LDAP_ESCAPE_FILTER);
         /* Get the conexion, createConnection return an error in array, never return false */
         $ldapconn = $this->createConnection();
         if (is_array($ldapconn)) {
@@ -486,7 +489,7 @@ class AuthLDAP extends LimeSurvey\PluginManager\AuthPluginBase
 
         if (empty($ldapmode) || $ldapmode == 'simplebind') {
             // in simple bind mode we know how to construct the userDN from the username
-            $ldapbind = @ldap_bind($ldapconn, $prefix . $username . $suffix, $password);
+            $ldapbind = @ldap_bind($ldapconn, $prefix . $escapedusername . $suffix, $password);
         } else {
             // in search and bind mode we first do a LDAP search from the username given
             // to foind the userDN and then we procced to the bind operation
@@ -505,9 +508,9 @@ class AuthLDAP extends LimeSurvey\PluginManager\AuthPluginBase
             }
             // Now prepare the search fitler
             if ($extrauserfilter != "") {
-                $usersearchfilter = "(&($searchuserattribute=$username)$extrauserfilter)";
+                $usersearchfilter = "(&($searchuserattribute=$escapedusername)$extrauserfilter)";
             } else {
-                $usersearchfilter = "($searchuserattribute=$username)";
+                $usersearchfilter = "($searchuserattribute=$escapedusername)";
             }
             // Search for the user
             $userentry = false;
@@ -530,7 +533,7 @@ class AuthLDAP extends LimeSurvey\PluginManager\AuthPluginBase
             // If specified, check group membership
             if ($groupsearchbase != '' && $groupsearchfilter != '') {
                 $keywords = array('$username', '$userdn');
-                $substitutions = array($username, ldap_escape($userdn, "", LDAP_ESCAPE_FILTER));
+                $substitutions = array($escapedusername, ldap_escape($userdn, "", LDAP_ESCAPE_FILTER));
                 $filter = str_replace($keywords, $substitutions, $groupsearchfilter);
                 $groupsearchres = ldap_search($ldapconn, $groupsearchbase, $filter);
                 $grouprescount = ldap_count_entries($ldapconn, $groupsearchres);
