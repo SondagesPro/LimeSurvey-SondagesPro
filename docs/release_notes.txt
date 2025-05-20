@@ -34,6 +34,15 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
+Changes from 5.6.78 (SondagesPro) to 5.6.19 (SondagesPro) may 20, 2025
+- Fixed issue [security] #20068: LDAP Injection Vulnerability in AuthLDAP
+- Fixed issue #20080: Disable plugins without way to alert administrator
+- Fixed issue #20058: Can't retreive a file uploaded with RC api
+- Fixed issue #20065: [security] SQL_Injection in central participant management
+- Fixed issue #20032: PHP Error When Importing Participants From CSV
+- Fixed issue #20030: Import LDAP - Can't connect LDAP Server with ldapv3 and ldpaps
+
+------------------------------------------------------
 Changes from 5.6.77 (SondagesPro) to 5.6.78 (SondagesPro) april 04, 2025
 - Fixed issue #19750: [security] Server-Side Request Forgery attack on SPSS export style settings
 - Fixed issue #19694: [security] Update jQuery UI
