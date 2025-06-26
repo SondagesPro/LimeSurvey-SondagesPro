@@ -34,7 +34,18 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
-Changes from 5.6.78 (SondagesPro) to 5.6.19 (SondagesPro) may 20, 2025
+Changes from 5.6.79 (SondagesPro) to 5.6.80 (SondagesPro) june 16, 2025
+- Fixed issue [security] #20098: Potentially sensitive information exposed to public
+- Fixed issue #20090: Return 1st existing surey with specific link
+- Fixed issue #20096: Confirmation and notification email not sent if multiple participants/email addresses are used
+- Fixed issue #20091: Eternal redirections
+- Fixed issue [security] #20144: Unsafe unserialize leads to remote code execution
+- Fixed issue #18229: Faulty message on numeric questions
+- Fixed issue #20117: Better error return in get_site_settings
+- Fixed issue #20145: [Security] SQL injection in statistics (thanks to AnNguyen)
+
+------------------------------------------------------
+Changes from 5.6.78 (SondagesPro) to 5.6.79 (SondagesPro) may 20, 2025
 - Fixed issue [security] #20068: LDAP Injection Vulnerability in AuthLDAP
 - Fixed issue #20080: Disable plugins without way to alert administrator
 - Fixed issue #20058: Can't retreive a file uploaded with RC api
