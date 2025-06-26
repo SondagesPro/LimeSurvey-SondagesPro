@@ -974,7 +974,7 @@ class LimeMailer extends \PHPMailer\PHPMailer\PHPMailer
     {
         $aOutList = [];
         if (!is_array($aEmailAddressList)) {
-            $aEmailAddressList = explode(';', $aEmailAddressList);
+            $aEmailAddressList = preg_split("/(,|;)/", (string) $aEmailAddressList);
         }
 
         foreach ($aEmailAddressList as $sEmailAddress) {
