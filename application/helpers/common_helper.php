@@ -4746,16 +4746,19 @@ function decodeTokenAttributes($oTokenAttributeData)
         return array();
     }
     if (substr($oTokenAttributeData, 0, 1) != '{' && substr($oTokenAttributeData, 0, 1) != '[') {
+        if (!App()->getConfig('allow_unserialize_attributedescriptions')) {
+            return array();
+        }
+        // minimal broken securisation, mantis issue #20144
         $sSerialType = getSerialClass($oTokenAttributeData);
         if ($sSerialType == 'array') {
-// Safe to decode
-            $aReturnData = @unserialize($oTokenAttributeData);
+            $aReturnData = @unserialize($oTokenAttributeData, ["allowed_classes" => false]);
         } else {
-// Something else, might be unsafe
+            // Something else, sure it's unsafe
             return array();
         }
     } else {
-            $aReturnData = @json_decode($oTokenAttributeData, true);
+        $aReturnData = @json_decode($oTokenAttributeData, true);
     }
     if ($aReturnData === false || $aReturnData === null) {
         return array();
