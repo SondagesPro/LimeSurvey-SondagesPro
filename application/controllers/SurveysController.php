@@ -117,6 +117,9 @@ class SurveysController extends LSYii_Controller
             // Never show email by default
             $admin = CHtml::mailto(App()->getConfig('siteadminname'), App()->getConfig('siteadminemail'));
         }
+        if (!YII_DEBUG && !\Permission::model()->hasGlobalPermission("superadmin") && isset($error['type']) && $error['type'] == 'CDbException') {
+            $error['message'] = gT('Database error!');
+        }
         $contact = sprintf(gT('If you think this is a server error, please contact %s.'), $admin);
         switch ($error['code']) {
             case '400':
