@@ -40,8 +40,9 @@ class OptinController extends LSYii_Controller
         $accessToken = Token::sanitizeToken(Yii::app()->request->getQuery('token'));
 
         //IF there is no survey id, redirect back to the default public page
-        if (!$surveyId) {
-            $this->redirect(['/']);
+
+        if (!$surveyId || strval(intval($surveyId)) !== strval($surveyId) || !$accessToken) {
+            throw new CHttpException(400, gT('Invalid request.'));
         }
 
         $survey = Survey::model()->findByPk($surveyId);
