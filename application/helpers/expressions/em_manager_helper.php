@@ -6395,8 +6395,8 @@ class LimeExpressionManager
         $sgqas = explode('|', $LEM->qid2code[$qid]); /* Must remove all session alert, even if irrelevant or hidden */
         foreach ($sgqas as $sgqa) {
             $validityString = self::getValidityString($sgqa);
-            if ($validityString && $qrel && !$qhidden) {
-                /* Add the string to be showned , no js error or another class ? */
+            /* Add the string if current question is valid and not hidde and relevant */
+            if ($validityString && $qrel && !$qhidden && $qvalid) {
                 $stringToParse .= App()->twigRenderer->renderPartial(
                     '/survey/questions/question_help/error_tip.twig',
                     [
