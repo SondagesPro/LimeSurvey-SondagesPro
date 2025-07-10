@@ -325,7 +325,7 @@ class Index extends CAction
         }
 
         //GET BASIC INFORMATION ABOUT THIS SURVEY
-        $thissurvey = getSurveyInfo($surveyid, $_SESSION['survey_' . $surveyid]['s_lang']);
+        $thissurvey = getSurveyInfo($surveyid, $sDisplayLanguage);
         EmCacheHelper::init($thissurvey);
         /* Unsure it still work, and surely better in afterFindSurvey */
         if (!is_null($beforeSurveyPageEvent->get('template'))) {
