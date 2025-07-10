@@ -54,12 +54,12 @@ class ExportSurveyResultsService
     /**
      * Root function for any export results action
      *
-     * @param mixed $iSurveyId
-     * @param mixed $sLanguageCode
+     * @param integer $iSurveyId
+     * @param string $sLanguageCode
      * @param string $sExportPlugin Type of export
      * @param FormattingOptions $oOptions
      * @param string $sFilter
-     * @return
+     * @return mixed
      * @throws Exception
      */
     function exportResponses($iSurveyId, $sLanguageCode, $sExportPlugin, FormattingOptions $oOptions, $sFilter = '')
@@ -104,17 +104,23 @@ class ExportSurveyResultsService
         $survey = $surveyDao->loadSurveyById($iSurveyId, $sLanguageCode, $oOptions);
         $writer->init($survey, $sLanguageCode, $oOptions);
 
-        $countResponsesCommand = $surveyDao->loadSurveyResults($survey, $oOptions->responseMinRecord, $oOptions->responseMaxRecord, $sFilter, $oOptions->responseCompletionState, $oOptions->selectedColumns, $oOptions->aResponses);
-        $countResponsesCommand->order = null;
-        $countResponsesCommand->select('count(*)');
-        $responseCount = $countResponsesCommand->queryScalar();
-        $maxRows = 100;
-        $maxPages = ceil($responseCount / $maxRows);
-        for ($i = 0; $i < $maxPages; $i++) {
-            $offset = $i * $maxRows;
+        $maxRows = intval(App()->getConfig('exportResponsesMaxRows', 100));
+        if ($maxRows > 0) {
+            $countResponsesCommand = $surveyDao->loadSurveyResults($survey, $oOptions->responseMinRecord, $oOptions->responseMaxRecord, $sFilter, $oOptions->responseCompletionState, $oOptions->selectedColumns, $oOptions->aResponses);
+            $countResponsesCommand->order = null;
+            $countResponsesCommand->select('count(*)');
+            $responseCount = $countResponsesCommand->queryScalar();
+            $maxPages = ceil($responseCount / $maxRows);
+            for ($i = 0; $i < $maxPages; $i++) {
+                $offset = $i * $maxRows;
+                $responsesQuery = $surveyDao->loadSurveyResults($survey, $oOptions->responseMinRecord, $oOptions->responseMaxRecord, $sFilter, $oOptions->responseCompletionState, $oOptions->selectedColumns, $oOptions->aResponses);
+                $responsesQuery->offset($offset);
+                $responsesQuery->limit($maxRows);
+                $survey->responses = $responsesQuery->query();
+                $writer->write($survey, $sLanguageCode, $oOptions, true);
+            }
+        } else {
             $responsesQuery = $surveyDao->loadSurveyResults($survey, $oOptions->responseMinRecord, $oOptions->responseMaxRecord, $sFilter, $oOptions->responseCompletionState, $oOptions->selectedColumns, $oOptions->aResponses);
-            $responsesQuery->offset($offset);
-            $responsesQuery->limit($maxRows);
             $survey->responses = $responsesQuery->query();
             $writer->write($survey, $sLanguageCode, $oOptions, true);
         }
