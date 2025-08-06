@@ -21,17 +21,10 @@ if (!defined('YII_DEBUG')) {
         if ($settings['config']['debug'] > 0) {
             define('YII_DEBUG', true);
             if ($settings['config']['debug'] > 1) {
-                error_reporting(E_ALL);
-
+                // Know deprecated issue with php8.1 and up
+                error_reporting(E_ALL & ~E_DEPRECATED);
                 // @see https://manual.limesurvey.org/Code_quality_guide#Assertions
-                assert_options(ASSERT_ACTIVE, true);
-                assert_options(ASSERT_WARNING, false);
-                assert_options(
-                    ASSERT_CALLBACK,
-                    function ($file, $line, $assertion, $message) {
-                        throw new Exception("The assertion $assertion in $file on line $line has failed: $message");
-                    }
-                );
+                @ini_set('zend.assertions', 1);
             } else {
                 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
             }
