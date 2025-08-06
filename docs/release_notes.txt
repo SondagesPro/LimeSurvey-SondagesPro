@@ -34,6 +34,10 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
+Changes from 5.6.80 (SondagesPro) to 5.6.81 (SondagesPro) august 6, 2025
+- Fixed issue : allow to disable maxrows when export responses
+- Fixed issue : Allow depug with PHP8.2 and up
+
 Changes from 5.6.79 (SondagesPro) to 5.6.80 (SondagesPro) june 16, 2025
 - Fixed issue [security] #20098: Potentially sensitive information exposed to public
 - Fixed issue #20090: Return 1st existing surey with specific link
