@@ -34,7 +34,7 @@ class LSjsonRPCServer extends jsonRPCServer
                                 );
         } else {
             try {
-                $result = @call_user_func_array(array($object, $request['method']), $request['params']);
+                $result = @call_user_func_array(array($object, $request['method']), array_values($request['params']));
                 if ($result !== false) {
                     $response = array(
                                         'id' => $request['id'],
