@@ -518,10 +518,12 @@ function sendSubmitNotifications($surveyid, array $emails = [], bool $return = f
                 $notificationRecipient = $sRecipient['recipient'];
                 $emailLanguage = $sRecipient['language'];
                 $aReplacementVars['ANSWERTABLE'] = getResponseTableReplacement($surveyid, $responseId, $emailLanguage, $bIsHTML);
+                $aReplacementVars['EDITRESPONSEURL'] = App()->getController()->createAbsoluteUrl("/admin/dataentry/sa/editdata/subaction/edit/surveyid/{$surveyid}/id/{$responseId}");
+                $aReplacementVars['VIEWRESPONSEURL'] = App()->getController()->createAbsoluteUrl("responses/view/", ['surveyId' => $surveyid, 'id' => $responseId]);
                 LimeExpressionManager::updateReplacementFields($aReplacementVars);
                 $mailer->setTypeWithRaw('admin_notification', $emailLanguage);
                 $mailer->setTo($notificationRecipient);
-                $mailerSuccess = $mailer->resend(json_decode($sRecipient['resendVars'],true));
+                $mailerSuccess = $mailer->SendMessage();
             } else {
                 $failedNotificationId = null;
                 $notificationRecipient = $sRecipient;
