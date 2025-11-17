@@ -47,7 +47,6 @@ echo viewHelper::getViewTestTag('surveyResponsesBrowse');
                             );
                             ?>
                             <input type="hidden" name="surveyid" value="<?= $surveyid ?>"/>
-                            <input type="hidden" name="<?= Yii::app()->request->csrfTokenName ?>" value="<?= Yii::app()->request->csrfToken ?>"/>
                             <input type="submit" class="hidden" name="submit" value="submit"/>
                         </div>
                     </form>

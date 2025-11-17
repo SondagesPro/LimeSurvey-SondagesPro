@@ -46,8 +46,8 @@ $scriptVariables = [
         'truncationWarning'       => gT('Warning: Some answer codes will be truncated.', 'js'),
     ],
     'csrf' => [
-        'tokenName'               => Yii::app()->request->csrfTokenName,
-        'token'                   => Yii::app()->request->csrfToken,
+        'tokenName'               => CHtml::encode(Yii::app()->request->csrfTokenName),
+        'token'                   => CHtml::encode(Yii::app()->request->csrfToken),
     ],
     'checkQuestionValidateTitleURL' =>  Yii::app()->createUrl('questionAdministration/checkQuestionValidateTitle'),
     'checkSubquestionCodeIsUniqueURL' =>  Yii::app()->createUrl('questionAdministration/checkSubquestionCodeUniqueness'),
