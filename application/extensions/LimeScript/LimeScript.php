@@ -20,6 +20,7 @@
             $data['language']                   = Yii::app()->language;
             $data['replacementFields']['path']  = App()->createUrl("limereplacementfields/index");
             $json = json_encode($data, JSON_FORCE_OBJECT);
+            $script = "LS.data = $json;\n";
             App()->getClientScript()->registerScript('LimeScript', $script, CClientScript::POS_HEAD);
         }
     }
