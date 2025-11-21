@@ -63,7 +63,19 @@ class CreateQuestionTest extends TestBaseClassWeb
             $web = self::$webDriver;
             $web->get($url);
             sleep(1);
-
+            // Ignore password warning.
+            try {
+                $button = self::$webDriver->wait(1)->until(
+                    WebDriverExpectedCondition::elementToBeClickable(
+                        WebDriverBy::cssSelector('#admin-notification-modal button.btn-default')
+                    )
+                );
+                $button->click();
+            } catch (TimeOutException $ex) {
+                // Do nothing.
+            } catch (NoSuchElementException $ex) {
+                // Do nothing.
+            }
             // Go to structure sidebar
             $selectStructureSidebar = $web->findById('adminsidepanel__sidebar--selectorStructureButton');
             $selectStructureSidebar->click();
