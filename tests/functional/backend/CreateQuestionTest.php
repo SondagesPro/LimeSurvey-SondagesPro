@@ -62,7 +62,6 @@ class CreateQuestionTest extends TestBaseClassWeb
             );
             $web = self::$webDriver;
             $web->get($url);
-            sleep(1);
             // Ignore password warning.
             try {
                 $button = self::$webDriver->wait(1)->until(
@@ -76,6 +75,8 @@ class CreateQuestionTest extends TestBaseClassWeb
             } catch (NoSuchElementException $ex) {
                 // Do nothing.
             }
+            sleep(2);
+
             // Go to structure sidebar
             $selectStructureSidebar = $web->findById('adminsidepanel__sidebar--selectorStructureButton');
             $selectStructureSidebar->click();
