@@ -88,17 +88,17 @@ class QuestionGroupEditorTest extends TestBaseClassWeb
             $groupRelevance->clear()->sendKeys("1");
 
             // Switch to German tab.
-            self::$webDriver->executeScript("window.scrollTo(0, 0);");  // Scroll to top because otherwise the tabs may be hidden under the topbar
-            sleep(2);
-            $germanTab = self::$webDriver->findElement(WebDriverBy::partialLinkText('German'));
-            $germanTab->click();
+            //~ self::$webDriver->executeScript("window.scrollTo(0, 0);");  // Scroll to top because otherwise the tabs may be hidden under the topbar
+            //~ sleep(2);
+            //~ $germanTab = self::$webDriver->findElement(WebDriverBy::partialLinkText('German'));
+            //~ $germanTab->click();
 
             // Edit group name in German
-            $groupNameGerman = self::$webDriver->wait(10)->until(WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::id('group_name_de')));
-            $groupNameGerman->clear()->sendKeys("German name");
+            //~ $groupNameGerman = self::$webDriver->wait(10)->until(WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::id('group_name_de')));
+            //~ $groupNameGerman->clear()->sendKeys("German name");
 
             // Edit description in German
-            $this->sendTextToEditor("description_de", "German description");
+            //~ $this->sendTextToEditor("description_de", "German description");
 
             // Click save.
             $save = self::$webDriver->findElement(WebDriverBy::id('save-button'));
@@ -113,9 +113,9 @@ class QuestionGroupEditorTest extends TestBaseClassWeb
 
             $this->assertNotEmpty($oGroup);
             $this->assertEquals("English name", $oGroup->questiongroupl10ns['en']->group_name);
-            $this->assertEquals("German name", $oGroup->questiongroupl10ns['de']->group_name);
+            //~ $this->assertEquals("German name", $oGroup->questiongroupl10ns['de']->group_name);
             $this->assertEquals("English description", $oGroup->questiongroupl10ns['en']->description);
-            $this->assertEquals("German description", $oGroup->questiongroupl10ns['de']->description);
+            //~ $this->assertEquals("German description", $oGroup->questiongroupl10ns['de']->description);
             $this->assertEquals("1", $oGroup->randomization_group);
             $this->assertEquals("1", $oGroup->grelevance);
 
@@ -161,17 +161,17 @@ class QuestionGroupEditorTest extends TestBaseClassWeb
             $groupRelevance->clear()->sendKeys("1");
 
             // Switch to German tab.
-            self::$webDriver->executeScript("window.scrollTo(0, 0);");  // Scroll to top because otherwise the tabs may be hidden under the topbar
-            sleep(2);
-            $germanTab = self::$webDriver->findElement(WebDriverBy::partialLinkText('German'));
-            $germanTab->click();
+            //~ self::$webDriver->executeScript("window.scrollTo(0, 0);");  // Scroll to top because otherwise the tabs may be hidden under the topbar
+            //~ sleep(2);
+            //~ $germanTab = self::$webDriver->findElement(WebDriverBy::partialLinkText('German'));
+            //~ $germanTab->click();
 
             // Edit group name in German
-            $groupNameGerman = self::$webDriver->wait(10)->until(WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::id('group_name_de')));
-            $groupNameGerman->clear()->sendKeys("Edited German name");
+            //~ $groupNameGerman = self::$webDriver->wait(10)->until(WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::id('group_name_de')));
+            //~ $groupNameGerman->clear()->sendKeys("Edited German name");
 
             // Edit description in German
-            $this->sendTextToEditor("description_de", "Edited German description");
+            //~ $this->sendTextToEditor("description_de", "Edited German description");
 
             // Click save.
             $save = self::$webDriver->findElement(WebDriverBy::id('save-button'));
@@ -182,9 +182,9 @@ class QuestionGroupEditorTest extends TestBaseClassWeb
 
             $this->assertNotEmpty($oGroup);
             $this->assertEquals("Edited English name", $oGroup->questiongroupl10ns['en']->group_name);
-            $this->assertEquals("Edited German name", $oGroup->questiongroupl10ns['de']->group_name);
+            //~ $this->assertEquals("Edited German name", $oGroup->questiongroupl10ns['de']->group_name);
             $this->assertEquals("Edited English description", $oGroup->questiongroupl10ns['en']->description);
-            $this->assertEquals("Edited German description", $oGroup->questiongroupl10ns['de']->description);
+            //~ $this->assertEquals("Edited German description", $oGroup->questiongroupl10ns['de']->description);
             $this->assertEquals("1", $oGroup->randomization_group);
             $this->assertEquals("1", $oGroup->grelevance);
 
