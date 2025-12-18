@@ -8,6 +8,8 @@ Advanced features like branching and multiple question types make it a valuable 
 
 **This is an unoffical fork of LimeSurvey, use at your own risk**
 
+**Regarding security**: we try to fix all known security vulnerabilities. Given the version of twig, there are no plans to fix minor security vulnerabilities that require access to the template editor. As a reminder, accessing the template editor allows you to add any JavaScript functionality, including scripts with cross-site scripting attacks.
+
 ## How to install
 
 5.X branch are maintain on github, [see official LimeSurvey manual](https://manual.limesurvey.org/Installation_-_LimeSurvey_CE/en).
@@ -24,7 +26,7 @@ The absolute minimal requirements are:
 ### Recommended
 We recommend the following setup
  - Web server: nginx (most recent stable version)
- - PHP <= 8.0 (For php up to 8.0: debug mode muts not be activated. Bugs with php higher than 8.0 will not be fixed. Only pull request bugs will be taken into account.)
+ - PHP >= 7.4
     - with php-fpm, mbstring, gd2 with freetype, imap, ldap, zip, zlib and database drivers
  - MariaDB or MySQL (most recent stable version)
 
@@ -35,12 +37,3 @@ for more information please refer to our [homepage](http://www.limesurvey.org), 
 LimeSurvey software is licensed under the [GPL 2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html), or at your choice any later version of the license.
 
 Pictures and the LimeSurvey Logo are registered trademarks of LimeSurvey GmbH, Hamburg, Germany.
-
-## Tools used
-We are using BrowserStack to run manual tests on different browsers and devices
-
-[![](https://raw.githubusercontent.com/LimeSurvey/LimeSurvey/master/docs/contributions/browserstack-logo.png "Checkout BrowserStack")](https://www.browserstack.com/)
-
-We are using Github Actions to run automated tests before release.
-
-![Main workflow](https://github.com/LimeSurvey/LimeSurvey/actions/workflows/main.yml/badge.svg)
