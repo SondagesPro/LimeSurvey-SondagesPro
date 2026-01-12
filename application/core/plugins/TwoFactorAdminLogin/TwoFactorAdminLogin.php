@@ -65,6 +65,16 @@ class TwoFactorAdminLogin extends AuthPluginBase
             ],
             'help' => 'Please keep in mind, that most tools only work with SHA1 hashing.'
         ),
+        'SecretLength' => array(
+            'type' => 'int',
+            'label' => 'Secret length',
+            'default' => '',
+            'htmlOptions' => [
+                'min' => 128,
+                'placeholder' => 128
+            ],
+            'help' => 'Length of the secret in bits. Minimum and default are 128.'
+        ),
         'force2fa' => array(
             'type' => 'select',
             'label' => 'Force 2FA on login',
@@ -332,7 +342,11 @@ class TwoFactorAdminLogin extends AuthPluginBase
         $o2FA = $this->get2FAObject();
 
         $oTFAModel->uid = $iUserId;
-        $oTFAModel->secretKey = $o2FA->createSecret();
+        $SecretLength = intval($this->get('SecretLength', null, null, ''));
+        if ($SecretLength < 128) {
+            $SecretLength = 128;
+        }
+        $oTFAModel->secretKey = $o2FA->createSecret($SecretLength);
         $sQRCodeContent = '<img src="' . $o2FA->getQRCodeImageAsDataUri('LimeSurvey - User ID: ' . Yii::app()->user->id, $oTFAModel->secretKey) . '">';
 
         return $this->renderPartial('_partial/create', [
