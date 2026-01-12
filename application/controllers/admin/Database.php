@@ -119,7 +119,7 @@ class Database extends SurveyCommonAction
         if ($sAction == "updatedefaultvalues" && Permission::model()->hasSurveyPermission($this->iSurveyID, 'surveycontent', 'update')) {
             $this->actionUpdateDefaultValues($this->iSurveyID);
         }
-        if (($sAction == "updatesurveylocalesettings") && (Permission::model()->hasSurveyPermission($this->iSurveyID, 'surveylocale', 'update') || Permission::model()->hasSurveyPermission($iSurveyID, 'surveysettings', 'update'))) {
+        if (($sAction == "updatesurveylocalesettings") && (Permission::model()->hasSurveyPermission($this->iSurveyID, 'surveylocale', 'update') || Permission::model()->hasSurveyPermission($this->iSurveyID, 'surveysettings', 'update'))) {
             $this->actionUpdateSurveyLocaleSettings($this->iSurveyID);
         }
         if (

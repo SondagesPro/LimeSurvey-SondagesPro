@@ -265,6 +265,9 @@ class viewHelper
     public static function purified($sHtml)
     {
         $oPurifier = new CHtmlPurifier();
+        $oPurifier->options = array(
+            'Attr.AllowedFrameTargets' => array('_blank', '_self', '_top'),
+        );
         return $oPurifier->purify($sHtml);
     }
 
