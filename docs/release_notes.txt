@@ -34,16 +34,18 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
+Changes from 5.6.84 (SondagesPro) to 5.6.85 (SondagesPro) January 26, 2026
+Fixed issue [security] #20366: TwoFactorAdminLogin should create secret with minimum 128 bits
+Fixed issue [security] #20390: Prevent XSS phishing by navigating browser tabs
+
 Changes from 5.6.83 (SondagesPro) to 5.6.84 (SondagesPro) December 18, 2025
 Fixed issue [security] #20388: User with "update surveys" can delete surveys
 Fixed issue [security] Update to twig 1.44.8
 Fixed issue [security] #20384: XSS Vulnerability in question editor
 
-------------------------------------------------------
 Changes from 5.6.82 (SondagesPro) to 5.6.83 (SondagesPro) November 24, 2025
 - Fixed issue : Fix test
 
-------------------------------------------------------
 Changes from 5.6.81 (SondagesPro) to 5.6.82 (SondagesPro) November 17, 2025
 - Fixed issue [security]  #20271: Reflected XSS with csrfToken cookie value
 - Fixed issue : unable to send failed notification email
