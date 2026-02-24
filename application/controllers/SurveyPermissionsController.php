@@ -62,7 +62,7 @@ class SurveyPermissionsController extends LSBaseController
             $this->redirect(Yii::app()->request->urlReferrer);
         }
         App()->getClientScript()->registerPackage('jquery-tablesorter');
-        App()->getClientScript()->registerScriptFile(App()->getConfig('adminscripts') . 'surveypermissions.js');
+        App()->getClientScript()->registerScriptFile(App()->getConfig('adminscripts') . 'surveypermissions.js', CClientScript::POS_END);
         $oSurvey = Survey::model()->findByPk($surveyid);
         $aData['surveyid'] = $surveyid;
         $aData['sidemenu']['state'] = false;
