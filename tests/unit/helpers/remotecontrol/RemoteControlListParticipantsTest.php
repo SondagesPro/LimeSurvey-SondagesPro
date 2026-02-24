@@ -94,7 +94,7 @@ class RemoteControlListParticipantsTest extends TestBaseClass
             ]
         ];
         if (!empty($list['status'])) {
-            $this->assertEquals($expected, $list, "Return value are invalid, status:: " . $list['status']);
+            $this->assertEquals($expected, $list, "Return value are invalid, status: " . $list['status']);
         }
         $this->assertEquals($expected, $list, "Return value are invalid: " .print_r($list,true));
     }
@@ -156,7 +156,10 @@ class RemoteControlListParticipantsTest extends TestBaseClass
 
         ];
 
-        $this->assertEquals($expected, $list);
+        if (!empty($list['status'])) {
+            $this->assertEquals($expected, $list, "Return value are invalid, status: " . $list['status']);
+        }
+        $this->assertEquals($expected, $list, "Return value are invalid: " .print_r($list,true));
     }
 
 
@@ -196,8 +199,10 @@ class RemoteControlListParticipantsTest extends TestBaseClass
         $expected = [
             'status' => 'No survey participants found.'
         ];
-
-        $this->assertEquals($expected, $list);
+        if (!empty($list['status'])) {
+            $this->assertEquals($expected, $list, "Return value are invalid, status: " . $list['status']);
+        }
+        $this->assertEquals($expected, $list, "Return value are invalid: " .print_r($list,true));
     }
 
     /**
@@ -237,7 +242,10 @@ class RemoteControlListParticipantsTest extends TestBaseClass
             'status' => 'Illegal operator: !'
         ];
 
-        $this->assertEquals($expected, $list);
+        if (!empty($list['status'])) {
+            $this->assertEquals($expected, $list, "Return value are invalid, status: " . $list['status']);
+        }
+        $this->assertEquals($expected, $list, "Return value are invalid: " .print_r($list,true));
     }
 
     /**
@@ -312,8 +320,10 @@ class RemoteControlListParticipantsTest extends TestBaseClass
             ]
         ];
 
-        $this->assertEquals($expected, $list);
-
+        if (!empty($list['status'])) {
+            $this->assertEquals($expected, $list, "Return value are invalid, status: " . $list['status']);
+        }
+        $this->assertEquals($expected, $list, "Return value are invalid: " .print_r($list,true));
         // As above but with future date.
 
         /** @var array */
@@ -332,8 +342,10 @@ class RemoteControlListParticipantsTest extends TestBaseClass
             'status' => 'No survey participants found.'
         ];
 
-        $this->assertEquals($expected, $list);
-
+        if (!empty($list['status'])) {
+            $this->assertEquals($expected, $list, "Return value are invalid, status: " . $list['status']);
+        }
+        $this->assertEquals($expected, $list, "Return value are invalid: " .print_r($list,true));
         /** @var array */
         $list = $handler->list_participants(
             $sessionKey,
