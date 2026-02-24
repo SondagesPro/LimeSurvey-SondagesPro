@@ -2225,10 +2225,12 @@ class remotecontrol_handle
      * @param int  $iLimit Number of participants to return
      * @param bool $bUnused If you want unused tokens, set true
      * @param bool|array $aAttributes The extented attributes that we want
-     * @param array $aConditions Optional conditions to limit the list, either as a key=>value array for simple comparisons
-     *              or as key=>array(operator,value[,value[...]]) using an operator.
-     *              Valid operators are  ['<', '>', '>=', '<=', '=', '<>', 'LIKE', 'IN']
-     *              Only the IN operator allows for several values. The same key can be used several times.
+     * @param array $aConditions Optional conditions to limit the list, either as a
+     *              key => value if key is an integer : value is used as comparaison string : sample ['tid = 2']
+     *              key=>value search value in column key  : sample ['tid' => '2']
+     *              key=>array(operator,value[,value[...]]) using an operator : sample ['tid'=>['=','2']]
+     *                  Valid operators are  ['<', '>', '>=', '<=', '=', '<>', 'LIKE', 'IN']
+     *                  Only the IN operator allows for several values.
      *              All conditions are connected by AND.
      * @return array The list of tokens
      */
@@ -2253,45 +2255,15 @@ class remotecontrol_handle
                 $oCriteria->order = 'tid';
                 $oCriteria->limit = $iLimit;
                 $oCriteria->compare('tid', '>=' . $iStart);
-
-                $aAttributeValues = array();
-                if (count($aConditions) > 0) {
-                    $aConditionFields = array_flip(Token::model($iSurveyID)->getMetaData()->tableSchema->columnNames);
-                    // NB: $valueOrTuple is either a value or tuple like [$operator, $value].                 
-                    foreach ($aConditions as $columnName => $valueOrTuple) {
-                        if (is_array($valueOrTuple)) {
-                            /** @var string[] List of operators allowed in query. */
-                            $allowedOperators = ['<', '>', '>=', '<=', '=', '<>', 'LIKE', 'IN'];
-                            /** @var string */
-                            $operator = $valueOrTuple[0];
-                            if (!in_array($operator, $allowedOperators)) {
-                                return array('status' => 'Illegal operator: ' . $operator);
-                            } elseif ($operator === 'LIKE') {
-                                /** @var mixed */
-                                $value = $valueOrTuple[1];
-                                $oCriteria->addSearchCondition($columnName, $value);
-                            } elseif ($operator === 'IN') {
-                                /** @var mixed */
-                                $values = array_slice($valueOrTuple, 1);
-                                $oCriteria->addInCondition($columnName, $values);
-                            } else {
-                                /** @var mixed */
-                                $value = $valueOrTuple[1];
-                                $oCriteria->compare($columnName, $operator . $value);
-                            }
-                        } elseif (is_string($valueOrTuple) || is_null($valueOrTuple)) {
-                            if (array_key_exists($columnName, $aConditionFields)) {
-                                $aAttributeValues[$columnName] = $valueOrTuple;
-                            }
-                        } else {
-                            // Silent ignore?
-                        }
-                    }
+                $addConditionError = $this->addConditionsToCriteria(Token::model($iSurveyID), $oCriteria, $aConditions);
+                if (is_string($addConditionError)) {
+                    return array('status' => $addConditionError);
                 }
+
                 if ($bUnused) {
-                    $oTokens = Token::model($iSurveyID)->incomplete()->findAllByAttributes($aAttributeValues, $oCriteria);
+                    $oTokens = Token::model($iSurveyID)->incomplete()->findAll($oCriteria);
                 } else {
-                    $oTokens = Token::model($iSurveyID)->findAllByAttributes($aAttributeValues, $oCriteria);
+                    $oTokens = Token::model($iSurveyID)->findAll($oCriteria);
                 }
 
                 if (count($oTokens) == 0) {
@@ -2670,7 +2642,13 @@ class remotecontrol_handle
      * @access public
      * @param string $sSessionKey Auth credentials
      * @param int $iSurveyID ID of the Survey that participants belong
-     * @param array $overrideAllConditions replace the default conditions
+     * @param array $overrideAllConditions replace the default conditions, either as a
+     *              key => value if key is an integer : value is used as comparaison string : sample ['tid = 2']
+     *              key=>value search value in column key  : sample ['tid' => '2']
+     *              key=>array(operator,value[,value[...]]) using an operator : sample ['tid'=>['=','2']]
+     *                  Valid operators are  ['<', '>', '>=', '<=', '=', '<>', 'LIKE', 'IN']
+     *                  Only the IN operator allows for several values.
+     *              All conditions are connected by AND.
      * @return array Result of the action
      */
     public function mail_registered_participants($sSessionKey, $iSurveyID, $overrideAllConditions = array())
@@ -2693,8 +2671,9 @@ class remotecontrol_handle
             $command = new CDbCriteria();
             $command->condition = '';
             if (count($overrideAllConditions)) {
-                foreach ($overrideAllConditions as $condition) {
-                    $command->addCondition($condition);
+                $addConditionError = $this->addConditionsToCriteria(Token::model($iSurveyID), $command, $overrideAllConditions);
+                if (is_string($addConditionError)) {
+                    return array('status' => $addConditionError);
                 }
             } else {
                 $sNow = date("Y-m-d H:i:s", strtotime(Yii::app()->getConfig('timeadjust'), strtotime(date("Y-m-d H:i:s"))));
@@ -3666,5 +3645,44 @@ class remotecontrol_handle
             return true;
         }
         return false;
+    }
+
+    /**
+     * Safely apply conditions to a CDbCriteria object.
+     * Hardens against SQL injection by validating column names.
+     * @param model $oModel : can be \Token or \Survey or anything else
+     * @param \LSDbCriteria $oCriteria
+     * @param array $aConditions conditions to limit the list, either as a
+     *              key => value if key is an integer : value is used as comparaison string : sample ['tid = 2']
+     *              key=>value search value in column key  : sample ['tid' => '2']
+     *              key=>array(operator,value[,value[...]]) using an operator : sample ['tid'=>['=','2']]
+     *                  Valid operators are  ['<', '>', '>=', '<=', '=', '<>', 'LIKE', 'IN']
+     *                  Only the IN operator allows for several values.
+     *              All conditions are connected by AND.
+     * @return null|string if string it's an error.
+     */
+    protected function addConditionsToCriteria($oModel, $oCriteria, $aConditions = [])
+    {
+        if (empty($aConditions)) {
+            return null;
+        }
+        foreach ($aConditions as $columnName => $valueOrTuple) {
+            /* Indexed element */
+            if (is_int($columnName)) {
+                try {
+                    $oCriteria->addSafeStringSearchCondition($oModel, $valueOrTuple);
+                } catch (Exception $e) {
+                    return $e->getMessage();
+                }
+            /* Associative element */
+            } else {
+                try {
+                    $oCriteria->addSafeStructuredSearchCondition($oModel, [$columnName => $valueOrTuple]);
+                } catch (Exception $e) {
+                    return $e->getMessage();
+                }
+            }
+        }
+        return null;
     }
 }
