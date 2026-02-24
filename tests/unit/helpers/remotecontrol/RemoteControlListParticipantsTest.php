@@ -239,7 +239,7 @@ class RemoteControlListParticipantsTest extends TestBaseClass
         );
 
         $expected = [
-            'status' => 'Illegal operator: !'
+            'status' => 'Illegal operator: ! for column validuntil'
         ];
 
         if (!empty($list['status'])) {
