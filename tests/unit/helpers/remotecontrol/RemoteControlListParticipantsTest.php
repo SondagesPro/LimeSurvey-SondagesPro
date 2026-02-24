@@ -93,8 +93,10 @@ class RemoteControlListParticipantsTest extends TestBaseClass
                 'validfrom' => "2020-03-18 15:12:00"
             ]
         ];
-
-        $this->assertEquals($expected, $list);
+        if (!empty($list['status'])) {
+            $this->assertEquals($expected, $list, "Return value are invalid, status:: " . $list['status']);
+        }
+        $this->assertEquals($expected, $list, "Return value are invalid: " .print_r($list,true));
     }
 
 
