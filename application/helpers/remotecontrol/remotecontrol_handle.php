@@ -2251,7 +2251,7 @@ class remotecontrol_handle
                 }
 
                 /** @var CDbCriteria mixed> Criteria used in final query below. */
-                $oCriteria = new CDbCriteria();
+                $oCriteria = new LSDbCriteria();
                 $oCriteria->order = 'tid';
                 $oCriteria->limit = $iLimit;
                 $oCriteria->compare('tid', '>=' . $iStart);
@@ -2668,7 +2668,7 @@ class remotecontrol_handle
                             return array('status' => 'Error: No survey participants table');
             }
 
-            $command = new CDbCriteria();
+            $command = new LSDbCriteria();
             $command->condition = '';
             if (count($overrideAllConditions)) {
                 $addConditionError = $this->addConditionsToCriteria(Token::model($iSurveyID), $command, $overrideAllConditions);
