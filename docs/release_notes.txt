@@ -34,6 +34,12 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
+Changes from 5.6.85 (SondagesPro) to 5.6.86 (SondagesPro) February 25, 2026
+New feature #16619: Allow get_uploaded_files() Remote function by response ID
+Fixed issue #20337: Cannot add a User Group to Survey Permissions unless at least one User is already added
+Fixed issue #20391: Spinner when trying to save survey settings
+Fixed issue #20424: [security] SQL Injection in RemoteControl API
+
 Changes from 5.6.84 (SondagesPro) to 5.6.85 (SondagesPro) January 26, 2026
 Fixed issue [security] #20366: TwoFactorAdminLogin should create secret with minimum 128 bits
 Fixed issue [security] #20390: Prevent XSS phishing by navigating browser tabs
