@@ -1426,13 +1426,11 @@ class Participant extends LSActiveRecord
             } else {
                 /* @var string[] available column name */
                 $columnNames = Participant::model()->attributeNames();
-                if (!in_array($sFieldname, $columnNames)) {
-                    // Skip invalid fieldname
-                    continue;
+                // Skip invalid fieldname
+                if (in_array($sFieldname, $columnNames)) {
+                    $command->addCondition(Yii::app()->db->quoteColumnName($sFieldname) . ' ' . $operator . ' ' . $param, $booloperator);
                 }
-                $command->addCondition(Yii::app()->db->quoteColumnName($sFieldname) . ' ' . $operator . ' ' . $param, $booloperator);
             }
-
             $i++;
         }
 
