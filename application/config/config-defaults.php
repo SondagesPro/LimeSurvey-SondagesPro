@@ -844,5 +844,11 @@ $config['passwordValidationRules'] = array(
 // @see https://www.php.net/unserialize
 $config['allow_unserialize_attributedescriptions'] = false;
 
+// Allow unserializing (with PHP unserialize function) attachments attributes when importing survey
+// In limesurvey 6.16.17 and SondagesPro version 5.6.87 : attachments attribute move from serialize to json_encode. If you need to keep attachment when import, you have to allow it
+// Warning: Unserialization can result in code being loaded and executed due to object instantiation and autoloading, and a malicious user may be able to exploit this.
+// @see https://www.php.net/unserialize
+$config['allow_unserialize_attachments'] = false;
+
 return $config;
 //settings deleted

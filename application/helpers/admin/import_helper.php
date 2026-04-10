@@ -1423,9 +1423,17 @@ function XMLImportSurvey($sFullFilePath, $sXMLdata = null, $sNewSurveyName = nul
         // Email attachments are with relative paths on the file, but are currently expected to be saved as absolute.
         // Transforming them from relative paths to absolute paths.
         if (!empty($insertdata['attachments'])) {
+            $attachments = @json_decode($insertdata['attachments'], true);
             // NOTE: Older LSS files have attachments as a serialized array, while newer ones have it as a JSON string.
             // Serialized attachments are not supported anymore.
-            $attachments = json_decode($insertdata['attachments'], true);
+            if (is_null($attachments)) {
+                if (App()->getConfig('allow_unserialize_attachments')) {
+                    $attachments = unserialize($insertdata['attachments'], ['allowed_classes' => false]);
+                    /* If it's a broken unserialize : it's NOT a wrongAttachmentsFormat, it's just invalid */
+                } else {
+                    $wrongAttachmentsFormat = true;
+                }
+            }
             if (!empty($attachments) && is_array($attachments)) {
                 $uploadDir = realpath(Yii::app()->getConfig('uploaddir'));
                 foreach ($attachments as &$template) {
@@ -1442,12 +1450,11 @@ function XMLImportSurvey($sFullFilePath, $sXMLdata = null, $sNewSurveyName = nul
                         $hasOldAttachments = true;
                     }
                 }
-            } elseif (is_null($attachments)) {
-                // JSON decode failed. Most probably the attachments were in the PHP serialization format.
-                $wrongAttachmentsFormat = true;
             }
-            $insertdata['attachments'] = serialize($attachments);
+            /* Set as json only if not empty */
+            $insertdata['attachments'] = !empty($attachments) ? json_encode($attachments) : "";
         }
+
 
         if (isset($insertdata['surveyls_attributecaptions']) && substr($insertdata['surveyls_attributecaptions'], 0, 1) != '{') {
             unset($insertdata['surveyls_attributecaptions']);
@@ -1455,7 +1462,7 @@ function XMLImportSurvey($sFullFilePath, $sXMLdata = null, $sNewSurveyName = nul
         $aColumns = SurveyLanguageSetting::model()->attributes;
         $insertdata = array_intersect_key($insertdata, $aColumns);
 
-        $surveyLanguageSetting = new SurveyLanguageSetting();
+        $surveyLanguageSetting = new SurveyLanguageSetting('import');
         $surveyLanguageSetting->setAttributes($insertdata, false);
         try {
             // Clear alias if it was already in use
@@ -2485,7 +2492,7 @@ function XMLImportResponses($sFullFilePath, $iSurveyID, $aFieldReMap = array())
                                 $results['responses']++;
                             } else {
                                 if (!empty($aInsertData['id'])) {
-                                    $results['warnings'][] = CHtml::errorSummary($response, "<div>" . sprintf(gT("Failed to save response data : response id %s"), 'unescaped'). "</div>");
+                                    $results['warnings'][] = CHtml::errorSummary($response, "<div>" . sprintf(gT("Failed to save response data : response id %s", 'unescaped'), $aInsertData['id']) . "</div>");
                                 } else {
                                     $results['warnings'][] = CHtml::errorSummary($response, "<div>" . gT("Failed to save response data : no response id") . "</div>");
                                 }
