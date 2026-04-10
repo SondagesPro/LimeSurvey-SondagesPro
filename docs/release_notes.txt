@@ -34,7 +34,8 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
-Changes from 5.6.86 (SondagesPro) to 5.6.87 (SondagesPro) April 10, 2026
+Changes from 5.6.86 (SondagesPro) to 5.6.88 (SondagesPro) April 10, 2026
+Changes from 5.6.86 (SondagesPro) to 5.6.87 (SondagesPro) (Do not use)
 - Fixed issue #20459: [security] SQL Injection in CPDB Participant Search (reported by podalirius)
 - Fixed issue #20458: [security] Unsafe php unserialize calls on attachements attribute (reported by podalirius)
 
