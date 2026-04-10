@@ -30,6 +30,8 @@ jobs:
       - name: Install specified PHP
         run: |
           sudo add-apt-repository ppa:ondrej/php
+          # avoid "Conflicting values set for option Signed-By" apt error
+          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
           sudo apt update
           sudo apt -y install php${{ matrix.php-versions }}
           sudo apt-get update > /dev/null
