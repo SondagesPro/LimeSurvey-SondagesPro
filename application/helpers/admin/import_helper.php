@@ -2492,7 +2492,7 @@ function XMLImportResponses($sFullFilePath, $iSurveyID, $aFieldReMap = array())
                                 $results['responses']++;
                             } else {
                                 if (!empty($aInsertData['id'])) {
-                                    $results['warnings'][] = CHtml::errorSummary($response, "<div>" . sprintf(gT("Failed to save response data : response id %s"), 'unescaped') . "</div>");
+                                    $results['warnings'][] = CHtml::errorSummary($response, "<div>" . sprintf(gT("Failed to save response data : response id %s", 'unescaped'), $aInsertData['id']) . "</div>");
                                 } else {
                                     $results['warnings'][] = CHtml::errorSummary($response, "<div>" . gT("Failed to save response data : no response id") . "</div>");
                                 }

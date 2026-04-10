@@ -18,7 +18,7 @@ class Update_500 extends DatabaseUpdateBase
             if (!empty($surveylanguage['attachments']) && substr($surveylanguage['attachments'], 0, 1) != '{' && substr($surveylanguage['attachments'], 0, 1) != '[') {
                 $sSerialType = getSerialClass($surveylanguage['attachments']);
                 if ($sSerialType == 'array') {
-                    $unserialized = unserialize($surveylanguage['attachments'], ["allowed_classes" => false]);
+                    $unserialized = @unserialize($surveylanguage['attachments'], ["allowed_classes" => false]);
                     if (empty($unserialized) || !is_array($unserialized)) {
                         /* Save broken as empty string */
                         $newAttachments = "";
