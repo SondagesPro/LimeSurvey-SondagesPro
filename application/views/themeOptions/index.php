@@ -197,8 +197,8 @@ echo viewHelper::getViewTestTag('templateOptions');
                                     <?php foreach ($oAdminTheme->adminThemeList as $oTheme) :?>
                                         <tr class="odd">
                                             <td class="col-md-1"><?php echo $oTheme->preview; ?></td>
-                                            <td class="col-md-2"><?php echo $oTheme->metadata->name; ?></td>
-                                            <td class="col-md-3"><?php echo $oTheme->metadata->description; ?></td>
+                                            <td class="col-md-2"><?php echo CHtml::encode($oTheme->metadata->name); ?></td>
+                                            <td class="col-md-3"><?php echo CHtml::encode($oTheme->metadata->description); ?></td>
                                             <td class="col-md-2"><?php eT('Core admin theme');?></td>
                                             <td class="col-md-1">
                                                 <?php if ($oTheme->path == getGlobalSetting('admintheme')) :?>
