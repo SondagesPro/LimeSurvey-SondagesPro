@@ -2589,7 +2589,7 @@ class QuestionAdministrationController extends LSBaseController
         }
 
         $originalRelevance = $oQuestion->relevance;
-
+        $originalTitle = $oQuestion->title;
         $oQuestion->setAttributes($aQuestionData, false);
         if ($oQuestion == null) {
             throw new LSUserException(
@@ -2616,8 +2616,29 @@ class QuestionAdministrationController extends LSBaseController
         if ($oQuestion->relevance != $originalRelevance && !empty($oQuestion->conditions)) {
             Condition::model()->deleteAllByAttributes(['qid' => $oQuestion->qid]);
         }
-
+        if ($oQuestion->title !== $originalTitle) {
+            $this->upgradeDependentQuestionRelevance($oQuestion->sid, $oQuestion->qid);
+        }
         return $oQuestion;
+    }
+
+    /**
+     * @param int $sid
+     * @param int $questionId
+     * @return void
+     */
+    private function upgradeDependentQuestionRelevance($sid, $questionId)
+    {
+        $dependentConditions = Condition::model()->findAllByAttributes([
+            'cqid' => $questionId
+        ]);
+        $dependentQuestionIds = [];
+        foreach ($dependentConditions as $condition) {
+            $dependentQuestionIds[(int) $condition->qid] = true;
+        }
+        foreach (array_keys($dependentQuestionIds) as $dependentQuestionId) {
+            LimeExpressionManager::UpgradeConditionsToRelevance($sid, $dependentQuestionId);
+        }
     }
 
     /**
