@@ -774,9 +774,9 @@ class LimeMailer extends \PHPMailer\PHPMailer\PHPMailer
         $resendHeader['message_type'] = $this->message_type;
         $resendHeader['Subject'] = $this->Subject;
         $resendHeader['uniqueid'] = $this->uniqueid;
-        $resendHeader['boundary'][1] = $this->boundary[1];
-        $resendHeader['boundary'][2] = $this->boundary[2];
-        $resendHeader['boundary'][3] = $this->boundary[3];
+        $resendHeader['boundary'][1] = $this->boundary[1] ?? "";
+        $resendHeader['boundary'][2] = $this->boundary[2] ?? "";
+        $resendHeader['boundary'][3] = $this->boundary[3] ?? "";
         $resendHeader['MIMEBody'] = $this->MIMEBody;
 
         return $resendHeader;
