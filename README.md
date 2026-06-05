@@ -8,7 +8,7 @@ Advanced features like branching and multiple question types make it a valuable 
 
 **This is an unoffical fork of LimeSurvey, use at your own risk**
 
-**Regarding security**: we try to fix all known security vulnerabilities. Given the version of twig, there are no plans to fix minor security vulnerabilities that require access to the template editor. As a reminder, accessing the template editor allows you to add any JavaScript functionality, including scripts with cross-site scripting attacks.
+**Regarding security**: we try to fix all known security vulnerabilities. Given the version of twig, **there are no plans to fix minor security vulnerabilities that require access to the template editor**. As a reminder, accessing the template editor allows you to add any JavaScript functionality, including scripts with cross-site scripting attacks.
 
 ## How to install
 
