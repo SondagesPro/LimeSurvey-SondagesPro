@@ -478,6 +478,17 @@ function sanitize_languagecode($codetosanitize)
 }
 
 /**
+ * Sanitize a google api key
+ * @see https://docs.cloud.google.com/docs/authentication/api-keys#components
+ * @param string|null
+ * @return string
+ **/
+function sanitize_googleapikey($string)
+{
+    return preg_replace('/[^A-Za-z0-9_-]/', '', trim(strval($string)));
+}
+
+/**
  * @param string $codestringtosanitize
  */
 function sanitize_languagecodeS($codestringtosanitize)
