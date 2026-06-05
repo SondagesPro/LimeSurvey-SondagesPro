@@ -227,13 +227,16 @@ class UploaderController extends SurveyController
             }
             if (!$disableCheck && !in_array($extByMimeType, $valid_extensions_array)) {
                 $realMimeType = LSFileHelper::getMimeType($_FILES['uploadfile']['tmp_name'], null, false);
-                $return = array(
-                    "success" => false,
-                    "msg" => sprintf(gT("Sorry, file type %s (extension : %s) is not allowed!"), $realMimeType, $extByMimeType)
-                );
-                //header('Content-Type: application/json');
-                echo ls_json_encode($return);
-                Yii::app()->end();
+                $isValidPlainTextMime = ($extByMimeType === 'txt' && in_array($ext, $valid_extensions_array));
+                if (!$isValidPlainTextMime) {
+                    $return = array(
+                        "success" => false,
+                        "msg" => sprintf(gT("Sorry, file type %s (extension : %s) is not allowed!"), $realMimeType, $extByMimeType)
+                    );
+                    //header('Content-Type: application/json');
+                    echo ls_json_encode($return);
+                    Yii::app()->end();
+                }
             }
 
             // if everything went fine and the file was uploaded successfully,
