@@ -34,6 +34,20 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
+Changes from 5.6.88 (SondagesPro) to 5.6.89 (SondagesPro) June 5, 2026
+- Fixed issue #20498: Condition expression are not updated when use regenerate
+- Fixed issue #20371: Users cannot have read only permissions on surveys
+- Fixed issue #20505: [security] Stored XSS in Limesurvey via Global Settings (reported by masquerad3r)
+- Fixed issue #20495: [security] Unrestricted getConfig() access in Twig sandbox
+- Fixed issue #20502: [security] POST-based self-XSS in Statistics View
+- Fixed issue #15946: File upload question: cannot select csv file
+- Fixed issue #20489: [security] Publicly reachable file upload via RemoteControl API
+- Fixed issue #20549: [security] SQL Injection in RemoteControl invite_participants and remind_participants
+- Fixed issue [security] : Hardending CPDB response link deletion
+- Fixed issue : Email do not break if boundary not set
+- Fixed issue [security] #20492: Stored Cross-Site Scripting (SXSS) in theme administration (reported by lavie3k)
+
+
 Changes from 5.6.86 (SondagesPro) to 5.6.88 (SondagesPro) April 10, 2026
 Changes from 5.6.86 (SondagesPro) to 5.6.87 (SondagesPro) (Do not use)
 - Fixed issue #20459: [security] SQL Injection in CPDB Participant Search (reported by podalirius)
