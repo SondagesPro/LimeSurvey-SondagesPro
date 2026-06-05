@@ -249,6 +249,7 @@ class Statistics extends SurveyCommonAction
         //second row below options -> filter settings headline
 
         $filterchoice_state = returnGlobal('filterchoice_state');
+        $filterchoice_state = !empty($filterchoice_state) ? '1' : '';
         $aData['filterchoice_state'] = $filterchoice_state;
 
 
