@@ -59,7 +59,7 @@
 			"php": "7.2.5"
 		},
 		"audit": {
-			"ignore": ["PKSA-yhcn-xrg3-68b1", "PKSA-2wrf-1xmk-1pky"]
+			"ignore": ["PKSA-fbvq-z33h-r2np", "PKSA-g9zw-qxh8-pq8w", "PKSA-yd6k-t2gh-1m43", "PKSA-1tmc-rt7x-12w6", "PKSA-xx6c-6d96-db2w", "PKSA-sjvz-tbbr-vwth", "PKSA-h8hf-ytnd-5t9q", "PKSA-kvv6-36cr-fkzb", "PKSA-n14z-jjjg-g8vd", "PKSA-3mcc-k66d-pydb", "PKSA-dpx1-78wg-1kqs", "PKSA-yhcn-xrg3-68b1", "PKSA-2wrf-1xmk-1pky", "PKSA-6319-ffpf-gx66", "PKSA-n7sg-8f52-pqtf", "PKSA-6cvh-gt46-wq7q", "PKSA-19rw-dqx2-75hc", "PKSA-g1zx-twcw-9z6k"]
 		}
 	},
 	"require-dev": {
