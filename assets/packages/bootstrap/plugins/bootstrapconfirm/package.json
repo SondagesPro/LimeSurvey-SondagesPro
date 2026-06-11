@@ -1,7 +1,10 @@
 {
-  "dependencies": {
-    "babel-preset-env": "^1.7.0",
-    "babel-cli": "^6.26.0",
-    "uglifyjs": "^2.4.11"
+  "devDependencies": {
+    "@babel/cli": "^7.29.7",
+    "@babel/core": "^7.29.7",
+    "terser": "^5.48.0"
+  },
+  "scripts": {
+    "build": "babel bootstrapconfirm.src.js --out-file bootstrapconfirm.js && terser bootstrapconfirm.js --compress --mangle --output bootstrapconfirm.min.js"
   }
 }
