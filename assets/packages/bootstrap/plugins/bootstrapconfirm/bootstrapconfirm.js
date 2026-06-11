@@ -1,5 +1,7 @@
+"use strict";
+
 jQuery.extend({
-  bsconfirm: function (text, i18n, cbok, cbcancel) {
+  bsconfirm: function bsconfirm(text, i18n, cbok, cbcancel) {
     cbok = cbok || function () {
       $('#identity__bsconfirmModal').modal('hide');
     };
@@ -7,22 +9,7 @@ jQuery.extend({
       $('#identity__bsconfirmModal').modal('hide');
     };
     i18n = i18n || {};
-    const modal = $(`
-        <div id="identity__bsconfirmModal" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    ${text}
-                </div>
-                <div class="modal-footer">
-                    <button id="identity__bsconfirmModal_button_cancel" type="button" class="btn btn-default">${i18n.confirm_cancel || ''} <i class="fa fa-times"></i></button>
-                    <button id="identity__bsconfirmModal_button_ok" type="button" class="btn btn-danger">${i18n.confirm_ok || ''} <i class="fa fa-check"></i></button>
-                </div>
-                </div>
-            </div>
-        </div>
-        `);
+    var modal = $("\n        <div id=\"identity__bsconfirmModal\" class=\"modal fade\">\n            <div class=\"modal-dialog\">\n                <div class=\"modal-content\">\n                <div class=\"modal-body\">\n                    <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n                    ".concat(text, "\n                </div>\n                <div class=\"modal-footer\">\n                    <button id=\"identity__bsconfirmModal_button_cancel\" type=\"button\" class=\"btn btn-default\">").concat(i18n.confirm_cancel || '', " <i class=\"fa fa-times\"></i></button>\n                    <button id=\"identity__bsconfirmModal_button_ok\" type=\"button\" class=\"btn btn-danger\">").concat(i18n.confirm_ok || '', " <i class=\"fa fa-check\"></i></button>\n                </div>\n                </div>\n            </div>\n        </div>\n        "));
     if ($('body').find('#identity__bsconfirmModal').length == 0) {
       $('body').append(modal);
     } else {
