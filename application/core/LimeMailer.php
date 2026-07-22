@@ -854,6 +854,7 @@ class LimeMailer extends \PHPMailer\PHPMailer\PHPMailer
             $string = preg_replace("/{TOKEN:([A-Z0-9_]+)}/", "{" . "$1" . "}", $string);
         }
         $aReplacements = array_merge($aReplacements, $aTokenReplacements);
+        $aReplacements = array_merge($aReplacements, $this->aReplacements);
         foreach ($this->aUrlsPlaceholders as $urlPlaceholder) {
             if (!empty($aReplacements["{$urlPlaceholder}URL"])) {
                 $url = $aReplacements["{$urlPlaceholder}URL"];
@@ -863,7 +864,6 @@ class LimeMailer extends \PHPMailer\PHPMailer\PHPMailer
                 }
             }
         }
-        $aReplacements = array_merge($aReplacements, $this->aReplacements);
         return LimeExpressionManager::ProcessString($string, null, $aReplacements, 3, 1, false, false, true);
     }
 
