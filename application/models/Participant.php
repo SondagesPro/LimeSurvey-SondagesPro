@@ -1871,10 +1871,14 @@ class Participant extends LSActiveRecord
 
         //Update the token entry with those values
         if (isset($value['value'])) {
-            $data = array($tokenFieldname => $value['value']);
             Yii::app()->db
                 ->createCommand()
-                ->update("{{tokens_$surveyId}}", $data, "participant_id = '$participantId'");
+                ->update(
+                    "{{tokens_" . intval($surveyId) . "}}",
+                    array($tokenFieldname => $value['value']),
+                    'participant_id = :participant_id',
+                    array(':participant_id' => $participantId)
+                );
         }
         return true;
     }
@@ -1892,6 +1896,16 @@ class Participant extends LSActiveRecord
     public function updateAttributeValueToken($surveyId, $participantId, $participantAttributeId, $tokenFieldname)
     {
         $survey = Survey::model()->findByPk($surveyId);
+        if (!self::isValidTokenAttributeFieldname($survey, $tokenFieldname)) {
+            return false;
+        }
+        if (!preg_match('/^[1-9][0-9]*$/', (string) $participantAttributeId)) {
+            return false;
+        }
+        $participantAttributeId = (int) $participantAttributeId;
+        if (ParticipantAttributeName::model()->findByPk($participantAttributeId) === null) {
+            return false;
+        }
         $val = Yii::app()->db
             ->createCommand()
             ->select($tokenFieldname)
@@ -1918,13 +1932,35 @@ class Participant extends LSActiveRecord
             if ($test['count'] > 0) {
                 Yii::app()->db
                     ->createCommand()
-                    ->update('{{participant_attribute}}', array("value" => $value2[$tokenFieldname]), "participant_id='$participantId' AND attribute_id=$participantAttributeId");
+                    ->update(
+                        '{{participant_attribute}}',
+                        array("value" => $value2[$tokenFieldname]),
+                        'participant_id = :participant_id AND attribute_id = :attribute_id',
+                        array(':participant_id' => $participantId, ':attribute_id' => $participantAttributeId)
+                    );
             } else {
                 Yii::app()->db
                     ->createCommand()
                     ->insert('{{participant_attribute}}', $data);
             }
         }
+        return true;
+    }
+
+    /**
+     * Checks that the given fieldname is a real custom attribute column of the survey
+     * participant table. Used to keep user supplied mappings out of SQL clauses.
+     *
+     * @param Survey $survey
+     * @param mixed $tokenFieldname
+     * @return boolean
+     */
+    protected static function isValidTokenAttributeFieldname($survey, $tokenFieldname)
+    {
+        if (!is_string($tokenFieldname) || !preg_match('/^attribute_[0-9]+$/', $tokenFieldname)) {
+            return false;
+        }
+        return array_key_exists($tokenFieldname, $survey->getTokenAttributes());
     }
 
     /**
@@ -1962,6 +1998,10 @@ class Participant extends LSActiveRecord
                 /* $key is the fieldname from the survey participants table (ie "attribute_1")
                  * $value is the 'friendly name' for the attribute (ie "Gender")
                  */
+                if (!isset($aTokenAttributes[$key]) || !self::isValidTokenAttributeFieldname($survey, $key)) {
+                    unset($aAttributesToBeCreated[$key]);
+                    continue;
+                }
                 $insertnames = [
                     'attribute_type' => 'TB',
                     'visible'        => 'Y',
