@@ -63,7 +63,7 @@
                     var editor = evt.editor;
                     editor.setData(window.opener.document.getElementById(<?php echo CJavaScript::encode($sFieldName, true); ?>).value);
                     editor.execCommand('maximize');
-                     window.status=<?php echo CJavaScript::encode(sprintf(gT('Editing %s', 'unescaped'), $sFieldText)); ?>;
+                    window.status=<?php echo CJavaScript::encode(sprintf(gT('Editing %s', 'unescaped'), $sFieldText), true); ?>;
                 }
 
                 function html_transfert()
