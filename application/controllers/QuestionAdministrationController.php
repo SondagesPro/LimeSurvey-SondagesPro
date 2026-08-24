@@ -414,6 +414,9 @@ class QuestionAdministrationController extends LSBaseController
     public function actionGetPossibleLanguages($iSurveyId)
     {
         $iSurveyId = (int)$iSurveyId;
+        if (!Permission::model()->hasSurveyPermission($iSurveyId, 'survey', 'read')) {
+            throw new CHttpException(403, gT("No permission"));
+        }
         $aLanguages = Survey::model()->findByPk($iSurveyId)->allLanguages;
         $this->renderJSON($aLanguages);
     }
@@ -683,7 +686,9 @@ class QuestionAdministrationController extends LSBaseController
     {
         $iQuestionId = (int)$iQuestionId;
         $oQuestion = $this->getQuestionObject($iQuestionId, $type, $gid);
-
+        if (!Permission::model()->hasSurveyPermission($oQuestion->sid, 'surveycontent', 'read')) {
+            throw new CHttpException(403, gT("No permission"));
+        }
         $aQuestionInformationObject = $this->getCompiledQuestionData($oQuestion);
         $surveyInfo = $this->getCompiledSurveyInfo($oQuestion);
 
