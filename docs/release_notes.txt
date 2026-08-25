@@ -34,6 +34,13 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
+Changes from 5.6.89 (SondagesPro) to 5.6.90 (SondagesPro) August 25, 2026
+- Fixed issue #20648: [security] SQL injection in statistics
+- Fixed issue #20651: [security] SQL Injection in CPDB through token
+- Fixed issue #20652: [security]Reflected XSS in HTML Editor popup endpoint
+- Fixed issue #20641: [security] Missing survey permission check on get question data
+- Fixed issue #20642: [security] Unauthenticated arbitrary 2FA plugin invocation
+
 Changes from 5.6.88 (SondagesPro) to 5.6.89 (SondagesPro) June 5, 2026
 - Fixed issue #20498: Condition expression are not updated when use regenerate
 - Fixed issue #20371: Users cannot have read only permissions on surveys
