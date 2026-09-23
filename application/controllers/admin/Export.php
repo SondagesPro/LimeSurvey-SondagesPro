@@ -1063,7 +1063,6 @@ class Export extends SurveyCommonAction
             throw new CHttpException(403, gT("You do not have permission to access this page."));
         }
         if (is_file($aZIPFileName)) {
-
             $fn = "surveys_archive.zip";
 
             //Send the file for download!

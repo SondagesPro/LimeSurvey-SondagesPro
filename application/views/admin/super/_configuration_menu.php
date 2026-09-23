@@ -104,11 +104,11 @@
                     </li>
 
                     <!-- Bulk Convert Conditions to Relevance -->
-                    <li class="dropdown-item">
-                        <a href="<?php echo $this->createUrl('admin/expressions/sa/upgrade_conditions2relevance'); ?>">
-                            <?php eT("Bulk convert conditions to ExpressionScript");?>
-                        </a>
-                    </li>
+                    <!-- <li class="dropdown-item">
+                        <?php echo CHtml::form(array('admin/expressions/sa/upgrade_conditions2relevance'), 'post'); ?>
+                            <button type="submit" class="ls-link btn btn-link">Bulk Convert Conditions to Relevance</button>
+                        <?php echo CHtml::endForm(); ?>
+                    </li>-->
 
                     <!-- Test Navigation -->
                     <li class="dropdown-item">

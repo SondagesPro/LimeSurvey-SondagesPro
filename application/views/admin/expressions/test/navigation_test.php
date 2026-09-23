@@ -11,7 +11,7 @@ if (count($_POST) == 0) {
     $aSurveys = Survey::model()->with('defaultlanguage')->findAll();
     $surveyList='';
     foreach($aSurveys as $row) {
-        $surveyList .= "<option value='" . $row['sid'] .'|' . $row['assessments'] . "'>#" . $row['sid'] . " [" . $row['datecreated'] . '] ' . flattenText($row->defaultlanguage->surveyls_title) . "</option>\n";
+        $surveyList .= "<option value='" . $row['sid'] . "'>#" . $row['sid'] . " [" . $row['datecreated'] . '] ' . flattenText($row->defaultlanguage->surveyls_title) . "</option>\n";
     }
     $sFormTag= CHtml::form(array('admin/expressions/sa/navigation_test'), 'post');
 
@@ -51,9 +51,9 @@ else {
 
     
 
-    // $surveyInfo = explode('|',Yii::app()->request->getParam('sid'));
-    // $surveyid = sanitize_int($surveyInfo[0]);
-    $assessments = ($surveyInfo[1] == 'Y');
+    $surveyid = sanitize_int(Yii::app()->request->getParam('sid'));
+    $survey = Survey::model()->findByPk($surveyid);
+    $assessments = $survey ? $survey->oOptions->assessments: 'N';
     $surveyMode = sanitize_paranoid_string(Yii::app()->request->getParam('surveyMode'));
     $LEMdebugLevel = (
             ((isset($_POST['LEM_DEBUG_TIMING']) && $_POST['LEM_DEBUG_TIMING'] == 'Y') ? LEM_DEBUG_TIMING : 0) +

@@ -37,6 +37,36 @@ class Expressions extends SurveyCommonAction
         if (($aData['sa'] == 'survey_logic_file' || $aData['sa'] == 'navigation_test') && $iSurveyID) {
             $needpermission = true;
         }
+        // These sub-actions read or rewrite data for every survey in the installation
+        // (they take no survey id to scope themselves to), so a per-survey permission
+        // check cannot apply to them. Restrict them to global superadmin instead.
+        $aInstallationWideActions = array(
+            'conditions2relevance',
+            'upgrade_conditions2relevance',
+            'revert_upgrade_conditions2relevance',
+            'upgrade_relevance_location',
+        );
+
+        if (
+            in_array($aData['sa'], $aInstallationWideActions, true)
+            && !Permission::model()->hasGlobalPermission('superadmin', 'read')
+        ) {
+            $message['title'] = gT('Access denied!');
+            $message['message'] = gT('You do not have permission to access this page.');
+            $message['class'] = "error";
+            $this->renderWrappedTemplate('survey', array("message" => $message), $aData);
+            return;
+        }
+        // Of the installation-wide actions above, these actually write to the database
+        // and must not be triggerable by a plain (e.g. bookmarked, CSRF-forged GET-based) link.
+        $aWriteActions = array(
+            'upgrade_conditions2relevance',
+            'revert_upgrade_conditions2relevance',
+            'upgrade_relevance_location',
+        );
+        if (in_array($aData['sa'], $aWriteActions, true)) {
+            $this->requirePostRequest();
+        }
 
         if ($needpermission && !Permission::model()->hasSurveyPermission($iSurveyID, 'surveycontent', 'read')) {
             $message['title'] = gT('Access denied!');
