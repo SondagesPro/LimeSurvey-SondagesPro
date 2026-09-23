@@ -220,7 +220,7 @@ function XMLImportGroup($sFullFilePath, $iNewSID, $bTranslateLinksFields)
             }
             // Set a warning if question title was updated
             if (isset($sNewTitle) && isset($sOldTitle)) {
-                $results['importwarnings'][] = sprintf(gT("Question code %s was updated to %s."), $sOldTitle, $sNewTitle);
+                $results['importwarnings'][] = sprintf(gT("Question code %s was updated to %s."), CHtml::encode($sOldTitle), $sNewTitle);
                 $aQuestionCodeReplacements[$sOldTitle] = $sNewTitle;
                 unset($sNewTitle);
                 unset($sOldTitle);
@@ -320,7 +320,7 @@ function XMLImportGroup($sFullFilePath, $iNewSID, $bTranslateLinksFields)
 
             // Set a warning if question title was updated
             if (isset($sNewTitle) && isset($sOldTitle)) {
-                $results['importwarnings'][] = sprintf(gT("Title of subquestion %s was updated to %s."), $sOldTitle, $sNewTitle); // Maybe add the question title ?
+                $results['importwarnings'][] = sprintf(gT("Title of subquestion %s was updated to %s."), CHtml::encode($sOldTitle), $sNewTitle); // Maybe add the question title ?
                 $aQuestionCodeReplacements[$sOldTitle] = $sNewTitle;
                 unset($sNewTitle);
                 unset($sOldTitle);
@@ -669,7 +669,7 @@ function XMLImportQuestion($sFullFilePath, $iNewSID, $iNewGID, $options = array(
                     }
                     $results['importwarnings'][] = sprintf(
                         gT("Question code %s was updated to %s."),
-                        $sOldTitle,
+                        CHtml::encode($sOldTitle),
                         $sNewTitle
                     );
                     unset($sNewTitle);
@@ -805,7 +805,7 @@ function XMLImportQuestion($sFullFilePath, $iNewSID, $iNewGID, $options = array(
 
             // Set a warning if question title was updated
             if (isset($sNewTitle) && isset($sOldTitle)) {
-                $results['importwarnings'][] = sprintf(gT("Title of subquestion %s was updated to %s."), $sOldTitle, $sNewTitle); // Maybe add the question title ?
+                $results['importwarnings'][] = sprintf(gT("Title of subquestion %s was updated to %s."), CHtml::encode($sOldTitle), $sNewTitle); // Maybe add the question title ?
                 $aQuestionCodeReplacements[$sOldTitle] = $sNewTitle;
                 unset($sNewTitle);
                 unset($sOldTitle);
@@ -1358,7 +1358,7 @@ function XMLImportSurvey($sFullFilePath, $sXMLdata = null, $sNewSurveyName = nul
         $insertdata = array_intersect_key($insertdata, $aSurveyModelsColumns);
         // Fill a optional array of error
         foreach ($aBadData as $key => $value) {
-            $results['importwarnings'][] = sprintf(gT("This survey setting has not been imported: %s => %s"), $key, $value);
+            $results['importwarnings'][] = sprintf(gT("This survey setting has not been imported: %s => %s"), CHtml::encode($key), CHtml::encode($value));
         }
         $newSurvey = Survey::model()->insertNewSurvey($insertdata);
         if ($newSurvey->sid) {
@@ -1471,7 +1471,7 @@ function XMLImportSurvey($sFullFilePath, $sXMLdata = null, $sNewSurveyName = nul
                 $languageData = getLanguageData();
                 $results['importwarnings'][] = sprintf(
                     gT("The survey alias for '%s' has been cleared because it was already in use by another survey."),
-                    $languageData[$insertdata['surveyls_language']]['description']
+                    CHtml::encode($languageData[$insertdata['surveyls_language']]['description'])
                 );
                 unset($surveyLanguageSetting->surveyls_alias);
                 $surveyLanguageSetting->clearErrors('surveyls_alias');
@@ -1669,7 +1669,7 @@ function XMLImportSurvey($sFullFilePath, $sXMLdata = null, $sNewSurveyName = nul
             }
             // Set a warning if question title was updated
             if (isset($sNewTitle) && isset($sOldTitle)) {
-                $results['importwarnings'][] = sprintf(gT("Question code %s was updated to %s."), $sOldTitle, $sNewTitle);
+                $results['importwarnings'][] = sprintf(gT("Question code %s was updated to %s."), CHtml::encode($sOldTitle), $sNewTitle);
                 $aQuestionCodeReplacements[$sOldTitle] = $sNewTitle;
                 unset($sNewTitle);
                 unset($sOldTitle);
@@ -1776,7 +1776,7 @@ function XMLImportSurvey($sFullFilePath, $sXMLdata = null, $sNewSurveyName = nul
 
             // Set a warning if question title was updated
             if (isset($sNewTitle) && isset($sOldTitle)) {
-                $results['importwarnings'][] = sprintf(gT("Title of subquestion %s was updated to %s."), $sOldTitle, $sNewTitle); // Maybe add the question title ?
+                $results['importwarnings'][] = sprintf(gT("Title of subquestion %s was updated to %s."), CHtml::encode($sOldTitle), $sNewTitle); // Maybe add the question title ?
                 $aQuestionCodeReplacements[$sOldTitle] = $sNewTitle;
                 unset($sNewTitle);
                 unset($sOldTitle);
