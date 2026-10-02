@@ -2128,39 +2128,39 @@ class ParticipantsAction extends SurveyCommonAction
     /**
      * Takes the edit call from the share panel, which either edits or deletes the share information
      * Basically takes the call on can_edit
+     * Requires ParticipantShare::isAllowedToManageShare() for the participant behind each share
      */
     public function editShareInfo()
     {
         $operation = Yii::app()->request->getPost('oper');
-        // NB: Comma-separated list.
-        $isSuperAdmin = Permission::model()->hasGlobalPermission('superadmin', 'read');
-        $userId = Yii::app()->user->id;
+
         if ($operation == 'del') {
             // NB: Comma-separated list of "participantId--shareUid" pairs.
+            // Only pass through the share ids the current user is allowed to manage.
             $shareIds = Yii::app()->request->getPost('id');
-            $allowedShareIds = [];
-            foreach (explode(',', (string) $shareIds) as $shareId) {
-                $participantId = explode('--', $shareId)[0] ?? null;
-                $participant = $participantId ? Participant::model()->findByPk($participantId) : null;
-                if ($participant && ($isSuperAdmin || $participant->owner_uid == $userId)) {
-                    $allowedShareIds[] = $shareId;
+            $authorizedShareIds = array_filter(
+                explode(',', (string) $shareIds),
+                function ($shareId) {
+                    $participantId = explode('--', $shareId)[0] ?? null;
+                    return $participantId && ParticipantShare::model()->isAllowedToManageShare($participantId);
                 }
-            }
-            if (!empty($allowedShareIds)) {
-                ParticipantShare::model()->deleteRow(implode(',', $allowedShareIds));
+            );
+            if (!empty($authorizedShareIds)) {
+                ParticipantShare::model()->deleteRow(implode(',', $authorizedShareIds));
             }
         } else {
             $participantId = Yii::app()->request->getPost('participant_id');
             $actualParticipantId = explode('--', (string) $participantId)[0];
-            $participant = Participant::model()->findByPk($actualParticipantId);
-            if ($participant && ($isSuperAdmin || $participant->owner_uid == $userId)) {
-                $aData = array(
-                    'participant_id' => $participantId,
-                    'can_edit' => Yii::app()->request->getPost('can_edit'),
-                    'share_uid' => Yii::app()->request->getPost('shared_uid')
-                );
-                ParticipantShare::model()->updateShare($aData);
+            if (!ParticipantShare::model()->isAllowedToManageShare($actualParticipantId)) {
+                $this->ajaxHelper::outputNoPermission();
+                return;
             }
+            $aData = array(
+                'participant_id' => $participantId,
+                'can_edit' => Yii::app()->request->getPost('can_edit'),
+                'share_uid' => Yii::app()->request->getPost('shared_uid')
+            );
+            ParticipantShare::model()->updateShare($aData);
         }
     }
 
@@ -2361,7 +2361,7 @@ class ParticipantsAction extends SurveyCommonAction
      */
     public function shareParticipants()
     {
-        $hasUpdatePermission = Permission::model()->hasGlobalPermission('update');
+        $hasUpdatePermission = Permission::model()->hasGlobalPermission('participantpanel', 'update');
         $isSuperAdmin = Permission::model()->hasGlobalPermission('superadmin', 'read');
         $permissions = [
             'hasUpdatePermission' => $hasUpdatePermission,
@@ -2405,7 +2405,7 @@ class ParticipantsAction extends SurveyCommonAction
      */
     public function shareParticipant()
     {
-        $hasUpdatePermission = Permission::model()->hasGlobalPermission('update');
+        $hasUpdatePermission = Permission::model()->hasGlobalPermission('participantpanel', 'update');
         $isSuperAdmin = Permission::model()->hasGlobalPermission('superadmin', 'read');
         $permissions = [
             'hasUpdatePermission' => $hasUpdatePermission,
@@ -2415,11 +2415,7 @@ class ParticipantsAction extends SurveyCommonAction
         $iParticipantId = Yii::app()->request->getPost('participant_id');
         $bCanEdit = Yii::app()->request->getPost('can_edit');
 
-        if (
-            ParticipantShare::model()->canEditSharedParticipant($iParticipantId)
-            || $hasUpdatePermission
-            || $isSuperAdmin
-        ) {
+        if (ParticipantShare::model()->isAllowedToManageShare($iParticipantId)) {
             $time = time();
             $aData = array(
                 'participant_id' => $iParticipantId,
@@ -2437,13 +2433,13 @@ class ParticipantsAction extends SurveyCommonAction
 
     /**
      * Deletes *all* shares for this participant
+     * Requires ParticipantShare::isAllowedToManageShare() for the participant
      * @return void
      */
     public function rejectShareParticipant()
     {
         $participant_id = yii::app()->request->getPost('participant_id');
-        $participant = Participant::model()->findByPk($participant_id);
-        if (empty($participant) || !$participant->isOwnerOrSuperAdmin()) {
+        if (!ParticipantShare::model()->isAllowedToManageShare($participant_id)) {
             $this->ajaxHelper::outputNoPermission();
             return;
         }
@@ -2528,13 +2524,13 @@ class ParticipantsAction extends SurveyCommonAction
     }
 
     /**
+     * Requires ParticipantShare::isAllowedToManageShare() for the participant behind the share
      * @return void
      */
     public function changeSharedEditableStatus()
     {
         $participant_id = Yii::app()->request->getPost('participant_id');
-        $participant = Participant::model()->findByPk($participant_id);
-        if (empty($participant) || !$participant->isOwnerOrSuperAdmin()) {
+        if (!ParticipantShare::model()->isAllowedToManageShare($participant_id)) {
             $this->ajaxHelper::outputNoPermission();
             return;
         }
