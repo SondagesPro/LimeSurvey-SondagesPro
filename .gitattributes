@@ -17,6 +17,7 @@ palm.xml                export-ignore
 tests                   export-ignore
 yarn.lock               export-ignore
 vendor/khaled.alshamaa/ar-php/examples export-ignore
+sonar-project.properties export-ignore
 
 # Set default behaviour, in case users don't have core.autocrlf set.
 * text=auto
