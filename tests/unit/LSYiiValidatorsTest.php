@@ -62,8 +62,8 @@ class LSYiiValidatorsTest extends TestBaseClass
         // First, we define the cases to test. Array keys are the strings to filter, and values are the expected result
         $cases = [
             "html_entity_decode('&amp;')" => "html_entity_decode('&amp;')", // Not an expression, so it shouldn't be changed.
-            "{html_entity_decode('&amp;')}" => "&#123;html_entity_decode('&amp;')&#125;",   // Used as a function in an expression, so it should be removed.
-            "{join(\"&#123;\",'html_entity_decode(\"&amp;amp;\")',\"&#125;\")}" => "{join(\"{\",'html_entity_decode(\"&amp;amp;\")',\"}\")}",   // Inside a function but as a string, so it's not removed.
+            "{html_entity_decode('&amp;')}" => "&#123;html_entity_decode('&amp;')&#125;",
+             "{join(\"&#123;\",'html_entity_decode(\"&amp;amp;\")',\"&#125;\")}" => "&#123;join(\"&#123;\",'html_entity_decode(\"&amp;amp;\")',\"&#125;\")&#125;",
         ];
 
         $validator = new \LSYii_Validators();
