@@ -110,7 +110,7 @@ class RenderDate extends QuestionBaseRenderer
         
             if (ctype_digit($date_min) && (strlen($date_min) == 4) && ($date_min >= 1900) && ($date_min <= 2099)) {
                 $this->minDate = $date_min . '-01-01'; // backward compatibility: if only a year is given, add month and day
-            } elseif (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])/", $date_min)) {
+            } elseif (preg_match(QuestionAttribute::DATE_LIMIT_PATTERN, $date_min)) {
                 // it's a YYYY-MM-DD date (use http://www.yiiframework.com/doc/api/1.1/CDateValidator ?)
                 $this->minDate = $date_min;
             } elseif ($date_time_em !== false) {
@@ -132,8 +132,8 @@ class RenderDate extends QuestionBaseRenderer
         
             if (ctype_digit($date_max) && (strlen($date_max) == 4) && ($date_max >= 1900) && ($date_max <= 2099)) {
                 $this->maxDate = $date_max . '-12-31'; // backward compatibility: if only a year is given, add month and day
-            } elseif (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])/", $date_max)) {
-        // it's a YYYY-MM-DD date (use http://www.yiiframework.com/doc/api/1.1/CDateValidator ?)
+            } elseif (preg_match(QuestionAttribute::DATE_LIMIT_PATTERN, $date_max)) {
+                // it's a YYYY-MM-DD date (use http://www.yiiframework.com/doc/api/1.1/CDateValidator ?)
                 $this->maxDate = $date_max;
             } elseif ($date_time_em !== false) {
                 $this->maxDate = (string) date("Y-m-d", $date_time_em);
@@ -144,7 +144,7 @@ class RenderDate extends QuestionBaseRenderer
             $this->maxDate = '2187-12-31'; // Why 2187 ?
         }
 
-        if (!empty($this->maxDate)) {
+        if (!empty($this->maxDate) && strlen($this->maxDate) == 10) {
             $this->maxDate .= " 23:59:59.999";
         }
     }
