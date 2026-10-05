@@ -10,4 +10,6 @@ You will receive a response from us within 48 hours. If the issue is confirmed, 
 
 Please report (suspected) security vulnerabilities on https://support.sondages.pro/open.php?topicId=10.
 
-If the issue is confirmed, we will release a patch as soon as possible depending on complexity but historically within a few days.
+Security reports are not considered in scope when exploitation requires access to the template editor or the ability to modify Twig templates or inject JavaScript.
+
+If the issue is confirmed, we will release a patch as soon as possible depending on complexity.
