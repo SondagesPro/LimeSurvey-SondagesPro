@@ -24,8 +24,8 @@ return array(
 
     // jQuery
     'jquery' => array(
-        'devBaseUrl' => 'vendor/jquery',
-        'basePath' => 'vendor.jquery',
+        'devBaseUrl' => 'assets/packages/jquery',
+        'basePath' => 'core.jquery',
         'position' =>CClientScript::POS_HEAD,
         'js' => array(
             'jquery-3.6.1'.$minVersion.'.js',
@@ -157,8 +157,8 @@ return array(
 
     // jQuery UI
     'jqueryui' => array(
-        'devBaseUrl' => 'vendor/jquery-ui',
-        'basePath' => 'vendor.jquery-ui',
+        'devBaseUrl' => 'assets/packages/jquery-ui',
+        'basePath' => 'core.jquery-ui',
         'position' =>CClientScript::POS_HEAD,
         'js' => array(
             'jquery-ui'.$minVersion.'.js',
@@ -173,7 +173,7 @@ return array(
 
     // jquery bindWithDelay
     'jquery-bindWithDelay' => array(
-        'basePath' => 'vendor.jquery-bindWithDelay',
+        'basePath' => 'core.jquery-bindWithDelay-ui',
         'js' => array(
             'bindWithDelay.js'
         ),
@@ -184,7 +184,7 @@ return array(
 
     // jQuery Cookie
     'js-cookie' => array(
-        'basePath' => 'vendor.js-cookie',
+        'basePath' => 'core.js-cookie',
         'js' => array(
             'js.cookie.js'
         )
@@ -192,7 +192,7 @@ return array(
 
     // jQuery json
     'jquery-json' => array(
-        'basePath' => 'vendor.jquery-json',
+        'basePath' => 'core.jquery-json',
         'js' => array(
             'jquery.json-2.4.min.js'
         ),
@@ -203,7 +203,7 @@ return array(
 
     // jQuery blockUI
     'jquery-blockUI' => array(
-        'basePath' => 'vendor.jquery-blockui',
+        'basePath' => 'core.jquery-blockui',
         'js' => array(
             'jquery.blockUI.js'
         ),
@@ -214,7 +214,7 @@ return array(
 
     // jQuery Table Sorter
     'jquery-tablesorter' => array(
-        'basePath' => 'vendor.jquery-tablesorter',
+        'basePath' => 'core.jquery-tablesorter',
         'js' => array(
             'jquery.tablesorter.min.js'
         ),
@@ -225,7 +225,7 @@ return array(
 
     // jQuery NestedSortable
     'jquery-nestedSortable' => array(
-        'basePath' => 'vendor.jquery-nestedSortable',
+        'basePath' => 'core.jquery-nestedSortable',
         'position' => CClientScript::POS_BEGIN,
         'js' => array(
             'jquery.mjs.nestedSortable.js'
@@ -237,8 +237,8 @@ return array(
 
     // Ace
     'ace' => array(
-        'devBaseUrl' => 'vendor/ace',
-        'basePath' => 'vendor.ace',
+        'devBaseUrl' => 'assets/packages/ace',
+        'basePath' => 'core.ace',
         'position' => CClientScript::POS_BEGIN,
         'js' => array(
             $minFolder.'/ace.js'
@@ -250,8 +250,8 @@ return array(
 
     // jQuery Ace
         'jquery-ace' => array(
-            'devBaseUrl' => 'vendor/jquery-ace',
-            'basePath' => 'vendor.jquery-ace',
+            'devBaseUrl' => 'assets/packages/jquery-ace',
+            'basePath' => 'core.jquery-ace',
             'position' => CClientScript::POS_BEGIN,
         'js' => array(
             'jquery.ace.js',
@@ -263,7 +263,7 @@ return array(
 
     // jQuery selectboxes
     'jquery-selectboxes' => array(
-        'basePath' => 'vendor.jquery-selectboxes.selectboxes',
+        'basePath' => 'core.jquery-selectboxes.selectboxes',
         'js' => array(
             'jquery.selectboxes.js'
         ),
@@ -274,7 +274,7 @@ return array(
 
     // jQuery touch punch : seems uneended now ?
     'jquery-touch-punch' => array(
-        'basePath' => 'vendor.jquery-touch-punch',
+        'basePath' => 'core.jquery-touch-punch',
         'js' => array(
             'jquery.ui.touch-punch.min.js'
         ),
@@ -286,8 +286,8 @@ return array(
     // Decimal.js calculate in js
     'decimal' => array(
         'position' => CClientScript::POS_BEGIN,
-        'devBaseUrl' => 'vendor/decimal',
-        'basePath' => 'vendor.decimal',
+        'devBaseUrl' => 'assets/packages/decimal',
+        'basePath' => 'core.decimal',
         'js' => array(
             'decimal.js'
         ),
@@ -297,8 +297,8 @@ return array(
 
     // Moment.js use real simple dateTime modification
     'moment' => array(
-        'devBaseUrl' => 'vendor/moment',
-        'basePath' => 'vendor.moment',
+        'devBaseUrl' => 'assets/packages/moment',
+        'basePath' => 'core.moment',
         'js' => array(
             'moment-with-locales'.$minVersion.'.js'
         ),
@@ -309,14 +309,14 @@ return array(
     // leaflet, needed for short text question with map (OSM)
 
     'jsuri' => array(
-        'basePath' => 'vendor.jsUri',
+        'basePath' => 'core.jsUri',
         'js' => array(
             'Uri.js'
         ),
     ),
 
     'jquery-datatable' => array(
-        'basePath' => 'vendor.datatables',
+        'basePath' => 'core.datatables',
         'position' => CClientScript::POS_BEGIN,
         'css' => array(
             'css/datatables'.$minVersion.'.css'
@@ -331,21 +331,21 @@ return array(
         )
     ),
     'es6promise' => array(
-        'basePath' => 'vendor.es6promise',
+        'basePath' => 'core.es6promise',
         'js' => array(
             'es6-promise.auto.min.js'
         )
     ),
 
     'dom2image' => array(
-        'basePath' => 'vendor.dom-to-image',
+        'basePath' => 'core.dom-to-image',
         'js' => array(
             'dist/dom-to-image.min.js',
         )
     ),
 
     'jspdf' => array(
-        'basePath' => 'vendor.jspdf',
+        'basePath' => 'core.jspdf',
         'position' => CClientScript::POS_BEGIN,
         'js' => array(
             'jspdf.min.js',
@@ -360,8 +360,8 @@ return array(
     ),
     /* Used by ranking question type */
     'sortable' => array(
-        'devBaseUrl' => 'vendor/sortable',
-        'basePath' => 'vendor.sortable', /* for sorting ability */
+        'devBaseUrl' => 'assets/packages/sortable',
+        'basePath' => 'core.sortable', /* for sorting ability */
         'position' => CClientScript::POS_BEGIN,
         'js' => array(
             'jquery.fn.sortable'.$minVersion.'.js'
@@ -369,15 +369,15 @@ return array(
         ),
     'jquery-actual' => array(
         'position' => CClientScript::POS_BEGIN,
-        'devBaseUrl' => 'vendor/jquery-actual',
-        'basePath' => 'vendor.jquery-actual', /* for samechoiceheight/samelistheight */
+        'devBaseUrl' => 'assets/packages/jquery-actual',
+        'basePath' => 'core.jquery-actual', /* for samechoiceheight/samelistheight */
         'js' => array(
             'jquery.actual'.$minVersion.'.js'
         ),
     ),
     /* Used by short text with map by leaflet */
     'leaflet' => array(
-        'basePath' => 'vendor.leaflet',
+        'basePath' => 'core.leaflet',
         'position' => CClientScript::POS_BEGIN,
         'js' => array(
             'leaflet.js'
@@ -387,14 +387,14 @@ return array(
         ),
     ),
     'devbridge-autocomplete' => array(
-        'basePath' => 'vendor.devbridge-autocomplete.dist', /* For geoname search autocomplete without jquery */
+        'basePath' => 'core.devbridge-autocomplete.dist', /* For geoname search autocomplete without jquery */
         'position' => CClientScript::POS_BEGIN,
         'js' => array(
             'jquery.autocomplete'.$minVersion.'.js'
         ),
     ),
     'jszip' => array(
-        'basePath' => 'vendor.jszip',
+        'basePath' => 'core.jszip',
         'position' => CClientScript::POS_BEGIN,
         'js' => array(
             'jszip.js',
