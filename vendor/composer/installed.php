@@ -3,7 +3,7 @@
         'name' => 'limesurvey/limesurvey',
         'pretty_version' => '5.x-dev',
         'version' => '5.9999999.9999999.9999999-dev',
-        'reference' => '863eadf55df43e9f734c6d908f8d0addaafe4f2c',
+        'reference' => '576b57b47f982cf1e8e909d8c1b2d5a20b9736d0',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -27,6 +27,15 @@
             'install_path' => __DIR__ . '/../amphp/byte-stream',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'chamilo/pclzip' => array(
+            'pretty_version' => 'v2.8.5',
+            'version' => '2.8.5.0',
+            'reference' => 'af10d07a39922b0789bf761524a22ecefc01d405',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../chamilo/pclzip',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'composer/package-versions-deprecated' => array(
             'pretty_version' => '1.11.99.5',
@@ -136,7 +145,7 @@
         'limesurvey/limesurvey' => array(
             'pretty_version' => '5.x-dev',
             'version' => '5.9999999.9999999.9999999-dev',
-            'reference' => '863eadf55df43e9f734c6d908f8d0addaafe4f2c',
+            'reference' => '576b57b47f982cf1e8e909d8c1b2d5a20b9736d0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -228,6 +237,12 @@
             'install_path' => __DIR__ . '/../paragonie/sodium_compat',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'pclzip/pclzip' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '^2.8',
+            ),
         ),
         'pdepend/pdepend' => array(
             'pretty_version' => '2.16.2',
