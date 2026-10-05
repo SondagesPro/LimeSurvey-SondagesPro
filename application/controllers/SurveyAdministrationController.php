@@ -1076,12 +1076,7 @@ class SurveyAdministrationController extends LSBaseController
             $oSurveyLanguageSetting->surveyls_urldescription = $contentChange['endUrlDescription'];
             $oSurveyLanguageSetting->surveyls_dateformat = $contentChange['dateFormat'];
             $oSurveyLanguageSetting->surveyls_numberformat = $contentChange['decimalDivider'];
-            $aSuccess[$sLanguage] = LSYii_Validators::refuseChangedExpressionsDuring(function () use ($oSurveyLanguageSetting) {
-                return $oSurveyLanguageSetting->save();
-            });
-            foreach ($oSurveyLanguageSetting->getErrors() as $aAttributeErrors) {
-                $aErrors = array_merge($aErrors, $aAttributeErrors);
-            }
+            $aSuccess[$sLanguage] = $oSurveyLanguageSetting->save();
             unset($oSurveyLanguageSetting);
         }
 
@@ -1098,8 +1093,7 @@ class SurveyAdministrationController extends LSBaseController
             [
                 'data' => [
                     "success" => $success,
-                    "message" => ($success ? gT("Survey texts were saved successfully.") : gT("Error saving survey texts")),
-                    "errors" => array_values(array_unique($aErrors))
+                    "message" => ($success ? gT("Survey texts were saved successfully.") : gT("Error saving survey texts"))
                 ]
             ],
             false,
