@@ -34,6 +34,17 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
+Changes from 5.6.90 (SondagesPro) to 5.6.91 (SondagesPro) October  5, 2026
+- Fixed issue [security] #20699: Broken access control in participant sharing.
+- Fixed issue [security] #20706: Broken access control in CPDB attribute deletion
+- Fixed issue [security] #20700: Missing permission and POST checks on Expression Manager maintenance actions
+- Fixed issue [security] #20707: No permission control for queXML exports.
+- Fixed issue [security] #20707: Unauthorized updates to queXML global settings.
+- Fixed issue [security]: No permission control for SPSS exports.
+- Fixed issue [security]: No permission control for survey archive ZIP downloads.
+- Fixed issue [security] #20697: Reflected XSS through unescaped LSS survey-import warnings
+- Fixed issue : array_sum error with PHP 8.3
+
 Changes from 5.6.89 (SondagesPro) to 5.6.90 (SondagesPro) August 25, 2026
 - Fixed issue #20648: [security] SQL injection in statistics
 - Fixed issue #20651: [security] SQL Injection in CPDB through token
