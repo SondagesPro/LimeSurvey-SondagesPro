@@ -118,7 +118,6 @@ composer.lock
 vendor/bin/phpcbf
 vendor/bin/phpcs
 vendor/squizlabs/
-vendor/amphp/
 vendor/bin/
 vendor/composer/autoload_files.php
 vendor/composer/installed\.json
