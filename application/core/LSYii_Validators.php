@@ -49,24 +49,6 @@ class LSYii_Validators extends CValidator
      * @var boolean
      */
     public $isLanguageMulti = false;
-    /**
-     * Refuse the value (add a validation error) when the XSS filter had to change an expression.
-     * Off by default : the filter is always applied, but only editors that show the validation errors
-     * should refuse the save. Other callers (import, copy …) may ignore a failed save and lose the text.
-     * @var boolean
-     */
-    public static $refuseChangedExpressions = false;
-    /**
-     * Errors about expressions changed by the last xssFilter call, only for the value as submitted
-     * @var string[]
-     */
-    private $expressionErrors = array();
-    /**
-     * Notices about expressions disabled outside a refusing context (e.g. during import), for the current request.
-     * Bulk callers such as the survey import read these to warn the user, since they can not show a validation error.
-     * @var string[]
-     */
-    private static $disabledExpressionNotices = array();
 
     public function __construct()
     {
@@ -92,14 +74,7 @@ class LSYii_Validators extends CValidator
     protected function validateAttribute($object, $attribute)
     {
         if ($this->xssfilter) {
-            /* Unchanged content is grandfathered : only newly added or modified content is refused/disabled */
-            $bModified = !($object instanceof LSActiveRecord) || $object->isAttributeModifiedFromStored($attribute);
-            $object->$attribute = $this->xssFilter($object->$attribute, $bModified);
-            if ($bModified && self::$refuseChangedExpressions) {
-                foreach ($this->getExpressionErrors() as $sError) {
-                    $this->addError($object, $attribute, '{attribute}: ' . $sError);
-                }
-            }
+            $object->$attribute = $this->xssFilter($object->$attribute);
             if ($this->isUrl) {
                 if (self::isXssUrl($object->$attribute)) {
                     $object->$attribute = "";
@@ -151,16 +126,14 @@ class LSYii_Validators extends CValidator
      * Remove any script or dangerous HTML
      *
      * @param string $value
-     * @param boolean $neutralizeUnsafeExpressions Whether to disable the unsafe expressions found (default true)
      * @return string
      */
-    public function xssFilter($value, $neutralizeUnsafeExpressions = true)
+    public function xssFilter($value)
     {
         /* No need to filter empty $value */
         if (empty($value)) {
             return strval($value);
         }
-        $this->expressionErrors = array();
         $filter = LSYii_HtmlPurifier::getXssPurifier();
         Yii::import('application.helpers.expressions.em_core_helper', true); // Already imported in em_manager_helper.php ?
         $oExpressionManager = new ExpressionManager();
@@ -182,17 +155,9 @@ class LSYii_Validators extends CValidator
                 $sExpression = trim($aValue[0], '{}');
                 $bUnsafe = false;
                 $sExpression = $this->filterExpression($oExpressionManager->Tokenize($sExpression, true), $filter, $bUnsafe);
-                if ($bUnsafe && $neutralizeUnsafeExpressions) {
+                if ($bUnsafe) {
                     // Disable the whole expression : it renders as inert text and can not be evaluated again
                     $sNewValue .= str_replace(array('{', '}'), array('&#123;', '&#125;'), "{" . $sExpression . "}");
-                    // Record it for bulk callers (import …) that can not show a validation error, unless an editor refuses it
-                    if (!self::$refuseChangedExpressions) {
-                        foreach ($this->expressionErrors as $sError) {
-                            if (!in_array($sError, self::$disabledExpressionNotices, true)) {
-                                self::$disabledExpressionNotices[] = $sError;
-                            }
-                        }
-                    }
                 } else {
                     $sNewValue .= "{" . $sExpression . "}";
                 }
@@ -286,66 +251,6 @@ class LSYii_Validators extends CValidator
     }
 
     /**
-     * Run a callback with $refuseChangedExpressions enabled, for editors that show the validation errors to the user
-     *
-     * @param callable $callback
-     * @return mixed The return value of the callback
-     */
-    public static function refuseChangedExpressionsDuring(callable $callback)
-    {
-        $previous = self::$refuseChangedExpressions;
-        self::$refuseChangedExpressions = true;
-        try {
-            return $callback();
-        } finally {
-            self::$refuseChangedExpressions = $previous;
-        }
-    }
-
-    /**
-     * Get the errors about unsafe expressions found by the last xssFilter call
-     *
-     * @return string[]
-     */
-    public function getExpressionErrors()
-    {
-        return $this->expressionErrors;
-    }
-
-    /**
-     * Get the notices about expressions disabled outside a refusing context during the current request
-     *
-     * @return string[]
-     */
-    public static function getDisabledExpressionNotices()
-    {
-        return self::$disabledExpressionNotices;
-    }
-
-    /**
-     * Clear the collected notices about disabled expressions (call before a bulk operation such as an import)
-     *
-     * @return void
-     */
-    public static function clearDisabledExpressionNotices()
-    {
-        self::$disabledExpressionNotices = array();
-    }
-
-    /**
-     * Record an error about an unsafe expression (each distinct message only once)
-     *
-     * @param string $sError The translated error message
-     * @return void
-     */
-    private function addExpressionError($sError)
-    {
-        if (!in_array($sError, $this->expressionErrors, true)) {
-            $this->expressionErrors[] = $sError;
-        }
-    }
-
-    /**
      * Rebuild an expression from its tokens, purifying the strings, and flag it when it contains an unsafe construct
      *
      * @param array $aTokens The tokens of the expression, from ExpressionManager::Tokenize with spaces
@@ -366,11 +271,6 @@ class LSYii_Validators extends CValidator
             } else {
                 if ($aToken[2] == 'WORD' && !$this->isSafeExpressionFunction($aTokens, $key)) {
                     $bUnsafe = true;
-                    if (strtolower((string) $aToken[0]) === 'sprintf') {
-                        $this->addExpressionError(gT("The function sprintf() is only allowed with a fixed format text that does not use %c.", "unescaped"));
-                    } else {
-                        $this->addExpressionError(sprintf(gT("The function %s() is not allowed in expressions.", "unescaped"), strtolower((string) $aToken[0])));
-                    }
                 }
                 $sNewExpression .= $aToken[0];
             }
@@ -405,7 +305,6 @@ class LSYii_Validators extends CValidator
            string arguments and joined), which would never have been filtered. regexMatch is the only exception. */
         if (strpos($sString, '{') !== false || strpos($sString, '}') !== false) {
             $bUnsafe = true;
-            $this->addExpressionError(gT('Curly braces inside quoted text are not allowed. Join the text instead, for example "Hello " + NAME.', 'unescaped'));
         }
         return $sString;
     }
