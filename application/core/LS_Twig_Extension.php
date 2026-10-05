@@ -258,11 +258,18 @@ class LS_Twig_Extension extends Twig_Extension
     }
 
     /**
-     * @param string $sRessource
+     * Publish a file or directory to the public assets folder.
+     * Exposed to the Twig sandbox, so only paths inside a theme root directory are allowed.
+     * @param string $sRessource absolute path of the file or directory to publish
+     * @return string|false the published asset URL, false if the path is invalid or outside the theme root directories
      */
     public static function assetPublish($sRessource)
     {
-        return App()->assetManager->publish($sRessource);
+        $sRealPath = realpath((string) $sRessource);
+        if ($sRealPath === false || !self::isInThemeRootDir($sRealPath)) {
+            return false;
+        }
+        return App()->assetManager->publish($sRealPath);
     }
 
     /**
@@ -288,7 +295,7 @@ class LS_Twig_Extension extends Twig_Extension
     public static function imageSrc($sImagePath, $default = false)
     {
         // If $sImagePath is a 'virtual' path, we must get the real path.
-        if (preg_match('/(image::\w+::)/', $sImagePath, $m)) {
+        if (preg_match('/(image::\w+::)/', strval($sImagePath), $m)) {
             $oTemplate =  Template::getLastInstance();
             Yii::import('application.helpers.SurveyThemeHelper');
             $sFullPath = SurveyThemeHelper::getRealThemeFilePath($sImagePath, $oTemplate->template_name, $oTemplate->sid);
@@ -317,7 +324,7 @@ class LS_Twig_Extension extends Twig_Extension
             return false;
         }
 
-        $sUrlImgAsset = self::assetPublish($sFullPath);
+        $sUrlImgAsset = App()->assetManager->publish($sFullPath);
         return $sUrlImgAsset;
     }
 
@@ -344,7 +351,7 @@ class LS_Twig_Extension extends Twig_Extension
             return false;
         }
         $sFullPath = $oTemplate->path . $resourcePath;
-        $resourceAsset = self::assetPublish($sFullPath);
+        $resourceAsset = App()->assetManager->publish($sFullPath);
         return $resourceAsset;
     }
 
@@ -411,13 +418,12 @@ class LS_Twig_Extension extends Twig_Extension
             $oMotherTemplate = $oRTemplate->oMotherTemplate;
             if (!($oMotherTemplate instanceof TemplateConfiguration)) {
                 return false;
-                break;
             }
             $oRTemplate = $oMotherTemplate;
         }
         $sRessourcePath = realpath($oRTemplate->path . $sRessource);
         $sTemplatePath = realpath($oRTemplate->path);
-        if (substr($sTemplatePath, 0, strlen($sTemplatePath)) !== $sTemplatePath) {
+        if ($sRessourcePath === false || strpos($sRessourcePath, $sTemplatePath . DIRECTORY_SEPARATOR) !== 0) {
             return false;
         }
         return $oRTemplate;
@@ -817,5 +823,21 @@ class LS_Twig_Extension extends Twig_Extension
 
         $trackURL = htmlspecialchars($surveyName . '-[' . $surveyId . ']/[' . $page . ']-' . $groupName);
         return $trackURL;
+    }
+
+    /**
+     * Check if a resolved path is inside the standard or user theme root directory.
+     * @param string $sRealPath
+     * @return bool
+     */
+    private static function isInThemeRootDir(string $sRealPath): bool
+    {
+        foreach (['standardthemerootdir', 'userthemerootdir'] as $sConfig) {
+            $sRoot = realpath((string) App()->getConfig($sConfig));
+            if ($sRoot !== false && strpos($sRealPath, $sRoot . DIRECTORY_SEPARATOR) === 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

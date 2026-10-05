@@ -169,13 +169,17 @@ class Themes extends SurveyCommonAction
      */
     public function upload()
     {
-        $action = returnGlobal('action');
+        $action = App()->request->getParam('action');
         if ($action == 'templateuploadimagefile' && App()->request->getPost('surveyid')) {
             App()->getController()->forward("/surveyAdministration/uploadimagefile/");
             App()->end();
         }
         $sTemplateName = App()->request->getPost('templatename');
-        if (Permission::model()->hasGlobalPermission('templates', 'import') || Permission::model()->hasTemplatePermission($sTemplateName)) {
+        // Theme upload and the import form require import permission; only image upload is allowed per theme.
+        if (
+            Permission::model()->hasGlobalPermission('templates', 'import')
+            || ($action == 'templateuploadimagefile' && Permission::model()->hasTemplatePermission($sTemplateName))
+        ) {
             App()->loadHelper('admin/template');
             // NB: lid = label id
             $lid = returnGlobal('lid');
