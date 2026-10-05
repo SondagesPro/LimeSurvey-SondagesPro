@@ -3,7 +3,7 @@
         'name' => 'limesurvey/limesurvey',
         'pretty_version' => '5.x-dev',
         'version' => '5.9999999.9999999.9999999-dev',
-        'reference' => 'e253e4a1cfb55294d2d27c2f585b27a2e3120614',
+        'reference' => '69af3c9d03694935212025d45b954db64dcc1a56',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -136,7 +136,7 @@
         'limesurvey/limesurvey' => array(
             'pretty_version' => '5.x-dev',
             'version' => '5.9999999.9999999.9999999-dev',
-            'reference' => 'e253e4a1cfb55294d2d27c2f585b27a2e3120614',
+            'reference' => '69af3c9d03694935212025d45b954db64dcc1a56',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
