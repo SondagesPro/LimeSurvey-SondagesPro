@@ -15,30 +15,30 @@ class ComposerStaticInitddb1a145e450f862353420acc5153e40
     );
 
     public static $prefixLengthsPsr4 = array (
-        'p' => 
+        'p' =>
         array (
             'phpseclib3\\' => 11,
         ),
-        'b' => 
+        'b' =>
         array (
             'bcmath_compat\\' => 14,
         ),
-        'T' => 
+        'T' =>
         array (
             'Twig\\' => 5,
         ),
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'SPSS\\' => 5,
         ),
-        'P' => 
+        'P' =>
         array (
             'ParagonIE\\ConstantTime\\' => 23,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
-        'L' => 
+        'L' =>
         array (
             'LimeSurvey\\PluginManager\\' => 25,
             'LimeSurvey\\Models\\Services\\' => 27,
@@ -50,139 +50,139 @@ class ComposerStaticInitddb1a145e450f862353420acc5153e40
             'LimeSurvey\\Exceptions\\' => 22,
             'LimeSurvey\\Datavalueobjects\\' => 28,
         ),
-        'H' => 
+        'H' =>
         array (
             'Html2Text\\' => 10,
         ),
-        'A' => 
+        'A' =>
         array (
             'ArPHP\\I18N\\' => 11,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'phpseclib3\\' => 
+        'phpseclib3\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
-        'bcmath_compat\\' => 
+        'bcmath_compat\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpseclib/bcmath_compat/src',
         ),
-        'Twig\\' => 
+        'Twig\\' =>
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
+        'Symfony\\Polyfill\\Mbstring\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Symfony\\Polyfill\\Ctype\\' => 
+        'Symfony\\Polyfill\\Ctype\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'SPSS\\' => 
+        'SPSS\\' =>
         array (
             0 => __DIR__ . '/..' . '/tiamo/spss/src',
         ),
-        'ParagonIE\\ConstantTime\\' => 
+        'ParagonIE\\ConstantTime\\' =>
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
         ),
-        'PHPMailer\\PHPMailer\\' => 
+        'PHPMailer\\PHPMailer\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
-        'LimeSurvey\\PluginManager\\' => 
+        'LimeSurvey\\PluginManager\\' =>
         array (
             0 => __DIR__ . '/../..' . '/application/libraries/PluginManager',
             1 => __DIR__ . '/../..' . '/application/libraries/PluginManager/Storage',
         ),
-        'LimeSurvey\\Models\\Services\\' => 
+        'LimeSurvey\\Models\\Services\\' =>
         array (
             0 => __DIR__ . '/../..' . '/application/models/services',
         ),
-        'LimeSurvey\\Menu\\' => 
+        'LimeSurvey\\Menu\\' =>
         array (
             0 => __DIR__ . '/../..' . '/application/libraries/MenuObjects',
         ),
-        'LimeSurvey\\Libraries\\' => 
+        'LimeSurvey\\Libraries\\' =>
         array (
             0 => __DIR__ . '/../..' . '/application/libraries',
         ),
-        'LimeSurvey\\Helpers\\Update\\' => 
+        'LimeSurvey\\Helpers\\Update\\' =>
         array (
             0 => __DIR__ . '/../..' . '/application/helpers/update',
             1 => __DIR__ . '/../..' . '/application/helpers/update/updates',
         ),
-        'LimeSurvey\\Helpers\\' => 
+        'LimeSurvey\\Helpers\\' =>
         array (
             0 => __DIR__ . '/../..' . '/application/helpers',
         ),
-        'LimeSurvey\\ExtensionInstaller\\' => 
+        'LimeSurvey\\ExtensionInstaller\\' =>
         array (
             0 => __DIR__ . '/../..' . '/application/libraries/ExtensionInstaller',
         ),
-        'LimeSurvey\\Exceptions\\' => 
+        'LimeSurvey\\Exceptions\\' =>
         array (
             0 => __DIR__ . '/../..' . '/application/exceptions',
         ),
-        'LimeSurvey\\Datavalueobjects\\' => 
+        'LimeSurvey\\Datavalueobjects\\' =>
         array (
             0 => __DIR__ . '/../..' . '/application/datavalueobjects',
         ),
-        'Html2Text\\' => 
+        'Html2Text\\' =>
         array (
             0 => __DIR__ . '/..' . '/html2text/html2text/src',
-            1 => __DIR__ . '/..' . '/html2text/html2text/test',
         ),
-        'ArPHP\\I18N\\' => 
+        'ArPHP\\I18N\\' =>
         array (
             0 => __DIR__ . '/..' . '/khaled.alshamaa/ar-php/src',
         ),
     );
 
     public static $prefixesPsr0 = array (
-        'T' => 
+        'T' =>
         array (
-            'Twig_' => 
+            'Twig_' =>
             array (
                 0 => __DIR__ . '/..' . '/twig/twig/lib',
             ),
         ),
-        'S' => 
+        'S' =>
         array (
-            'Spreadsheet' => 
+            'Spreadsheet' =>
             array (
                 0 => __DIR__ . '/..' . '/pear/spreadsheet_excel_writer',
             ),
         ),
-        'O' => 
+        'O' =>
         array (
-            'OLE' => 
+            'OLE' =>
             array (
                 0 => __DIR__ . '/..' . '/pear/ole',
             ),
         ),
-        'C' => 
+        'C' =>
         array (
-            'Console' => 
+            'Console' =>
             array (
                 0 => __DIR__ . '/..' . '/pear/console_getopt',
             ),
         ),
     );
 
-    public static $fallbackDirsPsr0 = array (
-        0 => __DIR__ . '/..' . '/pear/pear-core-minimal/src',
-    );
-
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Datamatrix' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/datamatrix.php',
+        'OS_Guess' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/OS/Guess.php',
         'PDF417' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/pdf417.php',
+        'PEAR' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
+        'PEAR_Error' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
+        'PEAR_ErrorStack' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR/ErrorStack.php',
         'PEAR_Exception' => __DIR__ . '/..' . '/pear/pear_exception/PEAR/Exception.php',
         'QRcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/qrcode.php',
+        'System' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/System.php',
         'TCPDF' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf.php',
         'TCPDF2DBarcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_barcodes_2d.php',
         'TCPDFBarcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_barcodes_1d.php',
@@ -191,8 +191,6 @@ class ComposerStaticInitddb1a145e450f862353420acc5153e40
         'TCPDF_FONTS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_fonts.php',
         'TCPDF_FONT_DATA' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_font_data.php',
         'TCPDF_IMAGES' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_images.php',
-        'TCPDF_IMPORT' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_import.php',
-        'TCPDF_PARSER' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_parser.php',
         'TCPDF_STATIC' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_static.php',
         'XLSXWriter' => __DIR__ . '/..' . '/mk-j/php_xlsxwriter/xlsxwriter.class.php',
         'XLSXWriter_BuffererWriter' => __DIR__ . '/..' . '/mk-j/php_xlsxwriter/xlsxwriter.class.php',
@@ -206,7 +204,6 @@ class ComposerStaticInitddb1a145e450f862353420acc5153e40
             $loader->prefixLengthsPsr4 = ComposerStaticInitddb1a145e450f862353420acc5153e40::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitddb1a145e450f862353420acc5153e40::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInitddb1a145e450f862353420acc5153e40::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInitddb1a145e450f862353420acc5153e40::$fallbackDirsPsr0;
             $loader->classMap = ComposerStaticInitddb1a145e450f862353420acc5153e40::$classMap;
 
         }, null, ClassLoader::class);
