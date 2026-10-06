@@ -7,6 +7,11 @@ get things working in your environment. There are a few guidelines that we
 need contributors to follow so that we can have a chance of keeping on
 top of things.
 
+## Contribut to this unoffical fork
+
+* For security issue : see SECURITY.md. Please report (suspected) security vulnerabilities on [Sondages Pro support](https://support.sondages.pro/open.php?topicId=10) and wait for an answer to create a Pull request.
+* For bug fixing and improvment, only litlle patch are accepted. Just create a Pull Request.
+
 ## Getting started
 
 * Make sure you have a [LimeSurvey account](https://www.limesurvey.org)
