@@ -635,6 +635,7 @@ class statistics_helper
         $sDatabaseType = Yii::app()->db->getDriverName();
         $statisticsoutput = "";
         $qqid = "";
+        $validColumns = SurveyDynamic::model($surveyid)->getTableSchema()->getColumnNames();
 
         /* Some variable depend on output type, actually : only line feed */
         switch ($outputType) {
@@ -653,7 +654,7 @@ class statistics_helper
         if ($sQuestionType == "M" || $sQuestionType == "P") {
             //get SGQ data
             [$qsid, $qgid, $qqid] = explode("X", substr($rt, 1, strlen($rt)), 3);
-
+            $qqid = intval($qqid);
             //select details for this question
             $nresult = Question::model()->find('parent_qid=0 AND qid=:qid', array(':qid' => $qqid));
             $qother = 'N';
@@ -672,13 +673,17 @@ class statistics_helper
             ));
             foreach ($rows as $row) {
                 $mfield = substr($rt, 1, strlen($rt)) . $row['title'];
-                $alist[] = array($row['title'], flattenText($row->questionl10ns[$language]->question), $mfield);
+                if (in_array($mfield, $validColumns, true)) {
+                    $alist[] = array($row['title'], flattenText($row->questionl10ns[$language]->question), $mfield);
+                }
             }
 
             //Add the "other" answer if it exists
             if ($qother == "Y") {
                 $mfield = substr($rt, 1, strlen($rt)) . "other";
-                $alist[] = array(gT("Other"), gT("Other"), $mfield);
+                if (in_array($mfield, $validColumns, true)) {
+                    $alist[] = array(gT("Other"), gT("Other"), $mfield);
+                }
             }
         } elseif ($sQuestionType == Question::QT_T_LONG_FREE_TEXT || $sQuestionType == Question::QT_S_SHORT_FREE_TEXT) {
             //Short and long text
@@ -4228,6 +4233,11 @@ class statistics_helper
      */
     function _listcolumn($surveyid, $column, $sortby = "", $sortmethod = "", $sorttype = "")
     {
+        // Security (mantis #20741): quoteColumnName() does not escape identifier quoting
+        $validColumns = SurveyDynamic::model($surveyid)->getTableSchema()->getColumnNames();
+        if (!in_array($column, $validColumns, true) || ($sortby != '' && !in_array($sortby, $validColumns, true))) {
+            throw new InvalidArgumentException('Statistics column listing references an unknown column.');
+        }
         $search['condition'] = Yii::app()->db->quoteColumnName($column) . " != ''";
         $sDBDriverName = Yii::app()->db->getDriverName();
         if ($sDBDriverName == 'sqlsrv' || $sDBDriverName == 'mssql' || $sDBDriverName == 'dblib') {

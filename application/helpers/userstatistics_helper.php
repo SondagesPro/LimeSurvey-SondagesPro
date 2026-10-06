@@ -403,7 +403,7 @@ function buildSelects($allfields, $surveyid, $language)
                 $mselects = array();
                 //create a list out of the $pv array
                 list($lsid, $lgid, $lqid) = explode("X", $pv);
-
+                $lqid = intval($lqid);
                 $aresult = Question::model()->findAll(array('order' => 'question_order', 'condition' => 'parent_qid=:parent_qid AND scale_id=0', 'params' => array(":parent_qid" => $lqid)));
                 foreach ($aresult as $arow) {
                     // only add condition if answer has been chosen
@@ -2980,7 +2980,10 @@ class userstatistics_helper
             if ($sorttype == 'N') {
                 $sortby = "($sortby * 1)";
             } //Converts text sorting into numerical sorting
-            $search['order'] = $sortby . ' ' . $sortmethod;
+            $sortmethod = strtoupper($sortmethod);
+            if ($sortmethod && in_array($sortmethod, ['ASC', 'DESC'])) {
+                $search['order'] = $sortby . ' ' . $sortmethod;
+            }
         }
         $results = SurveyDynamic::model($surveyid)->findAll($search);
         $output = array();

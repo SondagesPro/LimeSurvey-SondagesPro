@@ -61,21 +61,47 @@ class MysqlSchema extends CMysqlSchema
     public function getColumnType($type)
     {
         if (isset($this->columnTypes[$type])) {
-// Direct : get it
+            // Direct : get it
             $sResult = $this->columnTypes[$type];
         } elseif (preg_match('/^([a-zA-Z ]+)\((.+?)\)(.*)$/', $type, $matches)) {
-// With params : some test to do
+            // With params : some test to do
             $baseType = parent::getColumnType($matches[1]);
             if (preg_match('/^([a-zA-Z ]+)\((.+?)\)(.*)$/', $baseType, $baseMatches)) {
-// Replace the default Yii param
+                // Replace the default Yii param
                 $sResult = preg_replace('/\(.+\)/', "(" . $matches[2] . ")", parent::getColumnType($matches[1] . " " . $matches[3]));
             } else {
-// Get the base type and join
+                // Get the base type and join
                 $sResult = join(" ", array($baseType, "(" . $matches[2] . ")", $matches[3]));
             }
         } else {
             $sResult = parent::getColumnType($type);
         }
         return $sResult;
+    }
+
+    /**
+     * @inheritdoc
+     * Unlike the Yii parent, any embedded backtick is escaped by doubling it, so a
+     * name cannot break out of the quoted identifier (mantis #20741).
+     *
+     * @param string $name table name
+     * @return string the properly quoted table name
+     */
+    public function quoteSimpleTableName($name)
+    {
+        return '`' . str_replace('`', '``', (string) $name) . '`';
+    }
+
+    /**
+     * @inheritdoc
+     * Unlike the Yii parent, any embedded backtick is escaped by doubling it, so a
+     * name cannot break out of the quoted identifier (mantis #20741).
+     *
+     * @param string $name column name
+     * @return string the properly quoted column name
+     */
+    public function quoteSimpleColumnName($name)
+    {
+        return '`' . str_replace('`', '``', (string) $name) . '`';
     }
 }
