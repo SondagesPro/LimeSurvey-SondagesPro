@@ -516,9 +516,15 @@ class Statistics extends SurveyCommonAction
         if (!Permission::model()->hasSurveyPermission($surveyid, 'statistics', 'read')) {
             throw new CHttpException(403, gT("You do not have permission to access this page."));
         }
-        // Break for sortmethod bad parameter (mantis #20145)
+        // Break for bad parameter (mantis #20145 #20741 #20744)
         $sortmethod = strtoupper($sortmethod);
-        if ($sortmethod && !in_array($sortmethod, ['ASC', 'DESC'])) {
+        $validColumns = SurveyDynamic::model($surveyid)->getTableSchema()->getColumnNames();
+        if (
+            !in_array($column, $validColumns, true)
+            || ($sortby !== '' && !in_array($sortby, $validColumns, true))
+            || !in_array($sortmethod, ['', 'ASC', 'DESC'], true)
+            || !in_array($sorttype, ['', 'N', 'T'], true)
+        ) {
             throw new CHttpException(400, gT("Invalid request."));
         }
         Yii::app()->loadHelper('admin/statistics');
