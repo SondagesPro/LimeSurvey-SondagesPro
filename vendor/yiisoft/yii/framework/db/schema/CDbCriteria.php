@@ -197,17 +197,10 @@ class CDbCriteria extends CComponent
 			foreach($sqlContentFieldNames as $field)
 			{
 				if(is_array($this->$field))
-				{
 					foreach($this->$field as $k=>$v)
-					{
-						if (is_scalar($v))
-							$this->{$field}[$k]=strtr($v,$map);
-					}
-				}
-				elseif(is_scalar($this->$field))
-				{
+						$this->{$field}[$k]=strtr($v,$map);
+				else
 					$this->$field=strtr($this->$field,$map);
-				}
 			}
 		}
 		$this->params=$params;

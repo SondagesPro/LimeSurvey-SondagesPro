@@ -47,7 +47,8 @@ class CCaptchaValidator extends CValidator
 		if($this->allowEmpty && $this->isEmpty($value))
 			return;
 		$captcha=$this->getCaptchaAction();
-		if(!$captcha->validate($value,$this->caseSensitive))
+		// reason of array checking is explained here: https://github.com/yiisoft/yii/issues/1955
+		if(is_array($value) || !$captcha->validate($value,$this->caseSensitive))
 		{
 			$message=$this->message!==null?$this->message:Yii::t('yii','The verification code is incorrect.');
 			$this->addError($object,$attribute,$message);
@@ -120,3 +121,4 @@ if(jQuery.trim(value)!='') {
 		return $js;
 	}
 }
+

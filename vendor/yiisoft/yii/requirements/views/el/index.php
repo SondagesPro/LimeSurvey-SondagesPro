@@ -43,7 +43,7 @@
 	<td>
 	<?php echo $requirement[0]; ?>
 	</td>
-	<td class="<?php echo $requirement[2] ? 'passed' : ($requirement[1] ? 'failed' : 'warning'); ?>">
+	<td class="<?php echo $requirement[2] ? 'πέρασε' : ($requirement[1] ? 'απέτυχε' : 'προειδοποίηση'); ?>">
 	<?php echo $requirement[2] ? 'Πέρασε' : ($requirement[1] ? 'Απέτυχε' : 'Προειδοποίηση'); ?>
 	</td>
 	<td>

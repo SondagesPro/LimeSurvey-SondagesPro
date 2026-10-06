@@ -173,8 +173,6 @@ class CCaptchaAction extends CAction
 	 */
 	public function validate($input,$caseSensitive)
 	{
-		if(!is_string($input))
-			return false;
 		$code = $this->getVerifyCode();
 		$valid = $caseSensitive ? ($input === $code) : strcasecmp($input,$code)===0;
 		$session = Yii::app()->session;
