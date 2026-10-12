@@ -1383,7 +1383,7 @@ class QuestionAdministrationController extends LSBaseController
 
             if (is_object($oQuestion)) {
                 $aResults[$iQid]['title'] = "";
-                if (Permission::model()->hasSurveyPermission($question->sid, 'surveycontent', 'read')) {
+                if (Permission::model()->hasSurveyPermission($oQuestion->sid, 'surveycontent', 'read')) {
                     $aResults[$iQid]['title'] = viewHelper::flatEllipsizeText(
                         $oQuestion->questionl10ns[$sBaseLanguage]->question,
                         true,
@@ -1616,7 +1616,7 @@ class QuestionAdministrationController extends LSBaseController
 
             if (is_object($oQuestion)) {
                 $aResults[$iQid]['title'] = "";
-                if (Permission::model()->hasSurveyPermission($question->sid, 'surveycontent', 'read')) {
+                if (Permission::model()->hasSurveyPermission($oQuestion->sid, 'surveycontent', 'read')) {
                     $aResults[$iQid]['title'] = viewHelper::flatEllipsizeText(
                         $oQuestion->questionl10ns[$sBaseLanguage]->question,
                         true,
