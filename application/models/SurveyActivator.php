@@ -330,7 +330,7 @@ class SurveyActivator
         try {
             if (isset($this->tableDefinition['token'])) {
                 Yii::app()->db->createCommand()->createIndex(
-                    "idx_survey_token_{$this->survey->primaryKey}_" . rand(1, 50000),
+                    "idx_survey_token_{$this->survey->primaryKey}_" . date('YmdHis') . "_" . rand(1, 50000),
                     $sTableName,
                     'token'
                 );
@@ -380,8 +380,8 @@ class SurveyActivator
                 $sQuery = "ALTER TABLE {$this->survey->responsesTableName} ADD [id] int identity({$iAutoNumberStart},1)";
                 Yii::app()->db->createCommand($sQuery)->execute();
                 // Add back the primaryKey
-
-                Yii::app()->db->createCommand()->addPrimaryKey('PRIMARY_' . rand(1, 50000), $this->survey->responsesTableName, 'id');
+                $indexname = "idxuniq_survey_id_{$this->survey->primaryKey}_" . date('YmdHis') . "_" .rand(1, 50000);
+                Yii::app()->db->createCommand()->addPrimaryKey($indexname, $this->survey->responsesTableName, 'id');
             } elseif (Yii::app()->db->driverName == 'pgsql') {
                 $sQuery = "SELECT setval(pg_get_serial_sequence('{$this->survey->responsesTableName}', 'id'),{$iAutoNumberStart},false);";
                 // FIXME @ not good
