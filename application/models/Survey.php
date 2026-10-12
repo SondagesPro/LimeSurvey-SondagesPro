@@ -603,13 +603,13 @@ class Survey extends LSActiveRecord implements PermissionInterface
      */
     public function filterTemplateSave($sTemplateName)
     {
-        if (!Permission::model()->hasTemplatePermission($sTemplateName)) {
+        if ($sTemplateName !== 'inherit' && !Permission::model()->hasTemplatePermission($sTemplateName)) {
             // Reset to default only if different from actual value
             if (!$this->isNewRecord) {
-                $oSurvey = self::model()->findByPk($this->sid);
+                $oSurvey = self::model()->findByAttribute(['sid' => $this->sid]);
+                $sTemplateName = $oSurvey->template ?? 'inherit';
                 if ($oSurvey->template != $sTemplateName) {
-                    // No need to test !is_null($oSurvey)
-                    $sTemplateName = getGlobalSetting('defaulttheme');
+                    $sTemplateName = 'inherit';
                 }
             } else {
                 $sTemplateName = 'inherit';
