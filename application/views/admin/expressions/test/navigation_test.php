@@ -8,7 +8,7 @@ echo viewHelper::getViewTestTag('expressionsNavigationTest');
 
 <?php
 if (count($_POST) == 0) {
-    $aSurveys = Survey::model()->with('defaultlanguage')->findAll();
+    $aSurveys = Survey::model()->permission(App()->user->getId())->with('defaultlanguage')->findAll();
     $surveyList='';
     foreach($aSurveys as $row) {
         $surveyList .= "<option value='" . $row['sid'] . "'>#" . $row['sid'] . " [" . $row['datecreated'] . '] ' . flattenText($row->defaultlanguage->surveyls_title) . "</option>\n";

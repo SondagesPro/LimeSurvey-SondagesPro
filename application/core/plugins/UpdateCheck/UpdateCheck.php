@@ -131,6 +131,9 @@ JS
      */
     public function checkAll()
     {
+        if (!Permission::model()->hasGlobalPermission('settings', 'read')) {
+            throw new CHttpException(403, gT("You do not have permission to access this page."));
+        }
         $service = \Yii::app()->extensionUpdaterServiceLocator;
 
         // Get one updater class for each extension.

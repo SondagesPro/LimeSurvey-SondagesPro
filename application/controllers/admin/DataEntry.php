@@ -116,18 +116,26 @@ class DataEntry extends SurveyCommonAction
         $surveyid = sanitize_int($surveyid);
         $aData['surveyid'] = $surveyid;
         $aData['success'] = false;
-        if (Permission::model()->hasSurveyPermission($surveyid, 'surveyactivation', 'update')) {
-            if (Yii::app()->request->getParam('unfinalizeanswers') == 'true') {
-                SurveyDynamic::sid($surveyid);
-                Yii::app()->db->createCommand("DELETE from {{survey_$surveyid}} WHERE submitdate IS NULL AND token in (SELECT * FROM ( SELECT answ2.token from {{survey_$surveyid}} AS answ2 WHERE answ2.submitdate IS NOT NULL) tmp )")->execute();
-                // Then set all remaining answers to incomplete state
-                Yii::app()->db->createCommand("UPDATE {{survey_$surveyid}} SET submitdate=NULL, lastpage=NULL")->execute();
-                // Finally, reset the token completed and sent status
-                Yii::app()->db->createCommand("UPDATE {{tokens_$surveyid}} SET sent='N', remindersent='N', remindercount=0, completed='N', usesleft=1 where usesleft=0")->execute();
-                $aData['success'] = true;
-            }
-            $this->renderWrappedTemplate('dataentry', 'iteratesurvey', $aData);
+        if (
+            !Permission::model()->hasSurveyPermission($surveyid, 'responses', 'update')
+            || Permission::model()->hasSurveyPermission($surveyid, 'surveyactivation', 'update')
+        ) {
+            throw new CHttpException(403, gT("You do not have permission to access this page."));
         }
+        if (!Yii::app()->getRequest()->isPostRequest) {
+            throw new CHttpException(405, gT("Invalid action"));
+        }
+        if (Yii::app()->request->getParam('unfinalizeanswers') == 'true') {
+            SurveyDynamic::sid($surveyid);
+            Yii::app()->db->createCommand("DELETE from {{survey_$surveyid}} WHERE submitdate IS NULL AND token in (SELECT * FROM ( SELECT answ2.token from {{survey_$surveyid}} AS answ2 WHERE answ2.submitdate IS NOT NULL) tmp )")->execute();
+            // Then set all remaining answers to incomplete state
+            Yii::app()->db->createCommand("UPDATE {{survey_$surveyid}} SET submitdate=NULL, lastpage=NULL")->execute();
+            // Finally, reset the token completed and sent status
+            Yii::app()->db->createCommand("UPDATE {{tokens_$surveyid}} SET sent='N', remindersent='N', remindercount=0, completed='N', usesleft=1 where usesleft=0")->execute();
+            $aData['success'] = true;
+        }
+        $this->renderWrappedTemplate('dataentry', 'iteratesurvey', $aData);
+
     }
 
     /**

@@ -215,8 +215,9 @@ class AssessmentController extends LSBaseController
      */
     public function actionEdit($surveyid)
     {
-        $iAsessementId = App()->request->getParam('id');
-        $oAssessments = Assessment::model()->findAll("id=:id", [':id' => $iAsessementId]);
+        $iSurveyID = sanitize_int($surveyid);
+        $iAsessementId = sanitize_int(App()->request->getParam('id'));
+        $oAssessments = Assessment::model()->findAll("id=:id AND sid=:sid", [':id' => $iAsessementId, ':sid' => $iSurveyID]);
         if ($oAssessments !== null && Permission::model()->hasSurveyPermission($surveyid, 'assessments', 'update')) {
             $aData = [];
             $aData['editData'] = $oAssessments[0]->attributes;

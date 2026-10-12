@@ -627,9 +627,10 @@ class QuestionGroupsAdministrationController extends LSBaseController
                 'success' => false,
                 'message' => 'No permission'
             ]);
+            return;
         }
 
-        $oQuestionGroup = QuestionGroup::model()->findByPk($iQuestionGroupId);
+        $oQuestionGroup = QuestionGroup::model()->findByAttributes(['gid' => intval($iQuestionGroupId), 'sid' => $surveyid]);;
         $oSurvey = Survey::model()->findByPk($surveyid);
 
         $aLanguages = [];
@@ -747,8 +748,15 @@ class QuestionGroupsAdministrationController extends LSBaseController
         $sScenario = App()->request->getPost('scenario', '');
         $iSurveyId = (int) $sid;
 
-        $oQuestionGroup = isset($questionGroup['gid']) ? QuestionGroup::model()->findByPk($questionGroup['gid']) : null;
-
+        $oQuestionGroup = null;
+        if (!empty($questionGroup['gid'])) {
+            $oQuestionGroup = QuestionGroup::model()->findByAttributes(
+                ['gid' => (int)$questionGroup['gid'], 'sid' => $iSurveyId]
+            );
+            if ($oQuestionGroup == null) {
+                throw new CHttpException(404, gT("Invalid group ID"));
+            }
+        }
         //permission check ...
         if ($oQuestionGroup == null) {
             if (!Permission::model()->hasSurveyPermission($sid, 'surveycontent', 'create')) {
@@ -1015,6 +1023,8 @@ class QuestionGroupsAdministrationController extends LSBaseController
         if ($oQuestionGroup == null) {
             $oQuestionGroup = new QuestionGroup();
             $oQuestionGroup->sid = $iSurveyId;
+        } elseif ($oQuestionGroup->sid != $iSurveyId) {
+            throw new CHttpException(404, gT("Invalid group ID"));
         }
 
         return $oQuestionGroup;

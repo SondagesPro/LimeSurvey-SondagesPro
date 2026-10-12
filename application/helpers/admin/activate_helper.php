@@ -274,7 +274,19 @@ function checkQuestions($postsid, $iSurveyID)
     $fieldmap = createFieldMap($survey, 'full', true, false, $survey->language, $aDuplicateQIDs);
     if (count($aDuplicateQIDs)) {
         foreach ($aDuplicateQIDs as $iQID => $aDuplicate) {
-            $sFixLink = "[<a class='selector__fixConsistencyProblem' href='" . Yii::app()->getController()->createUrl("/surveyAdministration/activate/iSurveyID/{$iSurveyID}/fixnumbering/{$iQID}") . "'>Click here to fix</a>]";
+
+            // Note: Fixing changes the question ID, so it is only done by POST
+            $sFixLink = CHtml::form(
+                Yii::app()->getController()->createUrl("/surveyAdministration/activate/iSurveyID/{$iSurveyID}"),
+                'post',
+                ['class' => 'd-inline']
+            )
+                . CHtml::hiddenField('fixnumbering', $iQID, ['id' => false])
+                . CHtml::hiddenField('iSurveyID', $iSurveyID, ['id' => false])
+                . CHtml::hiddenField('questionId', $iQID, ['id' => false])
+                . "[<button type='submit' class='btn btn-link p-0 align-baseline selector__fixConsistencyProblem'>Click here to fix</button>]"
+                . CHtml::endForm();
+
             $failedcheck[] = array($iQID, $aDuplicate['question'], ": Bad duplicate fieldname {$sFixLink}", $aDuplicate['gid']);
         }
     }
