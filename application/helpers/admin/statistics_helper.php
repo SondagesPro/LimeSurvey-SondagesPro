@@ -781,14 +781,19 @@ class statistics_helper
 
             //get SGQ data
             list($qsid, $qgid, $qqid) = explode("X", substr($rt, 1, strlen($rt)), 3);
-
             //select details for this question
             /**
             FIXME $iQuestionIDlength not defined!!
              */
-            $nresult = Question::model()->find('language=:language AND parent_qid=0 AND qid=:qid', array(':language' => $language, ':qid' => substr($qqid, 0, $iQuestionIDlength)));
+            $nresult = Question::model()->find('language=:language AND parent_qid=0 AND qid=:qid', array(':language' => $language, ':qid' => $qqid));
+            if (!$nresult) {
+                return;
+            }
             $qtitle = $nresult->title;
             $qtype = $nresult->type;
+            if ($qtype !== Question::QT_VERTICAL_FILE_UPLOAD) {
+                return;
+            }
             $qquestion = flattenText($nresult->question);
             /*
             4)      Average size of file per respondent

@@ -437,12 +437,12 @@ function buildSelects($allfields, $surveyid, $language)
             elseif ($firstletter == "|") {
                 // no. of files greater than
                 if (substr($pv, strlen($pv) - 1, 1) == "G" && $_POST[$pv] != "") {
-                                            $selects[] = quoteColumn(substr($pv, 1, -1) . "_filecount", $validColumns) . " > " . sanitize_int($_POST[$pv]);
+                    $selects[] = quoteColumn(substr($pv, 1, -1) . "_filecount", $validColumns) . " > " . sanitize_int($_POST[$pv]);
                 }
 
                 // no. of files less than
                 if (substr($pv, strlen($pv) - 1, 1) == "L" && $_POST[$pv] != "") {
-                                            $selects[] = quoteColumn(substr($pv, 1, -1) . "_filecount", $validColumns) . " < " . sanitize_int($_POST[$pv]);
+                    $selects[] = quoteColumn(substr($pv, 1, -1) . "_filecount", $validColumns) . " < " . sanitize_int($_POST[$pv]);
                 }
             }
 
@@ -746,7 +746,10 @@ class userstatistics_helper
                 /**
                  * FIXME $iQuestionIDlength not defined!!
                  */
-                $nresult = Question::model()->find('language=:language AND parent_qid=0 AND qid=:qid', array(':language' => $language, ':qid' => substr($qqid, 0, $iQuestionIDlength)));
+                $nresult = Question::model()->find('language=:language AND parent_qid=0 AND qid=:qid', array(':language' => $language, ':qid' => $qqid));
+                if (!$nresult) {
+                    return [];
+                }
                 $qtitle = $nresult->title;
                 $qtype = $nresult->type;
                 $qquestion = flattenText($nresult->question);
