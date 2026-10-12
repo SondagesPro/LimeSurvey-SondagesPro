@@ -1787,7 +1787,7 @@ class ConditionsAction extends SurveyCommonAction
             'submitcid'     => $submitcid,
             'editSourceTab' => $this->getEditSourceTab(),
             'editTargetTab' => $this->getEditTargetTab(),
-            'addConditionToScenarioNr' => Yii::app()->request->getQuery('scenarioNr'),
+            'addConditionToScenarioNr' => intval(Yii::app()->request->getQuery('scenarioNr')),
             'surveyIsAnonymized' => $this->getSurveyIsAnonymized(),
         );
         $result .= $this->getController()->renderPartial('/admin/conditions/includes/form_editconditions_header', $data, true);
