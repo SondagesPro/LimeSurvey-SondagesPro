@@ -967,12 +967,13 @@ class Export extends SurveyCommonAction
             }
             $archiveName                    = "";
             $oSurvey                        = Survey::model()->findByPk($iSurveyID);
-            $aResults[$iSurveyID]['title']  = ellipsize($oSurvey->correct_relation_defaultlanguage->surveyls_title, 30);
+            $aResults[$iSurveyID]['title']  = '';
             $aResults[$iSurveyID]['result'] = false;
             if (!Permission::model()->hasSurveyPermission($iSurveyID, 'surveycontent', 'export')) {
                 $aResults[$iSurveyID]['error'] = gT("We are sorry but you don't have permissions to do this.");
                 continue;
             }
+            $aResults[$iSurveyID]['title']  = ellipsize($oSurvey->correct_relation_defaultlanguage->surveyls_title, 30);
 
             // Specific to each kind of export
             switch ($sExportType) {

@@ -261,7 +261,7 @@ class SurveyAdministrationController extends LSBaseController
         foreach ($aSurveys as $iSurveyID) {
             $iSurveyID = sanitize_int($iSurveyID);
             $oSurvey = Survey::model()->findByPk($iSurveyID);
-            $aResults[$iSurveyID]['title'] = $oSurvey->correct_relation_defaultlanguage->surveyls_title;
+            $aResults[$iSurveyID]['title'] = $this->getMassActionSurveyTitle($oSurvey);
             if (Permission::model()->hasSurveyPermission($iSurveyID, 'survey', 'delete')) {
                 $aResults[$iSurveyID]['result'] = Survey::model()->deleteSurvey($iSurveyID);
             } else {
@@ -293,7 +293,10 @@ class SurveyAdministrationController extends LSBaseController
                 continue;
             }
             $oSurvey = Survey::model()->findByPk($iSurveyID);
-            $aResults[$iSurveyID]['title'] = $oSurvey->correct_relation_defaultlanguage->surveyls_title;
+            if (empty($oSurvey)) {
+                continue;
+            }
+            $aResults[$iSurveyID]['title'] = $this->getMassActionSurveyTitle($oSurvey);
             $aResults[$iSurveyID]['result'] = 'selected';
         }
 
@@ -825,7 +828,10 @@ class SurveyAdministrationController extends LSBaseController
         $iSurveyGroupId = sanitize_int(App()->request->getPost('surveygroupid'));
         foreach ($aSIDs as $iSurveyID) {
             $oSurvey = Survey::model()->findByPk((int)$iSurveyID);
-            $aResults[$iSurveyID]['title'] = $oSurvey->correct_relation_defaultlanguage->surveyls_title;
+            if (empty($oSurvey)) {
+                continue;
+            }
+            $aResults[$iSurveyID]['title'] = $this->getMassActionSurveyTitle($oSurvey);
             /* Permission must be checked with current SurveyGroup, SurveyGroup give Surveys Permission, see mantis issue #19169 */
             if (!Permission::model()->hasSurveyPermission($iSurveyID, 'surveysettings', 'update')) {
                 $aResults[$iSurveyID]['result'] = false;
@@ -1274,6 +1280,12 @@ class SurveyAdministrationController extends LSBaseController
         $iSurveyID = $surveyid;
         if ((int)$iSurveyID > 0 && Yii::app()->request->isPostRequest) {
             $oSurvey = Survey::model()->findByPk($iSurveyID);
+            if (empty($oSurvey)) {
+                throw new CHttpException(404, gT("Survey not found."));
+            }
+            if (!Permission::model()->hasSurveyPermission($iSurveyID, 'surveysettings', 'update')) {
+                throw new CHttpException(403, gT("You do not have permission to access this page."));
+            }
             $sTemplateName = $oSurvey->template;
             $aThemeOptions = json_decode(App()->request->getPost('themeoptions', ''));
 
@@ -1712,8 +1724,11 @@ class SurveyAdministrationController extends LSBaseController
         Yii::app()->loadHelper("admin/activate");
 
         if (Yii::app()->request->getPost('ok') == '') {
-            if (isset($_GET['fixnumbering']) && $_GET['fixnumbering']) {
-                fixNumbering($_GET['fixnumbering'], $iSurveyID);
+            if (App()->getRequest()->getPost('fixnumbering')) {
+                if (!Permission::model()->hasSurveyPermission($surveyId, 'surveycontent', 'update')) {
+                    throw new CHttpException(403, gT("You do not have permission to access this page."));
+                }
+                fixNumbering(App()->getRequest()->getPost('fixnumbering'), $iSurveyID);
             }
 
             // Check consistency for groups and questions
@@ -2049,7 +2064,15 @@ class SurveyAdministrationController extends LSBaseController
     public function actionGetUrlParamsJSON($surveyid)
     {
         $iSurveyID = (int) $surveyid;
-        $sBaseLanguage = Survey::model()->findByPk($iSurveyID)->language;
+        $sBaseLanguage = Survey::model()->findByPk($iSurveyID);
+        $oSurvey = Survey::model()->findByPk($iSurveyID);
+        if (empty($oSurvey)) {
+            throw new CHttpException(404, gT("Survey not found."));
+        }
+        if (!Permission::model()->hasSurveyPermission($iSurveyID, 'surveysettings', 'read')) {
+            throw new CHttpException(403, gT("You do not have permission to access this page."));
+        }
+        $sBaseLanguage = $oSurvey->language;
         $aSurveyParameters = SurveyURLParameter::model()->findAll('sid=:sid', [':sid' => $iSurveyID]);
         $aData = array(
             'rows' => []
@@ -2364,9 +2387,12 @@ class SurveyAdministrationController extends LSBaseController
         foreach ($aSIDs as $sid) {
             if ((int)$sid > 0) {
                 $survey = Survey::model()->findByPk($sid);
+                if (empty($survey)) {
+                    continue;
+                }
                 $survey->expires = $expires;
                 $aResults[$survey->primaryKey]['title'] = ellipsize(
-                    $survey->correct_relation_defaultlanguage->surveyls_title,
+                    $this->getMassActionSurveyTitle($survey),
                     30
                 );
                 if (!Permission::model()->hasSurveyPermission($sid, 'surveysettings', 'update')) {
@@ -2648,7 +2674,7 @@ class SurveyAdministrationController extends LSBaseController
 
         if (!Permission::model()->hasSurveyPermission($iSurveyID, 'surveysettings', 'update')) {
             if (!empty($bReturn)) {
-                $aResults[$iSurveyID]['title'] = $survey->correct_relation_defaultlanguage->surveyls_title;
+                $aResults[$iSurveyID]['title'] = $this->getMassActionSurveyTitle($survey);
                 $aResults[$iSurveyID]['result'] = false;
                 $aResults[$iSurveyID]['error'] = gT("User does not have valid permissions");
                 return $aResults;
@@ -2657,7 +2683,7 @@ class SurveyAdministrationController extends LSBaseController
             }
         } elseif (!Permission::model()->hasGlobalPermission('templates', 'read') && !Permission::model()->hasTemplatePermission($template)) {
             if (!empty($bReturn)) {
-                $aResults[$iSurveyID]['title'] = $survey->correct_relation_defaultlanguage->surveyls_title;
+                $aResults[$iSurveyID]['title'] = $this->getMassActionSurveyTitle($survey);
                 $aResults[$iSurveyID]['result'] = false;
                 $aResults[$iSurveyID]['error'] = gT("User does not have permission to use this theme");
                 return $aResults;
@@ -2677,7 +2703,7 @@ class SurveyAdministrationController extends LSBaseController
         TemplateConfiguration::checkAndcreateSurveyConfig($iSurveyID);
 
         if (!empty($bReturn)) {
-            $aResults[$iSurveyID]['title'] = $survey->correct_relation_defaultlanguage->surveyls_title;
+            $aResults[$iSurveyID]['title'] = $this->getMassActionSurveyTitle($survey);
             $aResults[$iSurveyID]['result'] = true;
             return $aResults;
         }
@@ -3242,5 +3268,23 @@ class SurveyAdministrationController extends LSBaseController
 
         App()->getClientScript()->registerPackage('jquery-datatable');
         return $aData;
+    }
+
+    /**
+     * Returns the survey title to show in a mass action result table.
+     *
+     * Note: Returns an empty string if the survey does not exist or the current user
+     * has no survey read permission, so mass actions do not reveal titles of foreign surveys.
+     *
+     * @param Survey|null $survey The survey
+     *
+     * @return string
+     */
+    private function getMassActionSurveyTitle($survey): string
+    {
+        if (empty($survey) || !Permission::model()->hasSurveyPermission($survey->sid, 'survey', 'read')) {
+            return '';
+        }
+        return (string) ($survey->correct_relation_defaultlanguage->surveyls_title ?? '');
     }
 }

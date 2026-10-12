@@ -188,20 +188,21 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <!--<div class="form-group">
             <label class="control-label" for='tokenIpWhitelist'>
                 <?php eT("Reset failed login attempts of participants to make survey accessible again:"); ?>
             </label>
             <div class="">
-                <a
-                    class='btn btn-large btn-warning'
-                    type="button"
-                    href='<?= \Yii::app()->createUrl('admin/globalsettings', array("sa" => "resetFailedLoginParticipants")) ?>'
-                >
-                    <?php eT("Reset participant attempts"); ?>
-                </a>
+                    <button
+                        class='btn btn-large btn-warning'
+                        type="submit"
+                        name='sa'
+                        value='resetFailedLoginParticipants' 
+                    >
+                        <?php eT("Reset participant attempts"); ?>
+                    </button>
             </div>
-        </div>
+        </div>-->
     </div>
 
 <?php if (Yii::app()->getConfig("demoMode") == true) : ?>

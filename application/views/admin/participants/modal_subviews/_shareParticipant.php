@@ -18,10 +18,10 @@ Yii::app()->getController()->renderPartial(
 ?>
     <?php if (isset($participantIds)): ?>
         <?php foreach ($participantIds as $id): ?>
-            <input type="hidden" name="participant_id[]" value="<?php echo $id; ?>" />
+            <input type="hidden" name="participant_id[]" value="<?php echo CHtml::encode($id); ?>" />
         <?php endforeach;?>
     <?php else: ?>
-        <input type="hidden" name="participant_id" value="<?php echo $model->participant_id; ?>" />
+        <input type="hidden" name="participant_id" value="<?php echo CHtml::encode($model->participant_id); ?>" />
     <?php endif; ?>
     <div class="row">
         <div class="col-md-6">
@@ -35,7 +35,7 @@ Yii::app()->getController()->renderPartial(
                         <option value=''><?php eT('Share with all users'); ?></option>
                         <?php foreach ($users as $user): ?>
                             <option value='<?php echo $user->uid; ?>'>
-                                <?php echo $user->full_name; ?>
+                                <?php echo CHtml::encode($user->full_name); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>

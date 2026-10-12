@@ -144,7 +144,7 @@ class Database extends SurveyCommonAction
      * @param string $language     Language (defaults are language specific)
      * @param mixed $defaultvalue    The default value itself
      */
-    public function updateDefaultValues($qid, $sqid, $scale_id, $specialtype, $language, $defaultvalue)
+    private function updateDefaultValues($qid, $sqid, $scale_id, $specialtype, $language, $defaultvalue)
     {
         $arDefaultValue = DefaultValue::model()
             ->find(
@@ -210,9 +210,12 @@ class Database extends SurveyCommonAction
         $aSurveyLanguages = $oSurvey->allLanguages;
         $sBaseLanguage = $oSurvey->language;
 
-        Question::model()->updateAll(array('same_default' => Yii::app()->request->getPost('samedefault') ? 1 : 0), 'sid=:sid ANd qid=:qid', array(':sid' => $iSurveyID, ':qid' => $this->iQuestionID));
+        $arQuestion = Question::model()->findByAttributes(array('qid' => $this->iQuestionID, 'sid' => $iSurveyID));
+        if (empty($arQuestion)) {
+            throw new CHttpException(404, gT("Question not found"));
+        }
 
-        $arQuestion = Question::model()->findByAttributes(array('qid' => $this->iQuestionID));
+        Question::model()->updateAll(array('same_default' => Yii::app()->request->getPost('samedefault') ? 1 : 0), 'sid=:sid ANd qid=:qid', array(':sid' => $iSurveyID, ':qid' => $this->iQuestionID));
         $sQuestionType = $arQuestion['type'];
 
         $questionThemeMetaData = QuestionTheme::findQuestionMetaData($sQuestionType);

@@ -466,12 +466,11 @@ class Labels extends SurveyCommonAction
     public function getAllSets()
     {
         $results = LabelSet::model()->findAll();
-
         $output = array();
-
         foreach ($results as $row) {
             $output[$row->lid] = flattenText($row->getAttribute('label_name'));
         }
+
         header('Content-type: application/json');
         echo ls_json_encode($output);
     }
