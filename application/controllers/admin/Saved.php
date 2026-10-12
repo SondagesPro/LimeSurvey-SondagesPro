@@ -89,7 +89,7 @@ class Saved extends SurveyCommonAction
         Yii::import('application.helpers.admin.ajax_helper', true);
 
         $iScid = App()->getRequest()->getParam('scid');
-        $oSavedControl = SavedControl::model()->find('scid = :scid', array(':scid' => $iScid));
+        $oSavedControl = SavedControl::model()->find('scid = :scid AND sid = :sid', array(':scid' => $iScid, ':sid' => $surveyid));
         if (empty($oSavedControl)) {
             throw new CHttpException(401, gT("Saved response not found"));
         }

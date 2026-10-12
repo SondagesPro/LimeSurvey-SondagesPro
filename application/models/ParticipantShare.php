@@ -303,6 +303,15 @@ class ParticipantShare extends LSActiveRecord
         $participantFilter = Yii::app()->request->getPost('Participant');
 
         $criteria = new CDbCriteria();
+        // Superadmins and users with global participant panel read permission see all shares,
+        // everybody else only the shares of participants they own
+        if (
+            !Permission::model()->hasGlobalPermission('superadmin', 'read')
+            && !Permission::model()->hasGlobalPermission('participantpanel', 'read')
+        ) {
+            $criteria->addCondition('participant.owner_uid = :shareOwnerUid');
+            $criteria->params[':shareOwnerUid'] = (int) App()->user->id;
+        }
         $criteria->with = array('participant', 'shared_by');
 
         // This condition is necessary to filter out participants that got deleted, but the share entry is not
@@ -423,7 +432,7 @@ class ParticipantShare extends LSActiveRecord
     {
         $participent = $this->findByAttributes(
             ['participant_id' => $participent_id],
-            'can_edit = :can_edit AND share_uid = :userid',
+            'can_edit = :can_edit AND (share_uid = :userid OR share_uid = -1)',
             [
                 ':userid' => App()->user->id,
                 ':can_edit' => '1'

@@ -195,6 +195,9 @@ class ParticipantsAction extends SurveyCommonAction
         } else {
             $iUserID = Yii::app()->session['loginID'];
         }
+        if ($aAttributeIDs === null) {
+            $aAttributeIDs = array_column(ParticipantAttributeName::model()->getAllAttributes(), 'attribute_id');
+        }
         $aAttributeIDs = array_combine($aAttributeIDs, $aAttributeIDs);
         $query = Participant::model()->getParticipants(0, 0, $aAttributeIDs, null, $search, $iUserID);
         if (!$query) {
@@ -468,6 +471,15 @@ class ParticipantsAction extends SurveyCommonAction
     {
         $participant_id = Yii::app()->request->getParam('participant_id');
         if ($participant_id) {
+            $model = Participant::model()->findByPk($participant_id);
+            if (empty($model)) {
+                $this->ajaxHelper::outputError(gT('Found no participant'));
+                return;
+            }
+            if (!$model->userHasPermissionToEdit()) {
+                $this->ajaxHelper::outputNoPermission();
+                return;
+            }
             $model = Participant::model()->findByPk($participant_id)->decrypt();
             $operationType = "edit";
         } else {
@@ -511,6 +523,14 @@ class ParticipantsAction extends SurveyCommonAction
     {
         $participant_id = Yii::app()->request->getPost('participant_id');
         $model = Participant::model()->findByPk($participant_id);
+        if (empty($model)) {
+            $this->ajaxHelper::outputError(gT('Found no participant'));
+            return;
+        }
+        if (!$model->userHasPermissionToRead()) {
+            $this->ajaxHelper::outputNoPermission();
+            return;
+        }
         $surveyModel = SurveyLink::model();
         $surveyModel->participant_id = $participant_id;
         $aData = array(
@@ -911,9 +931,14 @@ class ParticipantsAction extends SurveyCommonAction
         $invalidparticipantid = array();
         $aGlobalErrors = array();
         /* If no mapped array */
-        if (!$mappedarray) {
+        if (!is_array($mappedarray)) {
             $mappedarray = array();
         }
+        /* Core participant columns (e.g. owner_uid, created_by) can never be used as attribute names */
+        $participantColumns = array_map('strtolower', Participant::model()->getTableSchema()->getColumnNames());
+        $mappedarray = array_filter($mappedarray, function ($mappedName) use ($participantColumns) {
+            return is_scalar($mappedName) && !in_array(strtolower((string) $mappedName), $participantColumns);
+        });
         /* Adjust system settings to read file with MAC line endings */
         @ini_set('auto_detect_line_endings', '1');
         /* Open the uploaded file into an array */
@@ -930,6 +955,9 @@ class ParticipantsAction extends SurveyCommonAction
             and it's associated lime_participant_attribute_names_lang table
             for each NEW attribute being created in this import process */
             foreach ($newarray as $key => $value) {
+                if (!is_scalar($value) || in_array(strtolower((string) $value), $participantColumns)) {
+                    continue;
+                }
                 $aData = array('attribute_type' => 'TB', 'defaultname' => $value, 'visible' => 'FALSE');
                 $insertid = ParticipantAttributeName::model()->storeAttributeCSV($aData);
                 /* Keep a record of the attribute_id for this new attribute
@@ -1029,9 +1057,9 @@ class ParticipantsAction extends SurveyCommonAction
                 if ($aData !== false) {
                     $thisduplicate = 1;
                     $dupcount++;
-                    if ($overwrite == "true") {
+                    $oParticipant = Participant::model()->findByPk($aData);
+                    if ($overwrite == "true" && $oParticipant->userHasPermissionToEdit()) {
                         // We want all the non filtering internal attributes to be updated,too
-                        $oParticipant = Participant::model()->findByPk($aData);
                         foreach ($writearray as $attribute => $value) {
                             if (in_array($attribute, ['firstname', 'lastname', 'email'])) {
                                 continue;
@@ -2175,6 +2203,11 @@ class ParticipantsAction extends SurveyCommonAction
     public function getSurveyInfoJson()
     {
         $participantid = Yii::app()->request->getQuery('pid');
+        $participant = Participant::model()->findByPk($participantid);
+        if (empty($participant) || !$participant->userHasPermissionToRead()) {
+            $this->ajaxHelper::outputNoPermission();
+            return;
+        }
         $records = SurveyLink::model()->findAllByAttributes((array('participant_id' => $participantid)));
         $aData = new stdClass();
         $aData->page = 1;
@@ -2555,13 +2588,23 @@ class ParticipantsAction extends SurveyCommonAction
      */
     public function addToCentral()
     {
+        $surveyId = (int) Yii::app()->request->getPost('surveyid');
         $newarr = Yii::app()->request->getPost('newarr');
         $mapped = Yii::app()->request->getPost('mapped');
         $overwriteauto = Yii::app()->request->getPost('overwriteauto', false);
         $overwriteman = Yii::app()->request->getPost('overwriteman', false);
         $createautomap = Yii::app()->request->getPost('createautomap');
 
-        $response = Participant::model()->copyToCentral((int) Yii::app()->request->getPost('surveyid'), $newarr, $mapped, $overwriteauto, $overwriteman, $createautomap);
+        if (
+            !Permission::model()->hasGlobalPermission('participantpanel', 'create')
+            || !Permission::model()->hasSurveyPermission($surveyId, 'tokens', 'read')
+            || ($createautomap == "true" && !Permission::model()->hasSurveyPermission($surveyId, 'tokens', 'update'))
+        ) {
+            echo gT('No permission');
+            return;
+        }
+
+        $response = Participant::model()->copyToCentral($surveyId, $newarr, $mapped, $overwriteauto, $overwriteman, $createautomap);
 
         echo "<p>";
         printf(gT("%s participants have been copied to the central participants table"), "<span class='badge alert-success'>" . $response['success'] . "</span>&nbsp;");
@@ -2730,6 +2773,12 @@ class ParticipantsAction extends SurveyCommonAction
         App()->getClientScript()->registerCssFile($oAdminTheme->sTemplateUrl . '/css/attributeMapToken.css');
         App()->getClientScript()->registerPackage('jqueryui'); // jqueryui
         $iSurveyID = (int) Yii::app()->request->getQuery('sid');
+        if (
+            !Permission::model()->hasGlobalPermission('participantpanel', 'create')
+            || !Permission::model()->hasSurveyPermission($iSurveyID, 'tokens', 'read')
+        ) {
+            throw new CHttpException(403, gT("You do not have permission to access this page."));
+        }
         $aCPDBAttributes = ParticipantAttributeName::model()->getCPDBAttributes();
         $aTokenAttributes = getTokenFieldsAndNames($iSurveyID, true);
 

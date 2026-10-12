@@ -856,7 +856,7 @@ class Participant extends LSActiveRecord
             // We are not superadmin so we need to limit to our own or shared with us
             $selectValue[] = '{{participant_shares}}.can_edit';
             $joinValue[]   = 'LEFT JOIN {{participant_shares}} ON p.participant_id={{participant_shares}}.participant_id';
-            $aConditions[] = 'p.owner_uid = :userid1 OR {{participant_shares}}.share_uid = :userid2 OR {{participant_shares}}.share_uid = 0';
+            $aConditions[] = 'p.owner_uid = :userid1 OR {{participant_shares}}.share_uid = :userid2 OR {{participant_shares}}.share_uid = -1';
         }
 
         if ($count) {
@@ -1470,7 +1470,7 @@ class Participant extends LSActiveRecord
             ->db
             ->createCommand()
             ->select('count(*)')
-            ->where('participant_id = :participant_id AND ( share_uid = :userid OR share_uid = 0)')
+            ->where('participant_id = :participant_id AND ( share_uid = :userid OR share_uid = -1)')
             ->from('{{participant_shares}}')
             ->bindParam(":participant_id", $participant_id, PDO::PARAM_STR)
             ->bindParam(":userid", $userid, PDO::PARAM_INT)
@@ -2051,12 +2051,14 @@ class Participant extends LSActiveRecord
                 /* If there is already an existing entry, add to the duplicate count */
                 if ($existing != null) {
                     $duplicate++;
-                    if ($overwriteman && !empty($aMapped)) {
+                    // Only overwrite attribute values of central participants the user is allowed to edit
+                    $canOverwrite = $existing->userHasPermissionToEdit();
+                    if ($canOverwrite && $overwriteman && !empty($aMapped)) {
                         foreach ($aMapped as $cpdbatt => $tatt) {
                             Participant::model()->updateAttributeValueToken($surveyid, $existing->participant_id, $cpdbatt, $tatt);
                         }
                     }
-                    if ($overwriteauto && !empty($aAutoMapped)) {
+                    if ($canOverwrite && $overwriteauto && !empty($aAutoMapped)) {
                         foreach ($aAutoMapped as $cpdbatt => $tatt) {
                             Participant::model()->updateAttributeValueToken($surveyid, $existing->participant_id, $cpdbatt, $tatt);
                         }
@@ -2199,18 +2201,22 @@ class Participant extends LSActiveRecord
         if (Permission::model()->hasGlobalPermission('superadmin') || (Permission::model()->hasGlobalPermission('participantpanel', 'update'))) {
             // Superadmins can do anything and users with global edit permission can to edit all participants
             return true;
-        } elseif ($shared && $shared->share_uid == -1 && $shared->can_edit) {
-            // -1 = shared with everyone
-            return true;
-        } elseif ($shared && $shared->exists('share_uid = :userid', [':userid' => $userId]) && $shared->can_edit) {
-            // Shared with this particular user
-            return true;
-        } elseif ($owner) {
+        }
+        if ($owner) {
             // User owns this participant
             return true;
-        } else {
-            return false;
         }
+        if ($shared && $shared->share_uid == -1 && $shared->can_edit) {
+            // -1 = shared with everyone
+            return true;
+        } 
+        if ($shared && $shared->exists('share_uid = :userid', [':userid' => $userId]) && $shared->can_edit) {
+            // Shared with this particular user
+            return true;
+        } 
+
+        return false;
+
     }
 
     /**
@@ -2389,5 +2395,29 @@ class Participant extends LSActiveRecord
             ->select('participant_id')
             ->queryColumn();
         return $oResult;
+    }
+
+    /**
+     * Filter an array of participants IDs according to permissions of the person being logged in
+     *
+     * @param mixed $aParticipantIDs
+     * @return int[]
+     */
+    public function filterParticipantIDs($aParticipantIDs)
+    {
+        // If not super admin filter the participant IDs first to owner only
+        if (
+            !Permission::model()->hasGlobalPermission('superadmin', 'read')
+            && !Permission::model()->hasGlobalPermission('participantpanel', 'delete')
+        ) {
+            $aCondition = array('and', 'owner_uid=:owner_uid', array('in', 'participant_id', $aParticipantIDs));
+            $aParameter = array(':owner_uid' => Yii::app()->session['loginID']);
+            $aParticipantIDs = Yii::app()->db->createCommand()
+                ->select('participant_id')
+                ->from(Participant::model()->tableName())
+                ->where($aCondition, $aParameter)
+                ->queryColumn();
+        }
+        return $aParticipantIDs;
     }
 }

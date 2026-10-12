@@ -2477,7 +2477,7 @@ class Tokens extends SurveyCommonAction
      * @param boolean $ajax
      * @return void
      */
-    public function handletokenform($iSurveyId, $subaction, $iTokenId = "", $ajax = false)
+    private function handletokenform($iSurveyId, $subaction, $iTokenId = "", $ajax = false)
     {
         $oSurvey = Survey::model()->findByPk($iSurveyId);
         if (!$oSurvey->hasTokensTable) {

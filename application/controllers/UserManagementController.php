@@ -985,7 +985,14 @@ class UserManagementController extends LSBaseController
      */
     public function actionRenderSelectedItems()
     {
+        if (!Permission::model()->hasGlobalPermission('users', 'read')) {
+            return $this->renderPartial(
+                'partial/error',
+                ['errors' => [gT("You do not have permission to access this page.")], 'noButton' => true]
+            );
+        }
         $aUsers = json_decode(App()->request->getPost('$oCheckedItems'));
+
         $aResults = [];
         $gridid = App()->request->getParam('$grididvalue');
 
