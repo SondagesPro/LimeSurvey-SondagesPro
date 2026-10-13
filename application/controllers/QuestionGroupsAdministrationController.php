@@ -630,7 +630,7 @@ class QuestionGroupsAdministrationController extends LSBaseController
             return;
         }
 
-        $oQuestionGroup = QuestionGroup::model()->findByAttributes(['gid' => intval($iQuestionGroupId), 'sid' => $surveyid]);;
+        $oQuestionGroup = QuestionGroup::model()->findByAttributes(['gid' => intval($iQuestionGroupId), 'sid' => $surveyid]);
         $oSurvey = Survey::model()->findByPk($surveyid);
 
         $aLanguages = [];

@@ -135,7 +135,6 @@ class DataEntry extends SurveyCommonAction
             $aData['success'] = true;
         }
         $this->renderWrappedTemplate('dataentry', 'iteratesurvey', $aData);
-
     }
 
     /**
