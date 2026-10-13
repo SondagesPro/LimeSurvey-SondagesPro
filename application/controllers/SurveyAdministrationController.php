@@ -1725,7 +1725,7 @@ class SurveyAdministrationController extends LSBaseController
 
         if (Yii::app()->request->getPost('ok') == '') {
             if (App()->getRequest()->getPost('fixnumbering')) {
-                if (!Permission::model()->hasSurveyPermission($surveyId, 'surveycontent', 'update')) {
+                if (!Permission::model()->hasSurveyPermission($iSurveyID, 'surveycontent', 'update')) {
                     throw new CHttpException(403, gT("You do not have permission to access this page."));
                 }
                 fixNumbering(App()->getRequest()->getPost('fixnumbering'), $iSurveyID);
