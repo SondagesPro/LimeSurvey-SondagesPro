@@ -34,6 +34,13 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
+Changes from 5.6.92 (SondagesPro) to 5.6.93 (SondagesPro) October 13, 2026
+- Fixed issue [security] #20749: Missing authorization vulnerability in the SPSS export page
+- Fixed issue #20447: [security] User can set any existing theme when saving survey
+- Fixed issue #20755: [security] Unvalidated field name in statistics summary for file upload questions
+- Fixed issue #20750: [security] Missing authorization checks in a lot of admin pages on survey content
+- Fixed issue #20761: MS-SQL Survey activation can remove unique index on response table
+
 Changes from 5.6.91 (SondagesPro) to 5.6.92 (SondagesPro) October 6, 2026
 - Fixed issue [security] #20746: XSS vulnerability in the Date/Time question date picker
 - Fixed issue [security] #20741: SQL injection vulnerability in statistics column browsin
