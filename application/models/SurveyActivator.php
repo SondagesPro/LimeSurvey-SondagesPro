@@ -380,7 +380,7 @@ class SurveyActivator
                 $sQuery = "ALTER TABLE {$this->survey->responsesTableName} ADD [id] int identity({$iAutoNumberStart},1)";
                 Yii::app()->db->createCommand($sQuery)->execute();
                 // Add back the primaryKey
-                $indexname = "idxuniq_survey_id_{$this->survey->primaryKey}_" . date('YmdHis') . "_" .rand(1, 50000);
+                $indexname = "idxuniq_survey_id_{$this->survey->primaryKey}_" . date('YmdHis') . "_" . rand(1, 50000);
                 Yii::app()->db->createCommand()->addPrimaryKey($indexname, $this->survey->responsesTableName, 'id');
             } elseif (Yii::app()->db->driverName == 'pgsql') {
                 $sQuery = "SELECT setval(pg_get_serial_sequence('{$this->survey->responsesTableName}', 'id'),{$iAutoNumberStart},false);";

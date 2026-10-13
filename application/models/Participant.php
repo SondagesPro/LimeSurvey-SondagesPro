@@ -2209,14 +2209,12 @@ class Participant extends LSActiveRecord
         if ($shared && $shared->share_uid == -1 && $shared->can_edit) {
             // -1 = shared with everyone
             return true;
-        } 
+        }
         if ($shared && $shared->exists('share_uid = :userid', [':userid' => $userId]) && $shared->can_edit) {
             // Shared with this particular user
             return true;
-        } 
-
+        }
         return false;
-
     }
 
     /**
@@ -2395,29 +2393,5 @@ class Participant extends LSActiveRecord
             ->select('participant_id')
             ->queryColumn();
         return $oResult;
-    }
-
-    /**
-     * Filter an array of participants IDs according to permissions of the person being logged in
-     *
-     * @param mixed $aParticipantIDs
-     * @return int[]
-     */
-    public function filterParticipantIDs($aParticipantIDs)
-    {
-        // If not super admin filter the participant IDs first to owner only
-        if (
-            !Permission::model()->hasGlobalPermission('superadmin', 'read')
-            && !Permission::model()->hasGlobalPermission('participantpanel', 'delete')
-        ) {
-            $aCondition = array('and', 'owner_uid=:owner_uid', array('in', 'participant_id', $aParticipantIDs));
-            $aParameter = array(':owner_uid' => Yii::app()->session['loginID']);
-            $aParticipantIDs = Yii::app()->db->createCommand()
-                ->select('participant_id')
-                ->from(Participant::model()->tableName())
-                ->where($aCondition, $aParameter)
-                ->queryColumn();
-        }
-        return $aParticipantIDs;
     }
 }
