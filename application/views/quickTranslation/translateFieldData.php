@@ -1,4 +1,5 @@
 <?php
+
 /* @var     $surveyId int */
 /* @var     $gid  int */
 /* @var     $qid int */
@@ -14,20 +15,23 @@ $translateoutput = "<tr>";
 $value1 = (!empty($amTypeOptions["id1"])) ? $rowfrom[$amTypeOptions["id1"]] : "";
 $value2 = (!empty($amTypeOptions["id2"])) ? $rowfrom[$amTypeOptions["id2"]] : "";
 $iScaleID = (!empty($amTypeOptions["scaleid"])) ? $rowfrom[$amTypeOptions["scaleid"]] : "";
+$description = $amTypeOptions["description"];
 // Display text in original language
 // Display text in foreign language. Save a copy in type_oldvalue_i to identify changes before db update
 if ($type == 'answer') {
     //$translateoutput .= "<td class='col-sm-2'>" . htmlspecialchars($rowfrom['answer']) . " (" . $rowfrom['qid'] . ") </td>";
     $translateoutput .= "<td class='col-sm-2'>" . htmlspecialchars($rowfrom['question_title'] . " / " . $rowfrom['code']) . " (" . $rowfrom['aid'] . ") </td>";
+    $description = $rowfrom['question_title'] . " / " . $rowfrom['code'] . " (" . $rowfrom['aid'] . ")";
 }
 if ($type == 'question_help' || $type == 'question') {
-    $translateoutput .= "<td class='col-sm-2'>" . htmlspecialchars($rowfrom['title']) . " ({$rowfrom['qid']}) </td>";
+    $translateoutput .= "<td class='col-sm-2'>" . $rowfrom['title'] . " ({$rowfrom['qid']}) </td>";
+    $description = $rowfrom['title'];
 } elseif ($type == 'subquestion') {
-    $translateoutput .= "<td class='col-sm-2'>" . htmlspecialchars($rowfrom['parent']['title']) . " ({$rowfrom['parent']['qid']}) </td>";
+    $translateoutput .= "<td class='col-sm-2'>" . $rowfrom['parent']['title'] . " - " . $rowfrom['title'] . " ({$rowfrom['parent']['qid']}) </td>";
+    $description = $rowfrom['parent']['title'] . " - " . $rowfrom['title'];
 }
-
 $translateoutput .= "<td class='_from_ col-sm-5' id='" . $type . "_from_" . $j . "'>"
-    . showJavaScript($textfrom)
+    . CHtml::encode($textfrom)
     . "</td>";
 
 $translateoutput .= "<td class='col-sm-5'>";
@@ -48,12 +52,11 @@ $aDisplayOptions = array(
 if ($type == 'group') {
     $aDisplayOptions['maxlength'] = 100;
 }
-
 $translateoutput .= CHtml::textArea("{$type}_newvalue_{$j}", $textto, $aDisplayOptions);
 $htmleditor_data = array(
     "edit" . $type,
     $type . "_newvalue_" . $j,
-    htmlspecialchars($textto),
+    $description,
     $surveyId,
     $gid,
     $qid,

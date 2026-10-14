@@ -200,7 +200,6 @@ function getPopupEditor($fieldtype, $fieldname, $fieldtext, $surveyID = null, $g
         $surveyID = 'uniq';
     }
 
-
     $htmlcode = '';
 
     if (
@@ -213,8 +212,9 @@ function getPopupEditor($fieldtype, $fieldname, $fieldtext, $surveyID = null, $g
     } else {
         $class = "editorLink input-group-addon";
     }
+    $fieldtext = javascriptEscape($fieldtext);
     $htmlcode .= ""
-    . "<a href=\"javascript:start_popup_editor('" . $fieldname . "','" . addslashes(htmlspecialchars_decode($fieldtext, ENT_QUOTES)) . "','" . intval($surveyID) . "','" . intval($gID) . "','" . intval($qID) . "','" . $fieldtype . "','" . $action . "')\" id='" . $fieldname . "_ctrl' class='{$class} btn btn-default btn-xs'>\n"
+    . "<a href=\"javascript:start_popup_editor('" . $fieldname . "','" . $fieldtext . "','" . intval($surveyID) . "','" . intval($gID) . "','" . intval($qID) . "','" . $fieldtype . "','" . $action . "')\" id='" . $fieldname . "_ctrl' class='{$class} btn btn-default btn-xs'>\n"
     . "\t<i class='fa fa-pencil btneditanswerena' id='" . $fieldname . "_popupctrlena' data-toggle='tooltip' data-placement='bottom' title='" . gT("Start HTML editor in a popup window") . "'></i>"
     . "\t<i class='fa fa-pencil btneditanswerdis' id='" . $fieldname . "_popupctrldis'  style='display:none'  ></i>"
     . "</a>\n";
@@ -238,11 +238,10 @@ function getModalEditor($fieldtype, $fieldname, $fieldtext, $surveyID = null, $g
     if (Yii::app()->getConfig('uniq_upload_dir') && !empty($surveyID)) {
         $surveyID = 'uniq';
     }
-
-    $htmlcode = "<a href='#' class='btn btn-default btn-sm htmleditor--openmodal' data-target-field-id='$fieldname' data-modal-title='$fieldtext' data-toggle='tooltip' data-original-title='" . gT("Open editor") . "'>\n" .
+    $fieldtext = javascriptEscape($fieldtext);
+    $htmlcode = "<a href='#' class='btn btn-primary btn-sm htmleditor--openmodal' data-target-field-id='$fieldname' data-modal-title='$fieldtext' data-toggle='tooltip' data-original-title='" . gT("Open editor") . "'>\n" .
                 "\t<i class='fa fa-edit' id='{$fieldname}_modal_icon'></i>\n" .
                 "</a>\n";
-
     return $htmlcode;
 }
 

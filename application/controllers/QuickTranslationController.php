@@ -364,15 +364,12 @@ class QuickTranslationController extends LSBaseController
         $editor_function = "";
         $displayType = strtolower($htmleditor["HTMLeditorDisplay"]);
         $displayTypeIsEmpty = empty($displayType);
-
         if ($displayType == "inline" || $displayTypeIsEmpty) {
             $editor_function = "getEditor";
         } elseif ($displayType == "popup") {
             $editor_function = "getPopupEditor";
-            $aData[2] = urlencode($htmleditor['description']);
         } elseif ($displayType == "modal") {
             $editor_function = "getModalEditor";
-            $aData[2] = $htmleditor['description'];
         }
         return call_user_func_array($editor_function, $aData);
     }
