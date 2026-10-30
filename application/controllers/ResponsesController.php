@@ -395,11 +395,12 @@ class ResponsesController extends LSBaseController
 
         $aData['num_total_answers'] = SurveyDynamic::model($surveyId)->count();
         $aData['num_completed_answers'] = SurveyDynamic::model($surveyId)->count('submitdate IS NOT NULL');
+        $aData['with_token'] = null;
+        $aData['tokeninfo'] = null;
         if ($survey->hasTokensTable && Permission::model()->hasSurveyPermission($surveyId, 'tokens', 'read')) {
             $aData['with_token'] = App()->db->schema->getTable($survey->tokensTableName);
             $aData['tokeninfo'] = Token::model($surveyId)->summary();
         }
-
         $aData['topBar']['name'] = 'baseTopbar_view';
         $aData['topBar']['leftSideView'] = 'responsesTopbarLeft_view';
 
