@@ -310,16 +310,26 @@ class DataEntry extends SurveyCommonAction
 
             $this->renderWrappedTemplate('dataentry', 'import', $aData);
         } else {
+            /* Only an archived response table of this survey can be imported */
+            $sourceTableName = App()->getRequest()->getPost('table');
+            if (!is_string($sourceTableName) || !in_array($sourceTableName, App()->getApi()->getOldResponseTables($iSurveyId), true)) {
+                Yii::app()->setFlashMessage(gT("Invalid parameters."), 'error');
+                $this->getController()->redirect(array("admin/dataentry/sa/import/surveyid/{$iSurveyId}"));
+            }
             $aSRIDConversions = array();
             $targetSchema = SurveyDynamic::model($iSurveyId)->getTableSchema();
-            $sourceTable = PluginDynamic::model($_POST['table']);
+            $sourceTable = PluginDynamic::model($sourceTableName);
             $sourceSchema = $sourceTable->getTableSchema();
             $encryptedAttributes = Response::getEncryptedAttributes($iSurveyId);
             $tbl_name = $sourceSchema->name;
             if (strpos($sourceSchema->name, Yii::app()->db->tablePrefix) === 0) {
                 $tbl_name = substr($sourceSchema->name, strlen(Yii::app()->db->tablePrefix));
             }
-            $archivedTableSettings = ArchivedTableSettings::model()->findByAttributes(['tbl_name' => $tbl_name]);
+            $archivedTableSettings = ArchivedTableSettings::model()->findByAttributes([
+                'tbl_name' => $tbl_name,
+                'survey_id' => (int) $iSurveyId,
+                'tbl_type' => 'response',
+            ]);
             $archivedEncryptedAttributes = [];
             if ($archivedTableSettings) {
                 $archivedEncryptedAttributes = json_decode($archivedTableSettings->properties);
