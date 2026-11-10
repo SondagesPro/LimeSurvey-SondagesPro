@@ -141,6 +141,7 @@ class QuestionAttributeSanitizeTest extends TestBaseClass
     public function testCustomAttributeDefinitionOptions()
     {
         $method = new \ReflectionMethod(\QuestionTemplate::class, 'getCustomAttributeDefinition');
+        $method->setAccessible(true); // Needed before PHP 8.1
 
         $shortFormat = simplexml_load_string(
             '<attribute><name>button_size</name><inputtype>buttongroup</inputtype>'
