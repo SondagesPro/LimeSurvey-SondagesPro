@@ -207,6 +207,19 @@ class SurveymenuEntryController extends SurveyCommonAction
                 foreach ($aSurveyMenuEntryIds as $iSurveyMenuEntryId) {
                     $iSurveyMenuEntryId = (int) $iSurveyMenuEntryId;
                     $oSurveyMenuEntry = SurveymenuEntries::model()->findByPk($iSurveyMenuEntryId);
+                    if (empty($oSurveyMenuEntry)) {
+                        continue;
+                    }
+                    //Don't update main menu entries, or move entries to main menus, when not superadmin
+                    $aMenuIds = [(int) $oSurveyMenuEntry->menu_id];
+                    if (isset($aData['menu_id'])) {
+                        $aMenuIds[] = (int) $aData['menu_id'];
+                    }
+                    if (array_intersect($aMenuIds, [1, 2]) && !Permission::model()->hasGlobalPermission('superadmin', 'read')) {
+                        $aResults[$iSurveyMenuEntryId]['status']    = false;
+                        $aResults[$iSurveyMenuEntryId]['message']   = gT("Access denied");
+                        continue;
+                    }
 
                     foreach ($aData as $k => $v) {
                         $oSurveyMenuEntry->$k = $v;
