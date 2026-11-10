@@ -554,6 +554,10 @@ function deleteAttributeAjax(attribute_id){
             method: "POST",
             dataType: 'json',
             success: function(result){
+                if (result && result.hasPermission === false) {
+                    window.LS.notifyFader(result.noPermissionText, 'well-lg bg-danger text-center');
+                    return;
+                }
                 window.LS.notifyFader(result.success, 'well-lg bg-primary text-center');
                 $.fn.yiiGridView.update('list_attributes',{});
             }

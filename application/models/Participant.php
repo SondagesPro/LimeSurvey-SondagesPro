@@ -2184,6 +2184,31 @@ class Participant extends LSActiveRecord
     }
 
     /**
+     * Returns true if the logged in user may see this participant:
+     * superadmin, global participant panel read permission, owner, or participant shared with the user or with everyone.
+     * Note: Mirrors the visibility rules of search().
+     *
+     * @return boolean
+     */
+    public function userHasPermissionToRead()
+    {
+        if (
+            Permission::model()->hasGlobalPermission('superadmin', 'read')
+            || Permission::model()->hasGlobalPermission('participantpanel', 'read')
+        ) {
+            return true;
+        }
+        $userId = Yii::app()->user->id;
+        if ($this->owner_uid == $userId) {
+            return true;
+        }
+        return ParticipantShare::model()->exists(
+            'participant_id = :participant_id AND (share_uid = :userid OR share_uid = -1)',
+            [':participant_id' => $this->participant_id, ':userid' => $userId]
+        );
+    }
+
+    /**
      * Returns true if logged in user has edit rights to this participant
      * @return boolean
      */

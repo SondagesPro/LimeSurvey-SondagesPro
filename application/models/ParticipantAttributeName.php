@@ -119,7 +119,9 @@ class ParticipantAttributeName extends LSActiveRecord
             gT("Edit this attribute"),
             'pencil'
         );
-        $buttons .= vsprintf($raw_button_template, $editData);
+        if (Permission::model()->hasGlobalPermission('participantpanel', 'update')) {
+            $buttons .= vsprintf($raw_button_template, $editData);
+        }
 
         //delete-button
         $deleteData = array(
@@ -128,15 +130,17 @@ class ParticipantAttributeName extends LSActiveRecord
             gT("Delete this attribute"),
             'trash text-danger'
         );
-        $buttons .= "<a href='#' 
-        data-toggle='modal' 
-        data-target='#confirmation-modal' 
-        data-title='" . gT("Delete this attribute") . "'
-        data-btnclass='btn-danger'
-        data-btntext='" . gt("Delete") . "'
-        data-message=' " . gt("Do you really want to delete this attribute") . "?'
-        data-onclick='deleteAttributeAjax(" . $this->attribute_id . ")'>";
-        $buttons .= vsprintf($raw_button_template, $deleteData) . "</a>";
+        if (Permission::model()->hasGlobalPermission('participantpanel', 'delete')) {
+            $buttons .= "<a href='#' 
+            data-toggle='modal' 
+            data-target='#confirmation-modal' 
+            data-title='" . gT("Delete this attribute") . "'
+            data-btnclass='btn-danger'
+            data-btntext='" . gt("Delete") . "'
+            data-message=' " . gt("Do you really want to delete this attribute") . "?'
+            data-onclick='deleteAttributeAjax(" . $this->attribute_id . ")'>";
+            $buttons .= vsprintf($raw_button_template, $deleteData) . "</a>";
+        }
         $buttons .= "</div>";
 
         return $buttons;
