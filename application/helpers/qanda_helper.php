@@ -108,7 +108,8 @@ function retrieveAnswers($ia)
     // 3. Always first time it's shown to one user (and no tokens).
     // 4. No expressions with tokens or time or other dynamic features.
     if (EmCacheHelper::cacheQanda($ia, $_SESSION['survey_' . $thissurvey['sid']])) {
-        $cacheKey = 'retrieveAnswers_' . sha1(implode('_', $ia));
+        // "sanitized" version: rendered before the question attributes were sanitized, see QuestionAttribute::getQuestionAttributes()
+        $cacheKey = 'retrieveAnswers_sanitized_' . sha1(implode('_', $ia));
         $value = EmCacheHelper::get($cacheKey);
         if ($value !== false) {
             return $value;
@@ -2446,7 +2447,7 @@ function do_shortfreetext($ia)
 
     if (trim($aQuestionAttributes['display_rows']) != '') {
         //question attribute "display_rows" is set -> we need a textarea to be able to show several rows
-        $drows = $aQuestionAttributes['display_rows'];
+        $drows = intval($aQuestionAttributes['display_rows']);
 
         $dispVal = "";
 
