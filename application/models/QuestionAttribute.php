@@ -697,11 +697,39 @@ class QuestionAttribute extends LSActiveRecord
                 if (empty($definition['options']) || !is_array($definition['options'])) {
                     return $value;
                 }
-                // Options are value => label: the editors submit the key, also for a plain list of labels
-                $validValues = array_map('strval', array_keys($definition['options']));
+                $validValues = self::getOptionValues($definition['options']);
                 return in_array($trimmedValue, $validValues, true) ? $trimmedValue : $default;
         }
         return $value;
+    }
+
+    /**
+     * Returns the values the editors submit for the options of a single select or button group attribute.
+     * Short format options are value => label (or a plain list of labels: the key is submitted). Long format
+     * options (theme config.xml <option><value/><text/></option>) may be kept as is, under an 'option' key,
+     * and as a single entry when there is only one option.
+     * @param array<mixed> $options the options of the attribute definition
+     * @return string[]
+     */
+    private static function getOptionValues(array $options)
+    {
+        if (isset($options['option']) && is_array($options['option'])) {
+            $options = $options['option'];
+        }
+        if (count($options) === 2 && array_key_exists('value', $options) && array_key_exists('text', $options)) {
+            // A single long format option
+            $options = [$options];
+        }
+        $validValues = [];
+        foreach ($options as $key => $option) {
+            if (is_array($option) && array_key_exists('value', $option)) {
+                // Long format, an empty <value/> is decoded as an empty array
+                $validValues[] = is_array($option['value']) ? '' : (string) $option['value'];
+            } else {
+                $validValues[] = (string) $key;
+            }
+        }
+        return $validValues;
     }
 
     /**
