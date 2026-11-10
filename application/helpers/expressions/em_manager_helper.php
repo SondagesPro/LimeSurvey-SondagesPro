@@ -8235,7 +8235,8 @@ report~numKids > 0~message~{name}, you said you are {age} and that you have {num
      */
     private function getQuestionAttributesForEM($surveyid = 0, $qid = 0, $lang = '')
     {
-        $cacheKey = 'getQuestionAttributesForEM_' . $surveyid . '_' . $qid . '_' . $lang;
+        // "sanitized" version: see QuestionAttribute::getQuestionAttributes()
+        $cacheKey = 'getQuestionAttributesForEM_sanitized_' . $surveyid . '_' . $qid . '_' . $lang;
         $value = EmCacheHelper::get($cacheKey);
         if ($value !== false) {
             return $value;
