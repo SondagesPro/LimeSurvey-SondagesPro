@@ -9,64 +9,10 @@ top of things.
 
 ## Contribut to this unoffical fork
 
-* For security issue : see SECURITY.md. Please report (suspected) security vulnerabilities on [Sondages Pro support](https://support.sondages.pro/open.php?topicId=10) and wait for an answer to create a Pull request.
-* For bug fixing and improvment, only litlle patch are accepted. Just create a Pull Request.
+- For security issue : see SECURITY.md. Please report (suspected) security vulnerabilities on [Sondages Pro support](https://support.sondages.pro/open.php?topicId=10) and wait for an answer to create a Pull request.
+- For bug fixing: create a Pull Request.
 
-## Getting started
+## Contribute to official version
 
-* Make sure you have a [LimeSurvey account](https://www.limesurvey.org)
-* Make sure you have a [GitHub account](https://github.com/signup/free)
-* Read the [manual entry about contributions](https://manual.limesurvey.org/How_to_contribute_new_features)
-* Submit a ticket at https://bugs.limesurvey.org for your issue, assuming one does not already exist.
-  * Clearly describe the issue including steps to reproduce when it is a bug.
-  * Make sure you fill in the earliest version that you know has the issue.
-* Fork the repository on GitHub
-
-## Making changes
-
-* Create a topic branch from where you want to base your work.
-  * Bug fixes go into the master branch
-  * New features go into the develop branch
-  * To quickly create a topic branch based on develop; `git checkout -b
-    fix/develop/my_contribution develop`. Please avoid working directly on the
-    `develop` or `master` branch.
-* Make commits of logical units.
-* Check for unnecessary whitespace with `git diff --check` before committing.
-* Make sure your commit messages are in the proper format - check out our 
-  [commit message guidelines](https://manual.limesurvey.org/Standard_for_Git_commit_messages).
-
-
-## Writing translatable code
-
-We use gettext-tooling to extract user-facing strings and pull in translations 
-based on the user's locale at runtime. In order for this tooling to work, all 
-user-facing strings must be wrapped in the `gT()` translation function, so they 
-can be extracted into files for the translators.
-
-When adding user-facing strings to your work, follow these guidelines:
-* Use full sentences. Strings built up out of concatenated bits are hard to translate.
-* Use string formatting instead of interpolation.
-    Ex. `sprintf(gT('Creating new user %s.'), $sUsername)`
-* Use `ngT()` for pluralization.
-
-It is the responsibility of contributors to ensure that all
-user-facing strings are marked in new PRs before merging.
-
-
-## Submitting changes
-
-* Push your changes to a topic branch in your fork of the repository.
-* Submit a pull request to the repository in the LimeSurvey organization.
-* Update your bug tracker ticket to mark that you have submitted code and are ready for it to be reviewed.
-  * Include a link to the pull request in the ticket.
-* The core team looks at Pull Requests on a regular basis in a weekly triage
-* After feedback has been given we expect responses within two weeks. After two
-  weeks we may close the pull request if it isn't showing any activity.
-
-# Additional resources
-
-* [Bug tracker (Mantis)](https://bugs.limesurvey.org)
-* [Standard for Git commit messages](https://manual.limesurvey.org/Standard_for_Git_commit_messages)
-* [General GitHub documentation](https://help.github.com/)
-* [GitHub pull request documentation](https://help.github.com/articles/creating-a-pull-request/)
-* #limesurvey IRC channel on freenode.org ([Archive](https://account.limesurvey.org/community/live-chat)
+- See [LimeSurvey official contribution politics](https://github.com/LimeSurvey/LimeSurvey/blob/master/CONTRIBUTING.md)
+ 
