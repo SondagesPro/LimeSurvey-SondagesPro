@@ -2446,7 +2446,7 @@ function do_shortfreetext($ia)
 
     if (trim($aQuestionAttributes['display_rows']) != '') {
         //question attribute "display_rows" is set -> we need a textarea to be able to show several rows
-        $drows = $aQuestionAttributes['display_rows'];
+        $drows = intval($aQuestionAttributes['display_rows']);
 
         $dispVal = "";
 
