@@ -130,8 +130,9 @@ class ParticipantAttributeName extends LSActiveRecord
             gT("Delete this attribute"),
             'trash text-danger'
         );
-        if (Permission::model()->hasGlobalPermission('participantpanel', 'delete')) {
-            $buttons .= "<a href='#' 
+        // Same permission as ParticipantsAction::deleteSingleAttribute()
+        if (Permission::model()->hasGlobalPermission('participantpanel', 'update')) {
+            $buttons .= "<a href='#'
             data-toggle='modal' 
             data-target='#confirmation-modal' 
             data-title='" . gT("Delete this attribute") . "'
