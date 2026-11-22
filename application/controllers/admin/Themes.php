@@ -384,7 +384,7 @@ class Themes extends SurveyCommonAction
             } else {
                 // Successfully unpacked
                 foreach ($aExtractResult as $sFile) {
-                    if ($sFile['status'] == 'skipped' && !$sFile['folder']) {
+                    if ($sFile['status'] == 'skipped') {
                         $aErrorFilesInfo[] = array(
                             "filename" => $sFile['stored_filename'],
                         );

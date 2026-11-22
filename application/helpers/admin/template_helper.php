@@ -123,6 +123,7 @@ function is_template_editable($templatename)
 
 /**
 * This is a PCLZip callback function that ensures only files are extracted that have a valid extension
+* and whose path contains no < > " or control characters
 *
 * @param mixed $p_event
 * @param mixed $p_header
@@ -130,6 +131,11 @@ function is_template_editable($templatename)
 */
 function templateExtractFilter($p_event, &$p_header)
 {
+    // File names are listed in the theme options, so don't allow names that could break out of HTML.
+    // Backslashes stay allowed, because some ZIP tools on Windows use them as folder separators.
+    if (preg_match('/[<>"\x00-\x1F\x7F]/', (string) ($p_header['stored_filename'] ?? $p_header['filename']))) {
+        return 0;
+    }
     $aAllowExtensions = explode(',', Yii::app()->getConfig('allowedthemeuploads') . ',' . Yii::app()->getConfig('allowedthemeimageformats'));
     $aAllowExtensions[] = 'twig';
     $info = pathinfo($p_header['filename']);
