@@ -1516,7 +1516,7 @@ class ParticipantsAction extends SurveyCommonAction
                         $aUpdateData[$sDefaultname] = LSActiveRecord::encryptSingle($participant->$sDefaultname);
                     }
                     if (!empty($aUpdateData)) {
-                        $oDB->createCommand()->update('{{participants}}', $aUpdateData, "participant_id='" . $participant->participant_id . "'");
+                        $oDB->createCommand()->update('{{participants}}', $aUpdateData, "participant_id = :where_participant_id", [':where_participant_id' => $participant->participant_id]);
                     }
                 }
             } else {

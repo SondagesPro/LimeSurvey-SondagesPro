@@ -14,7 +14,7 @@
     );
 ?>
     <input type="hidden" name="actionTarget" value="addParticipantToSurvey" />
-    <input type="hidden" name="Participant[participant_id]" value="<?php echo $model->participant_id; ?>" />
+    <input type="hidden" name="Participant[participant_id]" value="<?php echo CHtml::encode($model->participant_id); ?>" />
     <div class="container-fluid">
     <?php
         $this->widget('bootstrap.widgets.TbGridView', array(

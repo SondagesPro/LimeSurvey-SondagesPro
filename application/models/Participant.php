@@ -236,7 +236,7 @@ class Participant extends LSActiveRecord
      */
     public function getCheckbox()
     {
-        return "<input type='checkbox' class='selector_participantCheckbox' name='selectedParticipant[]' value='" . $this->id . "' >";
+        return "<input type='checkbox' class='selector_participantCheckbox' name='selectedParticipant[]' value='" . CHtml::encode($this->id) . "' >";
     }
 
     /**
@@ -780,7 +780,7 @@ class Participant extends LSActiveRecord
         $participants = array();
         foreach ($allData as $key => $data) {
             $participants[$key] = Participant::model()->findByPk($data['participant_id'])->decrypt()->attributes;
-            $attributes = ParticipantAttribute::model()->findAll(array('condition' => "participant_id = '" . $data['participant_id'] . "'"));
+            $attributes = ParticipantAttribute::model()->findAllByAttributes(array('participant_id' => $data['participant_id']));
             foreach ($attributes as $attribute) {
                 if (array_key_exists('a' . $attribute['attribute_id'], $data)) {
                     $participants[$key]['a' . $attribute['attribute_id']] = $attribute->decrypt()->attributes['value'];
