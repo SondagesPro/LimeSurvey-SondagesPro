@@ -2344,7 +2344,7 @@ function createPassword($iPasswordLength = 12)
     $aCharacters = "ABCDEGHJIKLMNOPQURSTUVWXYZabcdefhjmnpqrstuvwxyz23456789";
     $sPassword = '';
     for ($i = 0; $i < $iPasswordLength; $i++) {
-        $sPassword .= $aCharacters[(int) floor(rand(0, strlen($aCharacters) - 1))];
+        $sPassword .= $aCharacters[random_int(0, strlen($aCharacters) - 1)];
     }
     return $sPassword;
 }
@@ -2768,7 +2768,7 @@ function randomChars($length, $pattern = "23456789abcdefghijkmnpqrstuvwxyz")
     $patternlength = strlen($pattern) - 1;
     $key = '';
     for ($i = 0; $i < $length; $i++) {
-        $key .= $pattern[mt_rand(0, $patternlength)];
+        $key .= $pattern[random_int(0, $patternlength)];
     }
     return $key;
 }
