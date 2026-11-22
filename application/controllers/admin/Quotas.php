@@ -544,9 +544,8 @@ class Quotas extends SurveyCommonAction
                     $oQuotaLanguageSetting->quotals_message = html_entity_decode($oQuotaLanguageSetting->quotals_message, ENT_QUOTES, "UTF-8");
                     // Fix bug with FCKEditor saving strange BR types
                     $oQuotaLanguageSetting->quotals_message = fixCKeditorText($oQuotaLanguageSetting->quotals_message);
-                    $oQuotaLanguageSetting->save(false);
 
-                    if (!$oQuotaLanguageSetting->validate()) {
+                    if (!$oQuotaLanguageSetting->save()) {
                         $oQuota->addErrors($oQuotaLanguageSetting->getErrors());
                     }
                 }
