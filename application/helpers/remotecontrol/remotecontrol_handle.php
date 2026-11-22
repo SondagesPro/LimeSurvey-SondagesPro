@@ -2571,6 +2571,8 @@ class remotecontrol_handle
                         $attributes['permissions'][] = $permission->attributes;
                     }
                     unset($attributes['password']);
+                    unset($attributes['one_time_pw']);
+                    unset($attributes['validation_key']);
                     $data[] = $attributes;
                 }
                 return $data;
