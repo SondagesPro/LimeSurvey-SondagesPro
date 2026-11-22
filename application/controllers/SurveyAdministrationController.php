@@ -1730,7 +1730,11 @@ class SurveyAdministrationController extends LSBaseController
                 if (!Permission::model()->hasSurveyPermission($iSurveyID, 'surveycontent', 'update')) {
                     throw new CHttpException(403, gT("You do not have permission to access this page."));
                 }
-                fixNumbering(App()->getRequest()->getPost('fixnumbering'), $iSurveyID);
+                $fixNumberingQid = (int) App()->getRequest()->getPost('fixnumbering');
+                if (!Question::model()->countByAttributes(['qid' => $fixNumberingQid, 'sid' => $iSurveyID])) {
+                    throw new CHttpException(404, gT("Invalid question ID"));
+                }
+                fixNumbering($fixNumberingQid, $iSurveyID);
             }
 
             // Check consistency for groups and questions
