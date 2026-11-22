@@ -830,10 +830,16 @@ class Export extends SurveyCommonAction
         switch (Yii::app()->request->getParam('export')) {
             case 'survey':
                 $iSurveyID = sanitize_int(Yii::app()->getRequest()->getParam('surveyid'));
+                if (!Permission::model()->hasSurveyPermission($iSurveyID, 'surveycontent', 'export')) {
+                    throw new CHttpException(403, gT('You are not allowed to access this resource.'));
+                }
                 $resourcesdir = 'surveys/' . $iSurveyID;
                 $zipfilename = "resources-survey-$iSurveyID.zip";
                 break;
             case 'label':
+                if (!Permission::model()->hasGlobalPermission('labelsets', 'export')) {
+                    throw new CHttpException(403, gT('You are not allowed to access this resource.'));
+                }
                 $lid = sanitize_int(Yii::app()->getRequest()->getParam('lid'));
                 $resourcesdir = 'labels/' . $lid;
                 $zipfilename = "resources-labelset-$lid.zip";
@@ -869,7 +875,7 @@ class Export extends SurveyCommonAction
     public function dumplabel()
     {
         if (!Permission::model()->hasGlobalPermission('labelsets', 'export')) {
-            safeDie('No permission.');
+            throw new CHttpException(403, gT('You are not allowed to access this resource.'));
         }
         $lid = sanitize_int(Yii::app()->request->getParam('lid'));
         // DUMP THE RELATED DATA FOR A SINGLE QUESTION INTO A SQL FILE FOR IMPORTING LATER ON OR
