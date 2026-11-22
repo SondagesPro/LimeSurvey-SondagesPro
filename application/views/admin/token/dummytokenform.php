@@ -23,7 +23,7 @@
                 <div class="form-group">
                     <label  class=" control-label" for='amount'><?php eT("Number of participants:"); ?></label>
                     <div class="">
-                        <input class='form-control' type='number' min='1' size='20' id='amount' name='amount' value="<?php echo $amount; ?>" />
+                        <input class='form-control' type='number' min='1' size='20' id='amount' name='amount' value="<?php echo intval($amount); ?>" />
                     </div>
                 </div>
 
@@ -31,7 +31,7 @@
                 <div class="form-group">
                     <label  class=" control-label" for='tokenlen'><?php eT("Access code length"); ?>:</label>
                     <div class="">
-                        <input class='form-control' type='text' size='20' id='tokenlen' name='tokenlen' value="<?php echo $tokenlength; ?>" />
+                        <input class='form-control' type='text' size='20' id='tokenlen' name='tokenlen' value="<?php echo intval($tokenlength); ?>" />
                     </div>
                 </div>
 
@@ -39,7 +39,7 @@
                 <div class="form-group">
                     <label  class=" control-label" for='firstname'><?php eT("First name"); ?>:</label>
                     <div class="">
-                        <input class='form-control' type='text' size='30' id='firstname' name='firstname' value="<?php echo $firstname; ?>" />
+                        <input class='form-control' type='text' size='30' id='firstname' name='firstname' value="<?= CHtml::encode($firstname); ?>" />
                     </div>
                 </div>
 
@@ -47,7 +47,7 @@
                 <div class="form-group">
                     <label  class=" control-label" for='lastname'><?php eT("Last name"); ?>:</label>
                     <div class="">
-                        <input class='form-control' type='text' size='30'  id='lastname' name='lastname' value="<?php echo $lastname; ?>" />
+                        <input class='form-control' type='text' size='30'  id='lastname' name='lastname' value="<?= CHtml::encode($lastname); ?>" />
                     </div>
                 </div>
 
@@ -55,7 +55,7 @@
                 <div class="form-group">
                     <label  class=" control-label" for='email'><?php eT("Email address:"); ?></label>
                     <div class="">
-                        <input class='form-control' type='email' maxlength='320' size='50' id='email' name='email' value="<?php echo $email; ?>" />
+                        <input class='form-control' type='email' maxlength='320' size='50' id='email' name='email' value="<?= CHtml::encode($email); ?>" />
                     </div>
                 </div>
 
@@ -71,7 +71,7 @@
                 <div class="form-group">
                     <label  class=" control-label" for='usesleft'><?php eT("Uses left:"); ?></label>
                     <div class="">
-                        <input class='form-control' type='text' size='20' id='usesleft' name='usesleft' value="<?php echo $usesleft; ?>" />
+                        <input class='form-control' type='text' size='20' id='usesleft' name='usesleft' value="<?= CHtml::encode($usesleft); ?>" />
                     </div>
                 </div>
 
