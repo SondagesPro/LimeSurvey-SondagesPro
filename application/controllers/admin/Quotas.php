@@ -223,7 +223,7 @@ class Quotas extends SurveyCommonAction
                 $completed = 0;
                 $completed = $oQuota->completeCount;
                 $totalcompleted = $totalcompleted + $completed;
-                $csvoutput[] = $oQuota->name . "," . $oQuota->qlimit . "," . $completed . "," . ($oQuota->qlimit - $completed) . "\r\n";
+                $csvoutput[] = csvEscape($oQuota->name) . "," . $oQuota->qlimit . "," . $completed . "," . ($oQuota->qlimit - $completed) . "\r\n";
 
                 if ($quickreport != false) {
                     continue;
