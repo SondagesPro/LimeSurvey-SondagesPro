@@ -116,7 +116,8 @@ class RenderDate extends QuestionBaseRenderer
             } elseif ($date_time_em !== false) {
                 $this->minDate = (string) date("Y-m-d", $date_time_em);
             } else {
-                $this->minDate = '{' . $this->getQuestionAttribute('date_min') . '}';
+                // an expression: escape its result, on the server and when EM updates it in the browser
+                $this->minDate = '{htmlspecialchars(' . $this->getQuestionAttribute('date_min') . ')}';
             }
         } else {
             $this->minDate = '1900-01-01'; // Why 1900 ?
@@ -138,7 +139,8 @@ class RenderDate extends QuestionBaseRenderer
             } elseif ($date_time_em !== false) {
                 $this->maxDate = (string) date("Y-m-d", $date_time_em);
             } else {
-                $this->maxDate = '{' . $this->getQuestionAttribute('date_max') . '}';
+                // an expression: escape its result, on the server and when EM updates it in the browser
+                $this->maxDate = '{htmlspecialchars(' . $this->getQuestionAttribute('date_max') . ')}';
             }
         } else {
             $this->maxDate = '2187-12-31'; // Why 2187 ?
