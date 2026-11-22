@@ -266,4 +266,32 @@ class LSHttpRequest extends CHttpRequest
         $route = ltrim($route, '/');
         return preg_match('#^' . $rule . '$|^' . $rule . '/#', (string) $route);
     }
+
+    /**
+     * @inheritdoc
+     * Check host with config['allowedHost'] if it set
+     */
+    public function getHostInfo($schema = '')
+    {
+        $hostInfo = parent::getHostInfo($schema);
+        self::checkIsAllowedHost($hostInfo);
+        return $hostInfo;
+    }
+
+    /**
+     * Check if an url are in allowed host (if exist)
+     * @var string $hostInfo
+     * @throw Exception
+     * @return void
+     */
+    public static function checkIsAllowedHost($hostInfo)
+    {
+        $allowedHosts = App()->getConfig('allowedHosts');
+        if (!empty($allowedHosts) && is_array($allowedHosts)) {
+            $host = parse_url($hostInfo, PHP_URL_HOST);
+            if ($host && !in_array($host, $allowedHosts)) {
+                 throw new CHttpException(400, gT("The request hostname is invalid.", 'unescaped'));
+            }
+        }
+    }
 }
