@@ -3506,7 +3506,8 @@ class remotecontrol_handle
      */
     protected function _jumpStartSession($username)
     {
-        $aUserData = User::model()->findByAttributes(array('users_name' => (string) $username))->attributes;
+        $oUser = User::model()->findByAttributes(array('users_name' => (string) $username));
+        $aUserData = $oUser->attributes;
 
         $session = array(
             'loginID' => intval($aUserData['uid']),
@@ -3517,7 +3518,7 @@ class remotecontrol_handle
             'questionselectormode' => $aUserData['questionselectormode'],
             'dateformat' => $aUserData['dateformat'],
             'adminlang' => 'en',
-            'password_fingerprint' => $aUserData->getPasswordFingerprint()
+            'password_fingerprint' => $oUser->getPasswordFingerprint()
         );
         foreach ($session as $k => $v) {
             Yii::app()->session[$k] = $v;
