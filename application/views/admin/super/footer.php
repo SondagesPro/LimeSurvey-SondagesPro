@@ -8,7 +8,7 @@
 $systemInfos = [
     gT('LimeSurvey version') => Yii::app()->getConfig('versionnumber'),
     gT('LimeSurvey build') => Yii::app()->getConfig('buildnumber') == '' ? 'github' : Yii::app()->getConfig('buildnumber'),
-    gT('Operating system') => php_uname(),
+    gT('Operating system') => function_exists('php_uname') ? php_uname() : PHP_OS,
     gT('PHP version') => phpversion(),
     gT('Web server name') => $_SERVER['SERVER_NAME'],
     gT('Web server software') => $_SERVER['SERVER_SOFTWARE'],

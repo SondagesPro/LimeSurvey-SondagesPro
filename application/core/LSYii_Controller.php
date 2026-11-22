@@ -103,17 +103,11 @@ abstract class LSYii_Controller extends CController
             throw new CException($dieoutput);
         }
 
-        if (ini_get("max_execution_time") < Yii::app()->getConfig('max_execution_time')) {
-            try {
-                set_time_limit(Yii::app()->getConfig('max_execution_time')); // Maximum execution time - works only if safe_mode is off
-            } catch (Exception $e) {
-            };
+        if (function_exists('set_time_limit') && ini_get("max_execution_time") < Yii::app()->getConfig('max_execution_time')) {
+            @set_time_limit(Yii::app()->getConfig('max_execution_time')); // Maximum execution time - works only if safe_mode is off
         }
-        if (ini_get('memory_limit') != -1 && convertPHPSizeToBytes(ini_get("memory_limit")) < convertPHPSizeToBytes(Yii::app()->getConfig('memory_limit') . 'M')) {
-            try {
-                ini_set("memory_limit", Yii::app()->getConfig('memory_limit') . 'M'); // Set Memory Limit for big surveys
-            } catch (Exception $e) {
-            };
+        if (function_exists('ini_set') && ini_get('memory_limit') != -1 && convertPHPSizeToBytes(ini_get("memory_limit")) < convertPHPSizeToBytes(Yii::app()->getConfig('memory_limit') . 'M')) {
+            @ini_set("memory_limit", Yii::app()->getConfig('memory_limit') . 'M'); // Set Memory Limit for big surveys
         }
 
         // The following function (when called) includes FireBug Lite if true

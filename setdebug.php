@@ -24,7 +24,9 @@ if (!defined('YII_DEBUG')) {
                 // Know deprecated issue with php8.1 and up
                 error_reporting(E_ALL & ~E_DEPRECATED);
                 // @see https://manual.limesurvey.org/Code_quality_guide#Assertions
-                @ini_set('zend.assertions', 1);
+                if (function_exists('ini_set')) {
+                    @ini_set('zend.assertions', 1);
+                }
             } else {
                 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
             }
