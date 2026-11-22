@@ -252,7 +252,7 @@
             <div class="form-group">
                 <label class=" control-label" for='admin'><?php  eT("Administrator:") ; ?></label>
                 <div class="">
-                    <input type='text' size='50' id='admin' name='admin'   class="form-control"  value='<?php echo $owner['full_name'] ; ?>' />
+                    <input type='text' size='50' id='admin' name='admin'   class="form-control"  value='<?php echo CHtml::encode($owner['full_name']); ?>' />
                 </div>
             </div>
 
@@ -260,7 +260,7 @@
             <div class="form-group">
                 <label class=" control-label" for='adminemail'><?php  eT("Administrator email address:") ; ?></label>
                 <div class="">
-                    <input type='email' size='30'   class="form-control"   id='adminemail' name='adminemail' value='<?php echo $owner['email'] ; ?>' />
+                    <input type='email' size='30'   class="form-control"   id='adminemail' name='adminemail' value='<?php echo CHtml::encode($owner['email']); ?>' />
                 </div>
             </div>
 
@@ -268,7 +268,7 @@
             <div class="form-group">
                 <label class=" control-label" for='bounce_email'><?php  eT("Bounce email address:") ; ?></label>
                 <div class="">
-                    <input type='email' size='50'  class="form-control"  id='bounce_email' name='bounce_email' value='<?php echo $owner['bounce_email'] ; ?>' />
+                    <input type='email' size='50'  class="form-control"  id='bounce_email' name='bounce_email' value='<?php echo CHtml::encode($owner['bounce_email']); ?>' />
                 </div>
             </div>
             <?php endif;?>
