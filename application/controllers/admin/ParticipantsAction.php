@@ -1072,8 +1072,9 @@ class ParticipantsAction extends SurveyCommonAction
                     $oParticipant = Participant::model()->findByPk($aData);
                     if ($overwrite == "true" && $oParticipant->userHasPermissionToEdit()) {
                         // We want all the non filtering internal attributes to be updated,too
+                        // Note: Only language and blacklisted, never ownership or other core columns
                         foreach ($writearray as $attribute => $value) {
-                            if (in_array($attribute, ['firstname', 'lastname', 'email'])) {
+                            if (!in_array($attribute, ['language', 'blacklisted'])) {
                                 continue;
                             }
                             $oParticipant->$attribute = $value;
