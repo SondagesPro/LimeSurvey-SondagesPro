@@ -248,6 +248,10 @@ class Quotas extends SurveyCommonAction
 
                 //loop through all sub-parts
                 foreach ($oQuota->quotaMembers as $oQuotaMember) {
+                    // A member based on a question of another survey is never shown, it would disclose its texts
+                    if (!empty($oQuotaMember->question) && $oQuotaMember->question->sid != $iSurveyId) {
+                        continue;
+                    }
                     $aQuestionAnswers = self::getQuotaAnswers($oQuotaMember['qid'], $iSurveyId, $oQuota['id']);
                     if ($oQuotaMember->question->type == '*') {
                         $answerText = $oQuotaMember->code;
@@ -311,6 +315,9 @@ class Quotas extends SurveyCommonAction
         $quota_id = Yii::app()->request->getPost('quota_id');
         $this->checkPermissions($iSurveyId, 'update');
         $this->checkValidQuotaId($iSurveyId, $quota_id);
+        if (!Question::model()->exists('qid = :qid AND sid = :sid', [':qid' => (int) $qid, ':sid' => $iSurveyId])) {
+            throw new CHttpException(404, gT("Question not found"));
+        }
 
         $oQuotaMembers = new QuotaMember('create'); // Trigger the 'create' rules
         $oQuotaMembers->sid = $iSurveyId;
@@ -600,6 +607,9 @@ class Quotas extends SurveyCommonAction
         $aQuestion = Question::model()
             ->with('questionl10ns', array('language' => $sBaseLang))
             ->findByPk(array('qid' => $iQuestionId));
+        if (!empty($aQuestion) && $aQuestion->sid != $iSurveyId) {
+            throw new CHttpException(404, gT("Question not found"));
+        }
         $aQuestionType = $aQuestion['type'];
 
         if ($aQuestionType == Question::QT_M_MULTIPLE_CHOICE) {
