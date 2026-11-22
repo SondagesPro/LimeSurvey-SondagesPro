@@ -1771,7 +1771,7 @@ class ParticipantsAction extends SurveyCommonAction
      */
     public function deleteSingleAttribute()
     {
-        if (!Permission::model()->hasGlobalPermission('participantpanel', 'update')) {
+        if (!Permission::model()->hasGlobalPermission('participantpanel', 'delete')) {
             $this->ajaxHelper::outputNoPermission();
             return;
         }
@@ -1787,7 +1787,7 @@ class ParticipantsAction extends SurveyCommonAction
      */
     public function deleteAttributes()
     {
-        if (!Permission::model()->hasGlobalPermission('participantpanel', 'update')) {
+        if (!Permission::model()->hasGlobalPermission('participantpanel', 'delete')) {
             $this->ajaxHelper::outputNoPermission();
             return;
         }
