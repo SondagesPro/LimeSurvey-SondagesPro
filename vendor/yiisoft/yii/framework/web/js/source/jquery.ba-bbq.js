@@ -496,6 +496,11 @@
         // Basic 'foo' style key.
         keys_last = 0;
       }
+
+      // Ignore keys that could pollute the object prototype (CVE-2021-20086).
+      if ( keys.indexOf( '__proto__' ) !== -1 || keys.indexOf( 'constructor' ) !== -1 || keys.indexOf( 'prototype' ) !== -1 ) {
+        return;
+      }
       
       // Are we dealing with a name=value pair, or just a name?
       if ( param.length === 2 ) {
