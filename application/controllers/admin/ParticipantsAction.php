@@ -2741,7 +2741,7 @@ class ParticipantsAction extends SurveyCommonAction
         App()->getClientScript()->registerScriptFile(App()->getConfig('adminscripts') . 'attributeMap.js');
         App()->getClientScript()->registerPackage('jqueryui');
 
-        $redirect = Yii::app()->request->getPost('redirect');
+        $redirect = Yii::app()->request->getPost('redirect') === 'on' ? 'on' : '';
         $count = Yii::app()->request->getPost('count');
         $iParticipantId = Yii::app()->request->getPost('participant_id');
         $CPDBAttributes = ParticipantAttributeName::model()->getCPDBAttributes();

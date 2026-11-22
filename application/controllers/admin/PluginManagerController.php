@@ -334,7 +334,7 @@ class PluginManagerController extends SurveyCommonAction
             $oPluginObject->saveSettings($aSave);
             Yii::app()->user->setFlash('success', gT('The plugin settings were saved.'));
             if (App()->request->getPost('redirect')) {
-                $this->getController()->redirect(App()->request->getPost('redirect'), true);
+                $this->getController()->redirect(App()->createUrl("admin/pluginmanager/sa/index"), true);
             }
         }
 
