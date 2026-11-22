@@ -2660,9 +2660,16 @@ class ParticipantsAction extends SurveyCommonAction
     public function addToTokenattmap()
     {
         $participantIdsString = Yii::app()->request->getPost('participant_id'); // TODO: This is a comma separated string of ids
-        $participantIds = explode(",", $participantIdsString);
+        $participantIds = Participant::model()->filterEditableParticipantIds(explode(",", (string) $participantIdsString));
 
         $surveyId = (int)Yii::app()->request->getPost('surveyid');
+
+        if (
+            !Permission::model()->hasGlobalPermission('surveys', 'update')
+            && !Permission::model()->hasSurveyPermission($surveyId, 'tokens', 'update')
+        ) {
+            throw new CHttpException(403, gT("You do not have permission to access this page."));
+        }
 
         /**
          * mapped can take values like

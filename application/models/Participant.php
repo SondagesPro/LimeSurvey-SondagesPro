@@ -2243,6 +2243,41 @@ class Participant extends LSActiveRecord
     }
 
     /**
+     * Reduces a list of participant IDs to the participants the logged in user may edit.
+     * Empty IDs are dropped.
+     *
+     * @param string[] $participantIds
+     * @return string[]
+     */
+    public function filterEditableParticipantIds(array $participantIds)
+    {
+        $participantIds = array_values(array_filter($participantIds, function ($participantId) {
+            return is_scalar($participantId) && (string) $participantId !== '';
+        }));
+        if (
+            empty($participantIds)
+            || Permission::model()->hasGlobalPermission('superadmin', 'read')
+            || Permission::model()->hasGlobalPermission('participantpanel', 'update')
+        ) {
+            return $participantIds;
+        }
+        $userId = (int) Yii::app()->user->id;
+        return Yii::app()->db->createCommand()
+            ->selectDistinct('p.participant_id')
+            ->from('{{participants}} p')
+            ->leftJoin(
+                '{{participant_shares}} ps',
+                "ps.participant_id = p.participant_id AND (ps.share_uid = :shareuid OR ps.share_uid = -1) AND ps.can_edit = '1'",
+                [':shareuid' => $userId]
+            )
+            ->where(
+                ['and', 'p.owner_uid = :owneruid OR ps.participant_id IS NOT NULL', ['in', 'p.participant_id', $participantIds]],
+                [':owneruid' => $userId]
+            )
+            ->queryColumn();
+    }
+
+    /**
      * Returns true if user is either owner of this participant or superadmin
      * Used to decide is user can change owner of participant
      * @return boolean
