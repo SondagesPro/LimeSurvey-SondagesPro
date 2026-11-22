@@ -45,6 +45,7 @@ class UserAction extends SurveyCommonAction
         if (Yii::app()->request->getPost("action")) {
             $oUserModel = User::model()->findByPk(Yii::app()->session['loginID']);
             $uresult = true;
+            $passwordChanged = false;
 
             if (Yii::app()->request->getPost('newpasswordshown') == "1") {
                 if (Yii::app()->getConfig('demoMode')) {
@@ -73,6 +74,7 @@ class UserAction extends SurveyCommonAction
                     } else {
                         // We can update
                         $oUserModel->setPassword($newPassword);
+                        $passwordChanged = true;
                     }
                 }
             }
@@ -104,8 +106,10 @@ class UserAction extends SurveyCommonAction
             $oUserModel->full_name            = Yii::app()->request->getPost('fullname');
             $uresult = $uresult && $oUserModel->save();
             if ($uresult) {
-                // Keep this session valid after changing its own password
-                Yii::app()->session['password_fingerprint'] = $oUserModel->getPasswordFingerprint();
+                if ($passwordChanged) {
+                    // Keep this session valid after changing its own password
+                    Yii::app()->session['password_fingerprint'] = $oUserModel->getPasswordFingerprint();
+                }
                 if (Yii::app()->request->getPost('lang') == 'auto') {
                     $sLanguage = getBrowserLanguage();
                 } else {
