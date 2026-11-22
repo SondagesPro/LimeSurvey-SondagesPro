@@ -41,15 +41,17 @@ trait LSApplicationTrait
 
     /**
      * Whether the password changed since this session logged in.
-     * Sessions without a fingerprint (opened before this check, console, tests) are not checked.
+     * Sessions without a fingerprint of this user (opened before this check, console, tests
+     * changing the current user) are not checked.
      *
      * @param User $oUser
      * @return bool
      */
     private function isSessionPasswordStale($oUser)
     {
-        $sFingerprint = App()->session['password_fingerprint'] ?? null;
-        return !empty($sFingerprint) && !hash_equals($oUser->getPasswordFingerprint(), (string) $sFingerprint);
+        $sFingerprint = (string) (App()->session['password_fingerprint'] ?? '');
+        return strpos($sFingerprint, $oUser->uid . ':') === 0
+            && !hash_equals($oUser->getPasswordFingerprint(), $sFingerprint);
     }
 
     /**

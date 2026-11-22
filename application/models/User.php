@@ -302,13 +302,14 @@ class User extends LSActiveRecord
     }
 
     /**
-     * Fingerprint of the password hash, kept in session to detect a password change
+     * Fingerprint of the password hash, kept in session to detect a password change.
+     * Starts with the user id: it only applies to the user who logged in.
      *
      * @return string
      */
     public function getPasswordFingerprint()
     {
-        return hash('sha256', (string) $this->password);
+        return $this->uid . ':' . hash('sha256', (string) $this->password);
     }
 
     /**
