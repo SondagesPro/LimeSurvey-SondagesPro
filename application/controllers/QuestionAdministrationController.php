@@ -1201,7 +1201,8 @@ class QuestionAdministrationController extends LSBaseController
             $fatalerror .= gT("No SID (Survey) has been provided. Cannot import question.");
         }
 
-        if (!$gid) {
+        // The group must belong to the survey the permission was checked on
+        if (!$gid || !QuestionGroup::model()->exists('gid = :gid AND sid = :sid', [':gid' => $gid, ':sid' => $iSurveyID])) {
             $fatalerror .= gT("No GID (Group) has been provided. Cannot import question");
         }
 
@@ -2371,7 +2372,7 @@ class QuestionAdministrationController extends LSBaseController
             $oQuestion->question_theme_name = $questionThemeName;
         }
 
-        if ($gid != null) {
+        if ($gid != null && QuestionGroup::model()->exists('gid = :gid AND sid = :sid', [':gid' => (int) $gid, ':sid' => (int) $oQuestion->sid])) {
             $oQuestion->gid = $gid;
         }
 

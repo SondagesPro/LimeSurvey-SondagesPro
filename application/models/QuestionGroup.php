@@ -159,6 +159,10 @@ class QuestionGroup extends LSActiveRecord
      */
     public static function deleteWithDependency($groupId, $surveyId)
     {
+        // The group must belong to the survey the permission was checked on
+        if (!self::model()->exists('gid = :gid AND sid = :sid', [':gid' => (int) $groupId, ':sid' => (int) $surveyId])) {
+            return null;
+        }
         // Abort if the survey is active
         $surveyIsActive = Survey::model()->findByPk($surveyId)->active !== 'N';
         if ($surveyIsActive) {
