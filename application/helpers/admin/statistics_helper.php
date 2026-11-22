@@ -3251,7 +3251,12 @@ class statistics_helper
                     $this->xlsRow++;
                     $iColumn = 0;
                     foreach ($aRow as $sValue) {
-                        $this->sheet->write($this->xlsRow, $iColumn, $sValue);
+                        // Responses must never become a formula or a link: same number detection as write()
+                        if (preg_match('/^[+-]?(?=\d|\.\d)\d*(\.\d*)?([Ee][+-]?\d+)?$/', (string) $sValue)) {
+                            $this->sheet->writeNumber($this->xlsRow, $iColumn, $sValue);
+                        } else {
+                            $this->sheet->writeString($this->xlsRow, $iColumn, (string) $sValue);
+                        }
                         $iColumn++;
                     }
                 }
