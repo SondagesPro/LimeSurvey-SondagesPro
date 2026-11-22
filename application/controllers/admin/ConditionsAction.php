@@ -199,6 +199,9 @@ class ConditionsAction extends SurveyCommonAction
 
         // This will redirect after logic is reset
         if ($p_subaction == "resetsurveylogic") {
+            if (!Permission::model()->hasSurveyPermission($iSurveyID, 'surveycontent', 'update')) {
+                throw new CHttpException(403, gT("You do not have permission to access this page."));
+            }
             $this->resetSurveyLogic($iSurveyID);
         }
 
@@ -207,6 +210,7 @@ class ConditionsAction extends SurveyCommonAction
             Yii::app()->setFlashMessage(gT('You have not selected a question'), 'error');
             Yii::app()->getController()->redirect(Yii::app()->request->urlReferrer);
         }
+        $this->checkPermission($qid, 'read', $iSurveyID);
 
         // If we made it this far, then lets develop the menu items
         // add the conditions container table
@@ -897,6 +901,7 @@ class ConditionsAction extends SurveyCommonAction
         Yii::import('application.helpers.admin.ajax_helper', true);
         $request = Yii::app()->request;
         $data = $this->getQuickAddData($request);
+        $this->checkPermission((int) $data['qid'], 'update', (int) $data['sid']);
 
         list($message, $status) = $this->insertConditionAjax($data);
 
@@ -982,7 +987,7 @@ class ConditionsAction extends SurveyCommonAction
                     'method' => $p_method,
                     'value' => $ca
                 );
-                $results[] = Condition::model()->insertRecords($updated_data, true, array('cid' => $p_cid));
+                $results[] = Condition::model()->insertRecords($updated_data, true, array('cid' => $p_cid, 'qid' => $qid));
             }
 
             // Check if any result returned false
@@ -1021,7 +1026,7 @@ class ConditionsAction extends SurveyCommonAction
                     'method' => $p_method,
                     'value' => $posted_condition_value
                 );
-                $result = Condition::model()->insertRecords($updated_data, true, array('cid' => $p_cid));
+                $result = Condition::model()->insertRecords($updated_data, true, array('cid' => $p_cid, 'qid' => $qid));
             }
             if ($result) {
                 Yii::app()->setFlashMessage(gT('Condition updated.'), 'success');
@@ -1072,18 +1077,17 @@ class ConditionsAction extends SurveyCommonAction
         $copyconditionsfrom = returnGlobal('copyconditionsfrom');
         $copyconditionsto = returnGlobal('copyconditionsto');
         if (isset($copyconditionsto) && is_array($copyconditionsto) && isset($copyconditionsfrom) && is_array($copyconditionsfrom)) {
-            //Get the conditions we are going to copy and quote them properly
-            foreach ($copyconditionsfrom as &$entry) {
-                $entry = Yii::app()->db->quoteValue($entry);
-            }
-            $query = "SELECT * FROM {{conditions}}\n"
-                . "WHERE cid in (";
-            $query .= implode(", ", $copyconditionsfrom);
-            $query .= ")";
-            $result = Yii::app()->db->createCommand($query)->query() or
-                safeDie("Couldn't get conditions for copy<br />$query<br />");
+            //Get the conditions of this survey we are going to copy
+            $proformaconditions = array();
+            $aSourceConditions = Yii::app()->db->createCommand()
+                ->select('c.*')
+                ->from('{{conditions}} c')
+                ->join('{{questions}} q', 'q.qid = c.qid')
+                ->where(array('in', 'c.cid', array_map('intval', $copyconditionsfrom)))
+                ->andWhere('q.sid = :sid', array(':sid' => $this->iSurveyID))
+                ->queryAll();
 
-            foreach ($result->readAll() as $row) {
+            foreach ($aSourceConditions as $row) {
                 $proformaconditions[] = array(
                     "scenario"      =>    $row['scenario'],
                     "cqid"          =>    $row['cqid'],
@@ -1095,6 +1099,9 @@ class ConditionsAction extends SurveyCommonAction
 
             foreach ($copyconditionsto as $copyc) {
                 list(,, $newqid) = explode("X", $copyc);
+                if (!Question::model()->countByAttributes(array('qid' => (int) $newqid, 'sid' => $this->iSurveyID))) {
+                    continue;
+                }
                 foreach ($proformaconditions as $pfc) {
                     //TIBO
 
@@ -1158,6 +1165,9 @@ class ConditionsAction extends SurveyCommonAction
         /** @var string $p_newscenarionum */
         /** @var string $p_scenario */
         extract($args);
+        if (in_array($p_subaction, array('insertcondition', 'updatecondition', 'delete', 'deletescenario', 'updatescenario', 'deleteallconditions', 'renumberscenarios', 'copyconditions'), true)) {
+            $this->checkPermission((int) $qid, 'update', $this->iSurveyID);
+        }
         switch ($p_subaction) {
             // Insert new condition
             case "insertcondition":
@@ -1170,7 +1180,7 @@ class ConditionsAction extends SurveyCommonAction
             // Delete entry if this is delete
             case "delete":
                 LimeExpressionManager::RevertUpgradeConditionsToRelevance(null, $qid); // in case deleted the last condition
-                Condition::model()->deleteRecords(array('cid' => $p_cid));
+                Condition::model()->deleteRecords(array('cid' => $p_cid, 'qid' => $qid));
                 LimeExpressionManager::UpgradeConditionsToRelevance(null, $qid);
                 $this->redirectToConditionStart($qid, $gid);
                 break;
@@ -1207,6 +1217,25 @@ class ConditionsAction extends SurveyCommonAction
             case "copyconditions":
                 $this->copyConditions($args);
                 break;
+        }
+    }
+
+    /**
+     * Check that the question belongs to the survey and the permission on this survey
+     * @param integer $qid
+     * @param string $permission
+     * @param integer $surveyId
+     * @throws CHttpException
+     * @return void
+     */
+    private function checkPermission(int $qid, string $permission, int $surveyId)
+    {
+        $question = Question::model()->findByPk($qid);
+        if (empty($question) || (int) $question->sid !== $surveyId) {
+            throw new CHttpException(404, gT("Invalid question ID"));
+        }
+        if (!Permission::model()->hasSurveyPermission($surveyId, 'surveycontent', $permission)) {
+            throw new CHttpException(403, gT("You do not have permission to access this page."));
         }
     }
 
