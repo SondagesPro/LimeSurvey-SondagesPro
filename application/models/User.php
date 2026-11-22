@@ -291,10 +291,24 @@ class User extends LSActiveRecord
     public function setPassword($sPassword, $save = false)
     {
         $this->password = password_hash($sPassword, PASSWORD_DEFAULT);
+        if (!empty($this->users_name)) {
+            // Revoke the RemoteControl session keys of this user
+            Session::model()->deleteByUsername($this->users_name);
+        }
         if ($save) {
             $this->save();
         }
         return $this; // Return current object
+    }
+
+    /**
+     * Fingerprint of the password hash, kept in session to detect a password change
+     *
+     * @return string
+     */
+    public function getPasswordFingerprint()
+    {
+        return hash('sha256', (string) $this->password);
     }
 
     /**

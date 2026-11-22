@@ -30,10 +30,26 @@ trait LSApplicationTrait
         }
         /* use App()->session and not App()->user fot easiest unit test */
         $this->currentUserId = App()->session['loginID'];
-        if ($this->currentUserId && !User::model()->active()->findByPk($this->currentUserId)) {
-            $this->currentUserId = 0;
+        if ($this->currentUserId) {
+            $oUser = User::model()->active()->findByPk($this->currentUserId);
+            if (!$oUser || $this->isSessionPasswordStale($oUser)) {
+                $this->currentUserId = 0;
+            }
         }
         return $this->currentUserId;
+    }
+
+    /**
+     * Whether the password changed since this session logged in.
+     * Sessions without a fingerprint (opened before this check, console, tests) are not checked.
+     *
+     * @param User $oUser
+     * @return bool
+     */
+    private function isSessionPasswordStale($oUser)
+    {
+        $sFingerprint = App()->session['password_fingerprint'] ?? null;
+        return !empty($sFingerprint) && !hash_equals($oUser->getPasswordFingerprint(), (string) $sFingerprint);
     }
 
     /**

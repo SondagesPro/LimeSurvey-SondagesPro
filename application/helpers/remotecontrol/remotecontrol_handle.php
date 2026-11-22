@@ -3497,7 +3497,8 @@ class remotecontrol_handle
             'templateeditormode' => $aUserData['templateeditormode'],
             'questionselectormode' => $aUserData['questionselectormode'],
             'dateformat' => $aUserData['dateformat'],
-            'adminlang' => 'en'
+            'adminlang' => 'en',
+            'password_fingerprint' => $aUserData->getPasswordFingerprint()
         );
         foreach ($session as $k => $v) {
             Yii::app()->session[$k] = $v;

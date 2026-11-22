@@ -803,7 +803,7 @@ class UserManagementController extends LSBaseController
                     $oUser->parent_id = App()->user->id;
                     $oUser->modified = date('Y-m-d H:i:s');
                     if ($aNewUser['password'] != ' ') {
-                        $oUser->password = password_hash($aNewUser['password'], PASSWORD_DEFAULT);
+                        $oUser->setPassword($aNewUser['password']);
                     }
 
                     $save = $oUser->save();
@@ -1375,7 +1375,7 @@ class UserManagementController extends LSBaseController
         $oUser->setAttributes($aUser);
 
         if (isset($aUser['password']) && $aUser['password']) {
-            $oUser->password = password_hash($aUser['password'], PASSWORD_DEFAULT);
+            $oUser->setPassword($aUser['password']);
         }
         $oUser->modified = date('Y-m-d H:i:s');
         $oUser->save();

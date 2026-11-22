@@ -104,6 +104,8 @@ class UserAction extends SurveyCommonAction
             $oUserModel->full_name            = Yii::app()->request->getPost('fullname');
             $uresult = $uresult && $oUserModel->save();
             if ($uresult) {
+                // Keep this session valid after changing its own password
+                Yii::app()->session['password_fingerprint'] = $oUserModel->getPasswordFingerprint();
                 if (Yii::app()->request->getPost('lang') == 'auto') {
                     $sLanguage = getBrowserLanguage();
                 } else {
