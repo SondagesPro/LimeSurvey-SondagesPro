@@ -810,6 +810,15 @@ class Database extends SurveyCommonAction
                 if ($aURLParam['targetsqid'] == '') {
                     $aURLParam['targetsqid'] = null;
                 }
+                foreach (['targetqid', 'targetsqid'] as $targetAttribute) {
+                    if ($aURLParam[$targetAttribute] === null) {
+                        continue;
+                    }
+                    $aURLParam[$targetAttribute] = (int) $aURLParam[$targetAttribute];
+                    if (!Question::model()->countByAttributes(['qid' => $aURLParam[$targetAttribute], 'sid' => $iSurveyID])) {
+                        continue 2; // The target must be a question of this survey
+                    }
+                }
                 $aURLParam['sid'] = $iSurveyID;
 
                 $param = new SurveyURLParameter();
