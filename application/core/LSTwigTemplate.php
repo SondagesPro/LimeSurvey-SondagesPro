@@ -38,4 +38,35 @@ abstract class LSTwigTemplate extends Twig_Template
         }
         return $value;
     }
+
+    /**
+     * json_encode function of templates: CJSON reads all the attributes of a model
+     * @param mixed $value
+     * @return string
+     * @throws Twig_Sandbox_SecurityError
+     */
+    public static function jsonEncode($value)
+    {
+        self::denyNestedModel($value);
+        return CJSON::encode($value);
+    }
+
+    /**
+     * Refuse a model, including inside the values read by CJSON
+     * @param mixed $value
+     * @return void
+     * @throws Twig_Sandbox_SecurityError
+     */
+    private static function denyNestedModel($value)
+    {
+        self::denyModel($value);
+        if (is_object($value) && !$value instanceof Traversable) {
+            $value = get_object_vars($value);
+        }
+        if (is_array($value) || $value instanceof Traversable) {
+            foreach ($value as $item) {
+                self::denyNestedModel($item);
+            }
+        }
+    }
 }
