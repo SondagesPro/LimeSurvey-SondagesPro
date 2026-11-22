@@ -660,7 +660,7 @@ class User extends LSActiveRecord
                 data-target='#confirmation-modal' 
                 data-url='" . $changeOwnershipUrl . "' 
                 data-userid='" . $this->uid . "' 
-                data-user='" . $this->full_name . "' 
+                data-user='" . CHtml::encode($this->full_name) . "'
                 data-action='deluser' 
                 data-onclick='LS.UserManagement.triggerRunAction(\"#UserManagement--takeown-" . $this->uid . "\")' 
                 data-message='" . gT('Do you want to take ownerschip of this user?') . "'>
