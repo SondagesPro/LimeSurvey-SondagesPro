@@ -2440,19 +2440,19 @@ function tokensExport($iSurveyID)
             $tokenoutput .= '"' . trim($brow['tid']) . '",';
             $tokenoutput .= '"' . str_replace('"', '""', trim($brow['firstname'])) . '",';
             $tokenoutput .= '"' . str_replace('"', '""', trim($brow['lastname'])) . '",';
-            $tokenoutput .= '"' . trim($brow['email']) . '",';
-            $tokenoutput .= '"' . trim($brow['emailstatus']) . '",';
-            $tokenoutput .= '"' . trim($brow['token']) . '",';
-            $tokenoutput .= '"' . trim($brow['language']) . '",';
-            $tokenoutput .= '"' . trim($brow['validfrom']) . '",';
-            $tokenoutput .= '"' . trim($brow['validuntil']) . '",';
-            $tokenoutput .= '"' . trim($brow['sent']) . '",';
-            $tokenoutput .= '"' . trim($brow['remindersent']) . '",';
-            $tokenoutput .= '"' . trim($brow['remindercount']) . '",';
-            $tokenoutput .= '"' . trim($brow['completed']) . '",';
-            $tokenoutput .= '"' . trim($brow['usesleft']) . '",';
+            $tokenoutput .= '"' . str_replace('"', '""', trim($brow['email'])) . '",';
+            $tokenoutput .= '"' . str_replace('"', '""', trim($brow['emailstatus'])) . '",';
+            $tokenoutput .= '"' . str_replace('"', '""', trim($brow['token'])) . '",';
+            $tokenoutput .= '"' . str_replace('"', '""', trim($brow['language'])) . '",';
+            $tokenoutput .= '"' . str_replace('"', '""', trim($brow['validfrom'])) . '",';
+            $tokenoutput .= '"' . str_replace('"', '""', trim($brow['validuntil'])) . '",';
+            $tokenoutput .= '"' . str_replace('"', '""', trim($brow['sent'])) . '",';
+            $tokenoutput .= '"' . str_replace('"', '""', trim($brow['remindersent'])) . '",';
+            $tokenoutput .= '"' . str_replace('"', '""', trim($brow['remindercount'])) . '",';
+            $tokenoutput .= '"' . str_replace('"', '""', trim($brow['completed'])) . '",';
+            $tokenoutput .= '"' . str_replace('"', '""', trim($brow['usesleft'])) . '",';
             if ($iTokenStatus == 4 && $bIsNotAnonymous && $bIsDateStamped) {
-                $tokenoutput .= '"' . trim($brow['started']) . '",';
+                $tokenoutput .= '"' . str_replace('"', '""', trim($brow['started'])) . '",';
             }
             foreach ($attrfieldnames as $attr_name) {
                 $tokenoutput .= '"' . str_replace('"', '""', trim($brow[$attr_name])) . '",';
