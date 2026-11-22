@@ -274,12 +274,12 @@ class ThemeOptionsController extends LSBaseController
     {
         $model = $this->loadModel($id);
 
-        if (Permission::model()->hasTemplatePermission($model->template_name, 'update')) {
+        if (Permission::model()->hasTemplatePermission($model->template_name, 'update') && $this->canUpdateSurveyOrGroupOptions($model)) {
             $model = $this->turnAjaxmodeOffAsDefault($model);
             $model->save();
 
             if (isset($_POST['TemplateConfiguration'])) {
-                $model->attributes = $_POST['TemplateConfiguration'];
+                $model->attributes = $this->getPostedTemplateConfiguration();
                 if ($model->save()) {
                     App()->user->setFlash('success', gT('Theme options saved.'));
                     $this->redirect(array('themeOptions/update/id/' . $model->id));
@@ -290,6 +290,43 @@ class ThemeOptionsController extends LSBaseController
             App()->setFlashMessage(gT("We are sorry but you don't have permissions to do this."), 'error');
             $this->redirect(array("themeOptions/index"));
         }
+    }
+
+    /**
+     * Checks the permission on the survey or survey group of theme options.
+     * Global theme options (without survey and survey group) don't need any.
+     *
+     * @param TemplateConfiguration $model the theme options
+     * @return boolean
+     */
+    private function canUpdateSurveyOrGroupOptions(TemplateConfiguration $model): bool
+    {
+        if (Permission::model()->hasGlobalPermission('templates', 'update')) {
+            return true;
+        }
+        if (!empty($model->sid) && !Permission::model()->hasSurveyPermission($model->sid, 'surveysettings', 'update')) {
+            return false;
+        }
+        if (!empty($model->gsid)) {
+            $oSurveysGroups = SurveysGroups::model()->findByPk($model->gsid);
+            if (empty($oSurveysGroups) || !$oSurveysGroups->hasPermission('surveysettings', 'update')) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns the posted theme options without the IDs placing them (id, sid, gsid and template_name),
+     * so they can't be moved to another survey, survey group or theme.
+     *
+     * @return array
+     */
+    private function getPostedTemplateConfiguration(): array
+    {
+        $data = (array) App()->request->getPost('TemplateConfiguration', []);
+        unset($data['id'], $data['sid'], $data['gsid'], $data['template_name']);
+        return $data;
     }
 
     /**
@@ -342,7 +379,7 @@ class ThemeOptionsController extends LSBaseController
         $model->save();
 
         if (isset($_POST['TemplateConfiguration'])) {
-            $model->attributes = $_POST['TemplateConfiguration'];
+            $model->attributes = $this->getPostedTemplateConfiguration();
             if ($model->save()) {
                 App()->user->setFlash('success', gT('Theme options saved.'));
                 $this->redirect(array("themeOptions/updateSurvey", 'surveyid' => $sid));
@@ -380,8 +417,8 @@ class ThemeOptionsController extends LSBaseController
         }
 
         if (isset($_POST['TemplateConfiguration'])) {
-            $model = TemplateConfiguration::getInstance($_POST['TemplateConfiguration']['template_name'], $gsid);
-            $model->attributes = $_POST['TemplateConfiguration'];
+            // The posted options are saved to the configuration loaded above, the posted theme name is not used
+            $model->attributes = $this->getPostedTemplateConfiguration();
             if ($model->save()) {
                 App()->user->setFlash('success', gT('Theme options saved.'));
             }
