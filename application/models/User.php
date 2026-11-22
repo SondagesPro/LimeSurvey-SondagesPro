@@ -365,7 +365,15 @@ class User extends LSActiveRecord
             }
         }
 
-        return($error);
+        $oPasswordTestEvent = new PluginEvent('checkPasswordRequirement');
+        $oPasswordTestEvent->set('password', $password);
+        $oPasswordTestEvent->set('passwordOk', $error === '');
+        $oPasswordTestEvent->set('passwordError', $error);
+        Yii::app()->getPluginManager()->dispatchEvent($oPasswordTestEvent);
+        if ($oPasswordTestEvent->get('passwordOk')) {
+            return '';
+        }
+        return $oPasswordTestEvent->get('passwordError') ?: gT('The password does not fulfill the requirements.');
     }
 
     /**

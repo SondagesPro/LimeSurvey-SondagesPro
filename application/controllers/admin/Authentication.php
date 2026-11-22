@@ -237,13 +237,8 @@ class Authentication extends SurveyCommonAction
             $password = Yii::app()->request->getPost('password');
             $passwordRepeat = Yii::app()->request->getPost('password_repeat');
 
-            $oPasswordTestEvent = new PluginEvent('checkPasswordRequirement');
-            $oPasswordTestEvent->set('password', $password);
-            $oPasswordTestEvent->set('passwordOk', true);
-            $oPasswordTestEvent->set('passwordError', '');
-            Yii::app()->getPluginManager()->dispatchEvent($oPasswordTestEvent);
-            $passwordError = $oPasswordTestEvent->get('passwordError');
-            if (($password !== null && $passwordRepeat !== null) && ($password === $passwordRepeat) && $oPasswordTestEvent->get('passwordOk')) {
+            $passwordError = $user->checkPasswordStrength((string) $password);
+            if (($password !== null && $passwordRepeat !== null) && ($password === $passwordRepeat) && $passwordError === '') {
                 //now everything is ok, save password
                 $user->setPassword($password, true);
                 // And remove validation_key
