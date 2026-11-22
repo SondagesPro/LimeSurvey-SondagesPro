@@ -36,7 +36,7 @@ $codeids = '';
 
                         <tr class="labelDatas" style='white-space: nowrap;' id='row_<?php echo $lslanguage; ?>_<?php echo $row['sortorder'] ?>'>
                             <?php if (!$first) : ?>
-                                <td><?php echo $row['code'] ?></td>
+                                <td><?php echo CHtml::encode($row['code']) ?></td>
                                 <td><?php echo $row['assessment_value'] ?></td>
                             <?php else : ?>
                                 <td>
@@ -44,8 +44,8 @@ $codeids = '';
                                 </td>
 
                                 <td>
-                                    <input type='hidden' class='hiddencode' value='<?php echo $row['code'] ?>'/>
-                                    <input type='text' class='codeval  form-control  ' id='code_<?php echo $row['sortorder'] ?>' name='code_<?php echo $row['sortorder'] ?>' maxlength='20' size='20' value='<?php echo $row['code'] ?>'/>
+                                    <input type='hidden' class='hiddencode' value='<?php echo CHtml::encode($row['code']) ?>'/>
+                                    <input type='text' class='codeval  form-control  ' id='code_<?php echo $row['sortorder'] ?>' name='code_<?php echo $row['sortorder'] ?>' maxlength='20' size='20' value='<?php echo CHtml::encode($row['code']) ?>'/>
                                 </td>
 
                                 <td>
