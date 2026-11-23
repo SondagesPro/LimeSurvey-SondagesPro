@@ -15,7 +15,6 @@ jobs:
   CI-pipeline:
     runs-on: ${{ matrix.os }}    # ubuntu runner hosted by Github
     strategy:
-      fail-fast: false
       matrix:
         # Specify what versions of php you want to test
         # PHP 7.4 and 8.0 come from packages.sury.org, PHP 8.3 is the Ubuntu 24.04 package
@@ -142,17 +141,14 @@ jobs:
         # unzip chromedriver_linux64.zip
 
       - name: Run unit tests
-        id: unit-tests
         env:
             XDEBUG_MODE: coverage
-        run: php vendor/bin/phpunit --testdox tests/unit
+        run: php vendor/bin/phpunit --testdox --stop-on-failure tests/unit
 
       - name: Check test coverage if cov.xml exists (won't work on PHP 8 with current phpunit version)
-        if: ${{ !cancelled() && steps.unit-tests.conclusion != 'skipped' }}
         run: php tests/bin/check_coverage.php cov.xml 37
 
       - name: Set up Selenium with firefox (needed for integrity tests)
-        if: ${{ !cancelled() && steps.unit-tests.conclusion != 'skipped' }}
         run: |
           echo `which firefox`
           echo `firefox -v`
@@ -166,10 +162,9 @@ jobs:
           java -jar selenium-server-standalone-3.7.1.jar -enablePassThrough false > /dev/null 2> /dev/null &
 
       - name: Run functional tests
-        if: ${{ !cancelled() && steps.unit-tests.conclusion != 'skipped' }}
         env:
             DOMAIN: localhost
-        run: php vendor/bin/phpunit --testdox tests/functional
+        run: php vendor/bin/phpunit --testdox --stop-on-failure tests/functional
 
       - name: Upload Screenshots
         uses: actions/upload-artifact@v4
@@ -180,6 +175,5 @@ jobs:
           retention-days: 5
           
       - name: Run syntax check, CodeSniffer, MessDetector, ...
-        if: ${{ !cancelled() && steps.unit-tests.conclusion != 'skipped' }}
         run: composer test
 
