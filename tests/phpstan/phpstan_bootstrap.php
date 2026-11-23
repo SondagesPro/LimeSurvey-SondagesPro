@@ -20,6 +20,7 @@ define('ROOT', dirname(__FILE__ . '../../'));
 define('FCPATH', str_replace(SELF, '', __FILE__));
 define('SYSDIR', trim(strrchr(trim(BASEPATH, '/'), '/'), '/'));
 define('YII_DEBUG', true);
+error_reporting(E_ALL & ~E_DEPRECATED);
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once BASEPATH . 'yii' . EXT;
@@ -61,7 +62,5 @@ LoadQuestionTypes::loadAll();
 /** @var PluginManager */
 $pluginManager = Yii::app()->getComponent('pluginManager');
 $pluginManager->scanPlugins(true);
-
-error_reporting(E_ALL);
 
 define('LOGO_URL', 'dummy_logo_url');
