@@ -27,6 +27,50 @@ We recommend setting `allowedHosts` on each instance. It protects against Host h
 
 List every host name used to reach the instance, without scheme or port. Requests to any other host name get an HTTP 400 error. This setting is optional: without it, the host name is not checked.
 
+### Twig themes and Yii models (after 5.6.94)
+
+**Important change:** the Twig sandbox now applies to Yii models (survey participant, response, question…). A theme or a plugin view can only read the properties listed in the `sandboxConfig` of `application/config/internal.php`. Any other property or method gets an error, for example:
+
+```
+Calling "getattributes" method on a "Token_123456" object is not allowed.
+```
+
+The participant model (`Token`) has no allowed property: `oToken.tid`, `oToken.token` or `oToken.attributes` all fail. Iterating over a model (`for`, `merge`, `first`, `last`, `keys`) and `json_encode` on a model are refused too.
+
+To fix a theme, use the arrays sent to the view instead of the model, for example `aTokens` instead of `oTokens` for TokenUsersListAndManage.
+
+If all the users who can edit survey themes are trusted, you can allow more properties in `application/config/config.php`. The class name covers its child classes (`Token` covers `Token_123456`):
+
+```php
+'components' => array(
+    // ...
+    'twigRenderer' => array(
+        'sandboxConfig' => array(
+            'properties' => array(
+                'Token' => array('tid', 'token', 'email', 'firstname', 'lastname', 'attributes'),
+            ),
+            'methods' => array(
+                'Token' => array('getAttribute'),
+            ),
+        ),
+    ),
+),
+```
+
+Only add what your themes use. `attributes` and `getAttribute` give access to every column of the participant, including email and attributes. If `twigRenderer` is already in your `config.php`, add `sandboxConfig` into it: there must be only one `twigRenderer` key.
+
+To get back the previous behaviour, where every column of a model can be read, set the base class of the compiled templates:
+
+```php
+'twigRenderer' => array(
+    'options' => array(
+        'base_template_class' => 'Twig_Template',
+    ),
+),
+```
+
+This removes the protection for all the models: every user who can edit a theme can read any column of any model sent to a view. Properties like `attributes` still need to be in `properties`. The protection on iteration and `json_encode` stays active.
+
 ## Requirements
 
 ### Minimal
