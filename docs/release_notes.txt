@@ -34,6 +34,73 @@ Thank you to everyone who helped with this new release!
 
 CHANGE LOG
 ------------------------------------------------------
+Changes from 5.6.94 (SondagesPro) to 5.6.95 (SondagesPro) November 24, 2026
+- Important: the Twig sandbox now also applies to Yii models. Survey themes and plugin views that read a model property or method outside the allow-list get an error, see README.md
+- Fixed issue [security] #20843: Authorization bypass in survey participant table restore
+- Fixed issue [security] #20705: Missing authorization in the central participant database
+- Fixed issue #20705: show attribute delete button with the permission checked on delete
+- Fixed issue [security] #19736: Question advanced settings are not filtered
+- Fixed issue [security]: Stored XSS in replacement-fields question title rendering
+- Fixed issue [security]: Improper authorization in survey menu entry creation
+- Fixed issue: Response summary broken with debug set to 2
+- Fixed issue [security] #18912: Able to change username that is by default unchangeable
+- Fixed issue [security] #18883: Stored XSS vulnerability in user profile
+- Fixed issue [security] #18934: Stored XSS in label set administration
+- Fixed issue [security] #19134: User with "Users" permission only can add arbitrary users to the not owned user group
+- Fixed issue [security] #19038: Privilege escalation bug to creation survey-group with others group as parent
+- Fixed issue [security] #19457: Stored Cross-Site Scripting (XSS) in file upload question
+- Fixed issue [security] #19610: queXML PDF discloses version specific information
+- Fixed issue [security] #19639: Host Header Injection in password reset function
+- Fixed issue [security] #19732: XSS on date format
+- Fixed issue [security] #19842: Password default requirements do not get consistently applied
+- Fixed issue [security]: Export survey/label set resources with limited permissions
+- Fixed issue [security] #20239: Reflected Cross-Site Scripting in question create
+- Fixed issue [security]: RemoteControl API user export exports too much information
+- Fixed issue [security] AT-2090: SQL injection vulnerability in statistics
+- Fixed issue [security] #20575: XSS in add dummy participant form
+- Fixed issue [security] #20644: ResponsesController::actionTime does not enforce survey response permissions
+- Fixed issue [security]: Stored XSS in survey menu entries
+- Fixed issue [security]: Stored XSS in quota message rendering
+- Fixed issue [security] #19297: Disable access to some files on apache
+- Fixed issue [security] #19095: Session does not expire on password change
+- Fixed issue [security] #20544: Missing permission checks in conditions designer
+- Fixed issue [security] #15240: Self cross-site scripting (XSS) vulnerability in the print answers page
+- Fixed issue [security] #14382: Stored XSS via image file names in imported survey themes
+- Fixed issue [security] #20810: Stored cross-site scripting (XSS) vulnerability in the central participant database
+- Fixed issue [security] #20813: Broken access control vulnerability in quota mass actions
+- Fixed issue [security] #20814: Broken access control vulnerability in survey content editing
+- Fixed issue [security]: Path traversal vulnerability in the RemoteControl API response file functions
+- Fixed issue [security]: Privilege escalation vulnerability in the RemoteControl API
+- Fixed issue [security]: Broken access control vulnerability in survey theme options
+- Fixed issue [security] #20812: Privilege escalation vulnerability in survey permissions
+- Fixed issue [security] #20821: Insecure randomness vulnerability in the generation of participant access codes
+- Fixed issue [security] #20831: Stored XSS vulnerability via user group names in user management
+- Fixed issue [security]: Stored XSS via role names in the role selectors
+- Fixed issue [security] #20492: Stored XSS in the installed question theme list
+- Fixed issue [security] #20706: Require delete permission to delete central participant attributes
+- Fixed issue [security] #20447: Fix theme check when saving a survey with a theme without permission
+- Fixed issue [security] #20746: Escape expression date limits in the Date/Time question
+- Fixed issue [security] #20755: Unvalidated field name in statistics summary for file upload questions
+- Fixed issue [security] #20695: SQL injection in auditlog plugin
+- Fixed issue [security] #20494: Remote code execution via question theme path traversal
+- Fixed issue [security] #20750: Missing authorization when copying central participants to a survey
+- Fixed issue [security] #20750: Question of another survey can be renumbered during activation
+- Fixed issue [security] #20750: URL parameters can target a question of another survey
+- Fixed issue [security] #20750: Restrict the columns overwritten by the central participant CSV import
+- Fixed issue [security] #19253: CSV injection in export quota
+- Fixed issue [security] #19702: Prototype pollution in jquery-bbq
+- Fixed issue: Fatal error when ini_set, set_time_limit or php_uname are disabled
+- Fixed issue [security]: Unescaped double quotes in the survey participants CSV export
+- Fixed issue [security]: Formula injection in the statistics XLS export
+- Fixed issue [security]: PHP code injection through the Twig use tag (CVE-2026-46633)
+- Fixed issue [security]: Update Yii to 1.1.32
+- Fixed issue [security]: Twig sandbox bypass on Yii models
+- Fixed issue [security]: Twig json_encode function exposes all model attributes
+- Fixed issue #19095: Fatal error in RemoteControl when storing the password fingerprint
+- Fixed issue #19095: Password fingerprint logs out when the current user changes
+- Fixed issue #19095: Only refresh the password fingerprint after a password change
+- Fixed issue: Fatal error when ini_set or set_time_limit are disabled in participant CSV import and PDF exports
+
 Changes from 5.6.93 (SondagesPro) to 5.6.94 (SondagesPro) October 14, 2026
 - Fixed issue [security] : XSS in quick translation
 
