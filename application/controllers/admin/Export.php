@@ -1334,7 +1334,9 @@ class Export extends SurveyCommonAction
 
             $quexmlpdf->setLanguage($lang);
 
-            set_time_limit(120);
+            if (function_exists('set_time_limit')) {
+                set_time_limit(120);
+            }
 
             Yii::app()->loadHelper('export');
 

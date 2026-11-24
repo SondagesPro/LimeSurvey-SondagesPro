@@ -127,7 +127,9 @@ class SettingGlobal extends LSActiveRecord
      */
     public static function increaseAssetsversionnumber()
     {
-        @ini_set('auto_detect_line_endings', '1');
+        if (function_exists('ini_set')) {
+            @ini_set('auto_detect_line_endings', '1');
+        }
         $sRootdir      = Yii::app()->getConfig("rootdir");
         $versionlines = file($sRootdir . DIRECTORY_SEPARATOR . 'application' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'version.php');
         $handle       = fopen($sRootdir . DIRECTORY_SEPARATOR . 'application' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'version.php', "w");

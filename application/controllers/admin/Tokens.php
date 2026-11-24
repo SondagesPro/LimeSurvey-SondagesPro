@@ -2000,7 +2000,9 @@ class Tokens extends SurveyCommonAction
                 $iRecordOk = 0;
                 $iInvalidEmailCount = 0; // Count invalid email imported
                 // This allows to read file with MAC line endings too
-                @ini_set('auto_detect_line_endings', '1');
+                if (function_exists('ini_set')) {
+                    @ini_set('auto_detect_line_endings', '1');
+                }
                 // open it and trim the endings
                 $aTokenListArray = file($sFileName, FILE_SKIP_EMPTY_LINES);
                 $sBaseLanguage = Survey::model()->findByPk($iSurveyId)->language;

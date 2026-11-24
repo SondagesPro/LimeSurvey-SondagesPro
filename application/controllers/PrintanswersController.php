@@ -190,7 +190,9 @@ class PrintanswersController extends LSYii_Controller
 
             $quexmlpdf->setLanguage($sLanguage);
 
-            set_time_limit(120);
+            if (function_exists('set_time_limit')) {
+                set_time_limit(120);
+            }
 
             Yii::app()->loadHelper('export');
 

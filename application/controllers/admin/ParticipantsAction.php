@@ -952,7 +952,9 @@ class ParticipantsAction extends SurveyCommonAction
             return is_scalar($mappedName) && !in_array(strtolower((string) $mappedName), $participantColumns);
         });
         /* Adjust system settings to read file with MAC line endings */
-        @ini_set('auto_detect_line_endings', '1');
+        if (function_exists('ini_set')) {
+            @ini_set('auto_detect_line_endings', '1');
+        }
         /* Open the uploaded file into an array */
         $tokenlistarray = file($sFilePath);
 
