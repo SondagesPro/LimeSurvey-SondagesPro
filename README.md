@@ -27,6 +27,19 @@ We recommend setting `allowedHosts` on each instance. It protects against Host h
 
 List every host name used to reach the instance, without scheme or port. Requests to any other host name get an HTTP 400 error. This setting is optional: without it, the host name is not checked.
 
+### Disabled PHP functions
+
+LimeSurvey works with these functions disabled in `php.ini`:
+
+```ini
+disable_functions = ini_set,ini_alter,ini_restore,set_time_limit,exec,shell_exec,system,passthru,proc_open,popen,pcntl_exec,putenv
+```
+
+With this setting:
+- **Emails must be sent with SMTP.** With the PHP `mail()` method, PHPMailer always calls `ini_set` (for the bounce address), and the Sendmail and Qmail methods use `popen`. With PHP 8, every email then fails with a fatal error. Choose SMTP in Global settings > Email settings.
+- The `memory_limit` and `max_execution_time` values of `config.php` are not applied: set them in `php.ini`.
+- Do not set `timeout`, `cookieMode`, `gCProbability` or `useTransparentSessionID` in the `session` component of `config.php`: Yii uses `ini_set` for them.
+
 ### Twig themes and Yii models (after 5.6.94)
 
 **Important change:** the Twig sandbox now applies to Yii models (survey participant, response, question…). A theme or a plugin view can only read the properties listed in the `sandboxConfig` of `application/config/internal.php`. Any other property or method gets an error, for example:
