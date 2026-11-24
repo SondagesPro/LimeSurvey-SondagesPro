@@ -425,8 +425,10 @@ return array(
             'expressions.css'
         )  
     ),    
-    /* Replace bbq package from Yii core to set position */
+    /* Replace bbq package from Yii core to set position and fix prototype pollution (CVE-2021-20086) */
     'bbq'=>array(
+        'devBaseUrl' => 'assets/packages/bbq/',
+        'basePath' => 'core.bbq',
         'position' => CClientScript::POS_BEGIN,
         'js'=>array(YII_DEBUG ? 'jquery.ba-bbq.js' : 'jquery.ba-bbq.min.js'),
         'depends'=>array('jquery'),

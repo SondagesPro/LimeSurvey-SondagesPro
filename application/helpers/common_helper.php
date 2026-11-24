@@ -2344,7 +2344,7 @@ function createPassword($iPasswordLength = 12)
     $aCharacters = "ABCDEGHJIKLMNOPQURSTUVWXYZabcdefhjmnpqrstuvwxyz23456789";
     $sPassword = '';
     for ($i = 0; $i < $iPasswordLength; $i++) {
-        $sPassword .= $aCharacters[(int) floor(rand(0, strlen($aCharacters) - 1))];
+        $sPassword .= $aCharacters[random_int(0, strlen($aCharacters) - 1)];
     }
     return $sPassword;
 }
@@ -2768,7 +2768,7 @@ function randomChars($length, $pattern = "23456789abcdefghijkmnpqrstuvwxyz")
     $patternlength = strlen($pattern) - 1;
     $key = '';
     for ($i = 0; $i < $length; $i++) {
-        $key .= $pattern[mt_rand(0, $patternlength)];
+        $key .= $pattern[random_int(0, $patternlength)];
     }
     return $key;
 }
@@ -5118,4 +5118,30 @@ function isAbsolutePath($path)
         // Relative path
         return false;
     }
+}
+
+/**
+ * Escapes a string for use in a CSV file
+ * @param string|null $string
+ * @return string
+ */
+function csvEscape($string)
+{
+    if (empty($string)) {
+        return $string;
+    }
+
+    // Escape formulas to avoid CSV injection.
+    // If the string starts with =, +, -, @, tab or carriage return, prepend a single quote.
+    if (in_array(substr($string, 0, 1), ['=', '-', '+', '@', "\t", "\r"], true)) {
+        $string = "'" . $string;
+    }
+
+    // Normalize line endings
+    $string = preg_replace('~\R~u', "\n", $string);
+
+    // Escape double quotes and wrap the string in double quotes
+    $string = '"' . str_replace('"', '""', $string) . '"';
+
+    return $string;
 }

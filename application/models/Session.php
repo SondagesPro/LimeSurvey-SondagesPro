@@ -104,4 +104,29 @@ class Session extends CActiveRecord
         $this->data = $this->dataBackup;
         $this->dataBackup = null;
     }
+
+    /**
+     * Delete the RemoteControl session keys of a user: their data column is the username.
+     * Same value conversion as fixDataType: data is a binary column.
+     * @param string $username
+     * @return int number of deleted rows
+     */
+    public function deleteByUsername($username)
+    {
+        $db = $this->getDbConnection();
+        $value = $db->quoteValue((string) $username);
+        switch ($db->getDriverName()) {
+            case 'sqlsrv':
+            case 'mssql':
+            case 'dblib':
+                $value = 'CONVERT(VARBINARY(MAX), ' . $value . ')';
+                break;
+            case 'pgsql':
+                $value = $db->quoteValueWithType((string) $username, PDO::PARAM_LOB) . '::bytea';
+                break;
+            default:
+                // No update
+        }
+        return $this->deleteAll($db->quoteColumnName('data') . ' = ' . $value);
+    }
 }

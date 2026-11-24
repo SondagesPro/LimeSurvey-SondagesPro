@@ -44,6 +44,10 @@ class ExpressionValidate extends SurveyCommonAction
         if (!Permission::model()->hasSurveyPermission($iSurveyId, 'quotas', 'read')) {
             throw new CHttpException(401, "401 Unauthorized");
         }
+        /* The quota must belong to the survey the permission was checked on */
+        if (!Quota::model()->exists('id = :id AND sid = :sid', [':id' => (int) $quota, ':sid' => (int) $iSurveyId])) {
+            throw new CHttpException(404, gT("Invalid quota ID"));
+        }
         $iQuotaId = $quota;
         if (is_string($lang)) {
             $oValidator = new LSYii_Validators();

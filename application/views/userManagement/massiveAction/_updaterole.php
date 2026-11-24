@@ -13,7 +13,7 @@
             <label for="roleselector"><?=gT("Select role to apply to users")?></label>
             <select class="form-control select post-value" name="roleselector" id="roleselector" multiple >
                 <?php foreach($aPermissiontemplates as $oPermissiontemplate) {
-                    echo "<option value='".$oPermissiontemplate->ptid."'>".$oPermissiontemplate->name."</option>";
+                    echo CHtml::tag('option', ['value' => (int) $oPermissiontemplate->ptid], htmlspecialchars($oPermissiontemplate->name, ENT_QUOTES, 'UTF-8', false));
                 } ?>
             </select>
         </div>

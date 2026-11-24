@@ -17,7 +17,7 @@ Yii::app()->getController()->renderPartial(
     );
 ?>
     <input type="hidden" name="actionTarget" value="deleteParticipant" />
-    <input type="hidden" name="participant_id" value="<?php echo $model->participant_id; ?>" />
+    <input type="hidden" name="participant_id" value="<?php echo CHtml::encode($model->participant_id); ?>" />
     <p><?php eT("Please choose one option."); ?></p>
     <select name='selectedoption' class="form-control" >
         <option value="po" selected><?php eT("Delete only from the central panel") ?></option>

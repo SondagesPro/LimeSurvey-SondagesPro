@@ -44,6 +44,14 @@
 class LS_Twig_Extension extends Twig_Extension
 {
     /**
+     * @inheritdoc
+     */
+    public function getNodeVisitors()
+    {
+        return [new LSTwigModelGuardVisitor()];
+    }
+
+    /**
      * Publish a css file from public style directory, using or not the asset manager (depending on configuration)
      * In any twig file, you can register a public css file doing: {{ registerPublicCssFile($sPublicCssFileName) }}
      * @param string $sPublicCssFileName name of the CSS file to publish in public style directory

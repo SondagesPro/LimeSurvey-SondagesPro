@@ -372,7 +372,7 @@ class SurveysGroupsController extends SurveyCommonAction
             throw new CHttpException(403, gT("You do not have permission to access this page."));
         }
         $sGroupTitle    = $oGroupToDelete->title;
-        $returnUrl = App()->getRequest()->getPost('returnUrl', array('surveyAdministration/listsurveys', '#' => 'surveygroups'));
+        $returnUrl = array('surveyAdministration/listsurveys', '#' => 'surveygroups');
 
         if ($oGroupToDelete->gsid == 1) {
             Yii::app()->setFlashMessage(gT("You can't delete the default survey group!"), 'error');

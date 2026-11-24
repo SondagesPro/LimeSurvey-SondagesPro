@@ -158,16 +158,11 @@ class UserManagementController extends LSBaseController
                 ]]);
             }
 
-            $oPasswordTestEvent = new PluginEvent('checkPasswordRequirement');
-            $oPasswordTestEvent->set('password', $passwordTest);
-            $oPasswordTestEvent->set('passwordOk', true);
-            $oPasswordTestEvent->set('passwordError', '');
-            Yii::app()->getPluginManager()->dispatchEvent($oPasswordTestEvent);
-
-            if (!$oPasswordTestEvent->get('passwordOk')) {
+            $passwordError = (new User())->checkPasswordStrength($passwordTest);
+            if ($passwordError !== '') {
                 return Yii::app()->getController()->renderPartial('/admin/super/_renderJson', ["data" => [
                     'success' => false,
-                    'errors' => gT('Passwords does not fulfill minimum requirement:') . '<br/>' . $oPasswordTestEvent->get('passwordError'),
+                    'errors' => gT('Passwords does not fulfill minimum requirement:') . '<br/>' . $passwordError,
                 ]]);
             }
         }
@@ -808,7 +803,7 @@ class UserManagementController extends LSBaseController
                     $oUser->parent_id = App()->user->id;
                     $oUser->modified = date('Y-m-d H:i:s');
                     if ($aNewUser['password'] != ' ') {
-                        $oUser->password = password_hash($aNewUser['password'], PASSWORD_DEFAULT);
+                        $oUser->setPassword($aNewUser['password']);
                     }
 
                     $save = $oUser->save();
@@ -1380,7 +1375,7 @@ class UserManagementController extends LSBaseController
         $oUser->setAttributes($aUser);
 
         if (isset($aUser['password']) && $aUser['password']) {
-            $oUser->password = password_hash($aUser['password'], PASSWORD_DEFAULT);
+            $oUser->setPassword($aUser['password']);
         }
         $oUser->modified = date('Y-m-d H:i:s');
         $oUser->save();

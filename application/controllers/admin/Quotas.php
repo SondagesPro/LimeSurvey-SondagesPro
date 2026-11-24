@@ -223,7 +223,7 @@ class Quotas extends SurveyCommonAction
                 $completed = 0;
                 $completed = $oQuota->completeCount;
                 $totalcompleted = $totalcompleted + $completed;
-                $csvoutput[] = $oQuota->name . "," . $oQuota->qlimit . "," . $completed . "," . ($oQuota->qlimit - $completed) . "\r\n";
+                $csvoutput[] = csvEscape($oQuota->name) . "," . $oQuota->qlimit . "," . $completed . "," . ($oQuota->qlimit - $completed) . "\r\n";
 
                 if ($quickreport != false) {
                     continue;
@@ -248,6 +248,10 @@ class Quotas extends SurveyCommonAction
 
                 //loop through all sub-parts
                 foreach ($oQuota->quotaMembers as $oQuotaMember) {
+                    // A member based on a question of another survey is never shown, it would disclose its texts
+                    if (!empty($oQuotaMember->question) && $oQuotaMember->question->sid != $iSurveyId) {
+                        continue;
+                    }
                     $aQuestionAnswers = self::getQuotaAnswers($oQuotaMember['qid'], $iSurveyId, $oQuota['id']);
                     if ($oQuotaMember->question->type == '*') {
                         $answerText = $oQuotaMember->code;
@@ -311,6 +315,9 @@ class Quotas extends SurveyCommonAction
         $quota_id = Yii::app()->request->getPost('quota_id');
         $this->checkPermissions($iSurveyId, 'update');
         $this->checkValidQuotaId($iSurveyId, $quota_id);
+        if (!Question::model()->exists('qid = :qid AND sid = :sid', [':qid' => (int) $qid, ':sid' => $iSurveyId])) {
+            throw new CHttpException(404, gT("Question not found"));
+        }
 
         $oQuotaMembers = new QuotaMember('create'); // Trigger the 'create' rules
         $oQuotaMembers->sid = $iSurveyId;
@@ -544,9 +551,8 @@ class Quotas extends SurveyCommonAction
                     $oQuotaLanguageSetting->quotals_message = html_entity_decode($oQuotaLanguageSetting->quotals_message, ENT_QUOTES, "UTF-8");
                     // Fix bug with FCKEditor saving strange BR types
                     $oQuotaLanguageSetting->quotals_message = fixCKeditorText($oQuotaLanguageSetting->quotals_message);
-                    $oQuotaLanguageSetting->save(false);
 
-                    if (!$oQuotaLanguageSetting->validate()) {
+                    if (!$oQuotaLanguageSetting->save()) {
                         $oQuota->addErrors($oQuotaLanguageSetting->getErrors());
                     }
                 }
@@ -601,6 +607,9 @@ class Quotas extends SurveyCommonAction
         $aQuestion = Question::model()
             ->with('questionl10ns', array('language' => $sBaseLang))
             ->findByPk(array('qid' => $iQuestionId));
+        if (!empty($aQuestion) && $aQuestion->sid != $iSurveyId) {
+            throw new CHttpException(404, gT("Question not found"));
+        }
         $aQuestionType = $aQuestion['type'];
 
         if ($aQuestionType == Question::QT_M_MULTIPLE_CHOICE) {

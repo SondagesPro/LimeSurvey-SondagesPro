@@ -1072,8 +1072,9 @@ class ParticipantsAction extends SurveyCommonAction
                     $oParticipant = Participant::model()->findByPk($aData);
                     if ($overwrite == "true" && $oParticipant->userHasPermissionToEdit()) {
                         // We want all the non filtering internal attributes to be updated,too
+                        // Note: Only language and blacklisted, never ownership or other core columns
                         foreach ($writearray as $attribute => $value) {
-                            if (in_array($attribute, ['firstname', 'lastname', 'email'])) {
+                            if (!in_array($attribute, ['language', 'blacklisted'])) {
                                 continue;
                             }
                             $oParticipant->$attribute = $value;
@@ -1516,7 +1517,7 @@ class ParticipantsAction extends SurveyCommonAction
                         $aUpdateData[$sDefaultname] = LSActiveRecord::encryptSingle($participant->$sDefaultname);
                     }
                     if (!empty($aUpdateData)) {
-                        $oDB->createCommand()->update('{{participants}}', $aUpdateData, "participant_id='" . $participant->participant_id . "'");
+                        $oDB->createCommand()->update('{{participants}}', $aUpdateData, "participant_id = :where_participant_id", [':where_participant_id' => $participant->participant_id]);
                     }
                 }
             } else {
@@ -1771,7 +1772,7 @@ class ParticipantsAction extends SurveyCommonAction
      */
     public function deleteSingleAttribute()
     {
-        if (!Permission::model()->hasGlobalPermission('participantpanel', 'update')) {
+        if (!Permission::model()->hasGlobalPermission('participantpanel', 'delete')) {
             $this->ajaxHelper::outputNoPermission();
             return;
         }
@@ -1787,7 +1788,7 @@ class ParticipantsAction extends SurveyCommonAction
      */
     public function deleteAttributes()
     {
-        if (!Permission::model()->hasGlobalPermission('participantpanel', 'update')) {
+        if (!Permission::model()->hasGlobalPermission('participantpanel', 'delete')) {
             $this->ajaxHelper::outputNoPermission();
             return;
         }
@@ -2660,9 +2661,16 @@ class ParticipantsAction extends SurveyCommonAction
     public function addToTokenattmap()
     {
         $participantIdsString = Yii::app()->request->getPost('participant_id'); // TODO: This is a comma separated string of ids
-        $participantIds = explode(",", $participantIdsString);
+        $participantIds = Participant::model()->filterEditableParticipantIds(explode(",", (string) $participantIdsString));
 
         $surveyId = (int)Yii::app()->request->getPost('surveyid');
+
+        if (
+            !Permission::model()->hasGlobalPermission('surveys', 'update')
+            && !Permission::model()->hasSurveyPermission($surveyId, 'tokens', 'update')
+        ) {
+            throw new CHttpException(403, gT("You do not have permission to access this page."));
+        }
 
         /**
          * mapped can take values like
@@ -2733,7 +2741,7 @@ class ParticipantsAction extends SurveyCommonAction
         App()->getClientScript()->registerScriptFile(App()->getConfig('adminscripts') . 'attributeMap.js');
         App()->getClientScript()->registerPackage('jqueryui');
 
-        $redirect = Yii::app()->request->getPost('redirect');
+        $redirect = Yii::app()->request->getPost('redirect') === 'on' ? 'on' : '';
         $count = Yii::app()->request->getPost('count');
         $iParticipantId = Yii::app()->request->getPost('participant_id');
         $CPDBAttributes = ParticipantAttributeName::model()->getCPDBAttributes();

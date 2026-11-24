@@ -25,6 +25,9 @@
 # deny access to hidden files and directories without mod_rewrite
 RedirectMatch 403 ^/(?!\.well-known/)(.*/)?\.+
 
+# issue #19297: deny access to development/build/fingerprinting files without mod_rewrite
+RedirectMatch 403 ^/(.*/)?(composer\.(json|lock)|package\.json|yarn\.lock|buildVueComponents\.js|phpunit\.xml|psalm(-\w+)?\.xml|phpci\.yml|phpcs\.ruleset\.xml|sonar-project\.properties|manifest\.yml|CONTRIBUTING\.md|README\.md|SECURITY\.md)$
+
 # General setting to properly handle LimeSurvey paths
 # AcceptPathInfo on
 

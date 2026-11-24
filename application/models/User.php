@@ -117,6 +117,7 @@ class User extends LSActiveRecord
             array('templateeditormode', 'in', 'range' => array('default', 'full', 'none'), 'allowEmpty' => true),
             array('dateformat', 'numerical', 'integerOnly' => true, 'allowEmpty' => true),
             array('expires', 'date','format' => ['yyyy-M-d H:m:s.???','yyyy-M-d H:m:s','yyyy-M-d H:m'],'allowEmpty' => true),
+            array('users_name', 'unsafe' , 'on' => ['update']),
 
             // created as datetime default current date in create scenario ?
             // modifier as datetime default current date ?
@@ -290,10 +291,25 @@ class User extends LSActiveRecord
     public function setPassword($sPassword, $save = false)
     {
         $this->password = password_hash($sPassword, PASSWORD_DEFAULT);
+        if (!empty($this->users_name)) {
+            // Revoke the RemoteControl session keys of this user
+            Session::model()->deleteByUsername($this->users_name);
+        }
         if ($save) {
             $this->save();
         }
         return $this; // Return current object
+    }
+
+    /**
+     * Fingerprint of the password hash, kept in session to detect a password change.
+     * Starts with the user id: it only applies to the user who logged in.
+     *
+     * @return string
+     */
+    public function getPasswordFingerprint()
+    {
+        return $this->uid . ':' . hash('sha256', (string) $this->password);
     }
 
     /**
@@ -364,7 +380,15 @@ class User extends LSActiveRecord
             }
         }
 
-        return($error);
+        $oPasswordTestEvent = new PluginEvent('checkPasswordRequirement');
+        $oPasswordTestEvent->set('password', $password);
+        $oPasswordTestEvent->set('passwordOk', $error === '');
+        $oPasswordTestEvent->set('passwordError', $error);
+        Yii::app()->getPluginManager()->dispatchEvent($oPasswordTestEvent);
+        if ($oPasswordTestEvent->get('passwordOk')) {
+            return '';
+        }
+        return $oPasswordTestEvent->get('passwordError') ?: gT('The password does not fulfill the requirements.');
     }
 
     /**
@@ -659,7 +683,7 @@ class User extends LSActiveRecord
                 data-target='#confirmation-modal' 
                 data-url='" . $changeOwnershipUrl . "' 
                 data-userid='" . $this->uid . "' 
-                data-user='" . $this->full_name . "' 
+                data-user='" . CHtml::encode($this->full_name) . "'
                 data-action='deluser' 
                 data-onclick='LS.UserManagement.triggerRunAction(\"#UserManagement--takeown-" . $this->uid . "\")' 
                 data-message='" . gT('Do you want to take ownerschip of this user?') . "'>

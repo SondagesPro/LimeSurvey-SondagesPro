@@ -238,6 +238,7 @@ function get_next_code(event) {
  */
 function add_label(event) {
     var next_code = get_next_code(event);
+    var escaped_next_code = String(next_code).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
     var html = createNewLabelTR(true,true);
     var row_id;
 
@@ -255,7 +256,7 @@ function add_label(event) {
     var randomid = 'new' + Math.floor(Math.random()*1111111);
 
     html = str_replace("###assessmentval###",'0',html);
-    html = str_replace("###codeval###",next_code,html);
+    html = str_replace("###codeval###",escaped_next_code,html);
     html = str_replace("###next###",randomid,html);
     html = str_replace("###lang###",$("#lslanguagemain").val(),html);
 
@@ -267,7 +268,7 @@ function add_label(event) {
     html = createNewLabelTR(true,false);
 
     html = str_replace("###assessmentval###",'0',html);
-    html = str_replace("###codeval###",next_code,html);
+    html = str_replace("###codeval###",escaped_next_code,html);
     html = str_replace("###next###",randomid,html);
 
     // NB: Class "not_first" corresponds to all the language tabs that are not first...

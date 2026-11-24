@@ -14,6 +14,19 @@ Advanced features like branching and multiple question types make it a valuable 
 
 5.X branch are maintain on github, [see official LimeSurvey manual](https://manual.limesurvey.org/Installation_-_LimeSurvey_CE/en).
 
+### Recommended security setting
+
+We recommend setting `allowedHosts` on each instance. It protects against Host header injection, for example in password reset links. Add it to the `config` array of `application/config/config.php`:
+
+```php
+'config' => array(
+    // ...
+    'allowedHosts' => array('survey.example.org', 'www.survey.example.org'),
+),
+```
+
+List every host name used to reach the instance, without scheme or port. Requests to any other host name get an HTTP 400 error. This setting is optional: without it, the host name is not checked.
+
 ## Requirements
 
 ### Minimal

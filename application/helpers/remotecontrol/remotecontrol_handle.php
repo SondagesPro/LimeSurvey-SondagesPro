@@ -413,7 +413,21 @@ class remotecontrol_handle
             if (Permission::model()->hasSurveyPermission($iSurveyID, 'surveysettings', 'update')) {
                 // Remove fields that may not be modified
                 unset($aSurveyData['sid']);
-                //unset($aSurveyData['owner_id']);
+                // The owner can only be changed by the owner or a superadmin, and only to a user they can see, like in the survey settings
+                if (isset($aSurveyData['owner_id'])) {
+                    // Only a real user ID: Loose comparisons would let e.g. true match any user
+                    $ownerId = $aSurveyData['owner_id'];
+                    $ownerId = (is_int($ownerId) || (is_string($ownerId) && ctype_digit($ownerId))) ? (int) $ownerId : false;
+                    if (
+                        $ownerId === false
+                        || !($oSurvey->owner_id == Yii::app()->session['loginID'] || Permission::model()->hasGlobalPermission('superadmin', 'read'))
+                        || !in_array($ownerId, array_map('intval', getUserList('onlyuidarray')), true)
+                    ) {
+                        unset($aSurveyData['owner_id']);
+                    } else {
+                        $aSurveyData['owner_id'] = $ownerId;
+                    }
+                }
                 unset($aSurveyData['active']);
                 unset($aSurveyData['language']);
                 unset($aSurveyData['additional_languages']);
@@ -1079,7 +1093,7 @@ class remotecontrol_handle
      */
     public function delete_group($sSessionKey, $iSurveyID, $iGroupID)
     {
-        if ($this->_checkSessionKey($sSessionKey)) {
+        if (!$this->_checkSessionKey($sSessionKey)) {
             return array('status' => self::INVALID_SESSION_KEY);
         }
         $iSurveyID = (int) $iSurveyID;
@@ -1094,7 +1108,7 @@ class remotecontrol_handle
         if (!isset($oGroup)) {
             return array('status' => 'Error: Invalid group ID');
         }
-        if (Permission::model()->hasSurveyPermission($iSurveyID, 'surveycontent', 'delete')) {
+        if (!Permission::model()->hasSurveyPermission($iSurveyID, 'surveycontent', 'delete')) {
             return array('status' => 'No permission');
         }
         /* Other restrictions */
@@ -1336,7 +1350,8 @@ class remotecontrol_handle
 
                 // Process L10n data
                 if (!empty($aGroupData['questiongroupl10ns']) && is_array($aGroupData['questiongroupl10ns'])) {
-                    $aL10nDestinationFields = array_flip(QuestionGroupL10n::model()->tableSchema->columnNames);
+                    // Only the texts can be set: The gid and language must not move the row to another group
+                    $aL10nDestinationFields = array_flip(['group_name', 'description']);
                     foreach ($aGroupData['questiongroupl10ns'] as $language => $aLanguageData) {
                         // Get existing L10n data or create new
                         if (isset($oGroup->questiongroupl10ns[$language])) {
@@ -2453,7 +2468,8 @@ class remotecontrol_handle
             if ($sUsername != null) {
                 $aUserData = User::model()->findByAttributes(array('users_name' => (string) $sUsername));
                 if (!isset($aUserData)) {
-                    return array('status' => 'Invalid user');
+                    // Same answer as for an existing user without surveys, to not reveal which usernames exist
+                    return array('status' => 'No surveys found');
                 } else {
                     $sUid = $aUserData->attributes['uid'];
                 }
@@ -2571,6 +2587,8 @@ class remotecontrol_handle
                         $attributes['permissions'][] = $permission->attributes;
                     }
                     unset($attributes['password']);
+                    unset($attributes['one_time_pw']);
+                    unset($attributes['validation_key']);
                     $data[] = $attributes;
                 }
                 return $data;
@@ -2946,9 +2964,11 @@ class remotecontrol_handle
                 $result_id = $survey_dynamic->id;
                 $oResponse = Response::model($iSurveyID)->findByAttributes(array('id' => $result_id))->decrypt();
                 foreach ($oResponse->getFiles() as $aFile) {
+                    // The file name comes from the response data: Never allow a path
+                    $sFileName = basename((string) $aFile['filename']);
                     $sUploadPath = Yii::app()->getConfig('uploaddir') . "/surveys/" . $iSurveyID . "/files/";
-                    $sFileRealName = Yii::app()->getConfig('uploaddir') . "/surveys/" . $iSurveyID . "/files/" . $aFile['filename'];
-                    $sFileTempName = Yii::app()->getConfig('tempdir') . "/upload/" . $aFile['filename'];
+                    $sFileRealName = Yii::app()->getConfig('uploaddir') . "/surveys/" . $iSurveyID . "/files/" . $sFileName;
+                    $sFileTempName = Yii::app()->getConfig('tempdir') . "/upload/" . $sFileName;
 
                     if (!file_exists($sFileRealName)) {
                         if (!is_dir($sUploadPath)) {
@@ -3394,7 +3414,8 @@ class remotecontrol_handle
         $uploaded_files = array();
         foreach ($oResponses as $key => $oResponse) {
             foreach ($oResponse->getFiles() as $aFile) {
-                $sFileRealName = Yii::app()->getConfig('uploaddir') . "/surveys/" . $iSurveyID . "/files/" . $aFile['filename'];
+                // The file name comes from the response data: Never allow a path
+                $sFileRealName = Yii::app()->getConfig('uploaddir') . "/surveys/" . $iSurveyID . "/files/" . basename((string) $aFile['filename']);
 
                 if (!file_exists($sFileRealName)) {
                     return array('status' => 'Could not find uploaded files');
@@ -3485,7 +3506,8 @@ class remotecontrol_handle
      */
     protected function _jumpStartSession($username)
     {
-        $aUserData = User::model()->findByAttributes(array('users_name' => (string) $username))->attributes;
+        $oUser = User::model()->findByAttributes(array('users_name' => (string) $username));
+        $aUserData = $oUser->attributes;
 
         $session = array(
             'loginID' => intval($aUserData['uid']),
@@ -3495,7 +3517,8 @@ class remotecontrol_handle
             'templateeditormode' => $aUserData['templateeditormode'],
             'questionselectormode' => $aUserData['questionselectormode'],
             'dateformat' => $aUserData['dateformat'],
-            'adminlang' => 'en'
+            'adminlang' => 'en',
+            'password_fingerprint' => $oUser->getPasswordFingerprint()
         );
         foreach ($session as $k => $v) {
             Yii::app()->session[$k] = $v;
@@ -3602,10 +3625,11 @@ class remotecontrol_handle
             $model->lastname    = $participant['lastname'];
             $model->email       = $participant['email'];
             $model->language    = $participant['language'] ?? 'en';
-            $model->owner_uid   = Yii::app()->session['loginID'];
             $model->blacklisted = (isset($participant['blacklisted']) && $participant['blacklisted'] === 'Y') ? 'Y' : 'N';
 
             if ($scenario == 'insert') {
+                // Updating a participant must not take over its ownership
+                $model->owner_uid = Yii::app()->session['loginID'];
                 $model->created = date('Y-m-d H:i:s');
                 $model->created_by = Yii::app()->session['loginID'];
             } else { // update

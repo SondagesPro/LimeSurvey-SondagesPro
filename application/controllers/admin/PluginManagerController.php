@@ -334,7 +334,7 @@ class PluginManagerController extends SurveyCommonAction
             $oPluginObject->saveSettings($aSave);
             Yii::app()->user->setFlash('success', gT('The plugin settings were saved.'));
             if (App()->request->getPost('redirect')) {
-                $this->getController()->redirect(App()->request->getPost('redirect'), true);
+                $this->getController()->redirect(App()->createUrl("admin/pluginmanager/sa/index"), true);
             }
         }
 
@@ -574,6 +574,12 @@ class PluginManagerController extends SurveyCommonAction
             if (!$config->isCompatible()) {
                 $installer->abort();
                 $this->errorAndRedirect(gT('The plugin is not compatible with your version of LimeSurvey.'));
+            }
+
+            $pluginManager = App()->getPluginManager();
+            if (!$pluginManager->validatePluginName($config->getName())) {
+                $installer->abort();
+                $this->errorAndRedirect(gT('Invalid plugin name in config.xml.'));
             }
 
             // Show confirmation page.

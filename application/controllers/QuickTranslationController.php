@@ -85,8 +85,12 @@ class QuickTranslationController extends LSBaseController
             // Only save if the administration user has the correct permission
             //todo: this is only necessary on save ...
             if ($actionvalue == "translateSave" && Permission::model()->hasSurveyPermission($surveyid, 'translations', 'update')) {
-                $this->translateSave($languageToTranslate, $quickTranslation);
-                Yii::app()->setFlashMessage(gT("Saved"), 'success');
+                $failedCount = $this->translateSave($languageToTranslate, $quickTranslation);
+                if ($failedCount > 0) {
+                    Yii::app()->setFlashMessage(ngT("{n} translation could not be saved.|{n} translations could not be saved.", $failedCount), 'error');
+                } else {
+                    Yii::app()->setFlashMessage(gT("Saved"), 'success');
+                }
             }
 
             $tolangdesc = $supportedLanguages[$languageToTranslate]['description'];
@@ -119,7 +123,7 @@ class QuickTranslationController extends LSBaseController
      * @param $tolang
      * @param $baselang
      * @param $quickTranslation \LimeSurvey\Models\Services\QuickTranslation the quicktranslation object
-     * @return void
+     * @return int number of translations that could not be saved
      */
     private function translateSave($tolang, $quickTranslation)
     {
@@ -136,6 +140,7 @@ class QuickTranslationController extends LSBaseController
             }
         }
 
+        $failedCount = 0;
         foreach ($tab_names_full as $type) {
             $size = (int) Yii::app()->getRequest()->getPost("{$type}_size"); //todo: what is size here?
             // start a loop in order to update each record
@@ -151,12 +156,15 @@ class QuickTranslationController extends LSBaseController
                         $qidOrGid = Yii::app()->getRequest()->getPost("{$type}_id1_{$i}");
                         $answerCode = Yii::app()->getRequest()->getPost("{$type}_id2_{$i}");
                         $iScaleID = Yii::app()->getRequest()->getPost("{$type}_scaleid_{$i}");
-                        $quickTranslation->updateTranslations($type, $tolang, $new, $qidOrGid, $answerCode, $iScaleID);
+                        if (!$quickTranslation->updateTranslations($type, $tolang, $new, $qidOrGid, $answerCode, $iScaleID)) {
+                            $failedCount++;
+                        }
                     }
                 }
                 $i++;
             } // end while
         } // end foreach
+        return $failedCount;
     }
 
     /**

@@ -132,6 +132,13 @@ class Condition extends LSActiveRecord
 
     public function insertRecords($data, $update = false, $condition = false)
     {
+        // The source question must belong to the survey of the question
+        if (!empty($data['cqid'])) {
+            $qid = $data['qid'] ?? (is_array($condition) ? ($condition['qid'] ?? null) : null);
+            if (empty($qid) || !self::isQuestionOfSameSurvey((int) $qid, (int) $data['cqid'])) {
+                return false;
+            }
+        }
         $record = new self();
         foreach ($data as $k => $v) {
             $v = str_replace(array("'", '"'), '', $v);
@@ -150,6 +157,23 @@ class Condition extends LSActiveRecord
         } else {
             return $record->save();
         }
+    }
+
+    /**
+     * Checks whether two questions belong to the same survey.
+     *
+     * @param integer $qid the question ID
+     * @param integer $otherQid the other question ID
+     * @return boolean
+     */
+    public static function isQuestionOfSameSurvey(int $qid, int $otherQid): bool
+    {
+        return (bool) Yii::app()->db->createCommand()
+            ->select('COUNT(*)')
+            ->from('{{questions}} q')
+            ->join('{{questions}} oq', 'oq.sid = q.sid')
+            ->where('q.qid = :qid AND oq.qid = :oqid', [':qid' => $qid, ':oqid' => $otherQid])
+            ->queryScalar();
     }
 
     /**

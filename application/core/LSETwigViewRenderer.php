@@ -769,6 +769,7 @@ window.addEventListener('message', function(event) {
     public function addExtensions($extensions)
     {
         $this->_twig = parent::getTwig();
+        $this->_twig->setCompiler(new LSTwigCompiler($this->_twig));
         foreach ($extensions as $extName) {
             if ($extName == "Twig_Extension_Sandbox") {
                 // Process to load the sandBox

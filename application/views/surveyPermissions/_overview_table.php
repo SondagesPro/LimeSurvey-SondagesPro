@@ -56,14 +56,14 @@
                 </span>
             <?php }?>
         </td>
-        <td><?php echo $content->user->users_name?></td>
+        <td><?php echo CHtml::encode($content->user->users_name)?></td>
         <td>
             <?php
             $groupsStr = $oSurveyPermissions->getUserGroupNames($content->uid, Yii::app()->getConfig('usercontrolSameGroupPolicy'));
-            echo implode(", ", $groupsStr);
+            echo CHtml::encode(implode(", ", $groupsStr));
             ?>
         </td>
-        <td><?php echo $content->user->full_name?></td>
+        <td><?php echo CHtml::encode($content->user->full_name)?></td>
         <?php
         // permission columns
         foreach ($basePermissions as $sPermission => $aSubPermissions) {

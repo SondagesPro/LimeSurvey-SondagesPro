@@ -604,13 +604,10 @@ class Survey extends LSActiveRecord implements PermissionInterface
     public function filterTemplateSave($sTemplateName)
     {
         if ($sTemplateName !== 'inherit' && !Permission::model()->hasTemplatePermission($sTemplateName)) {
-            // Reset to default only if different from actual value
+            // Keep the stored theme of an existing survey: findByAttributes because findByPk is cached
             if (!$this->isNewRecord) {
-                $oSurvey = self::model()->findByAttribute(['sid' => $this->sid]);
+                $oSurvey = self::model()->findByAttributes(['sid' => $this->sid]);
                 $sTemplateName = $oSurvey->template ?? 'inherit';
-                if ($oSurvey->template != $sTemplateName) {
-                    $sTemplateName = 'inherit';
-                }
             } else {
                 $sTemplateName = 'inherit';
             }

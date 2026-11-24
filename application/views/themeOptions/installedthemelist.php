@@ -54,7 +54,6 @@
                     'name'        => 'description',
                     'value'       => '$data->description',
                     'htmlOptions' => array('class' => 'col-md-3'),
-                    'type'        => 'raw',
                 ),
 
                 array(

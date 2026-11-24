@@ -87,7 +87,12 @@ class ParticipantAttribute extends LSActiveRecord
             ->queryScalar();
         if ($result > 0) {
             Yii::app()->db->createCommand()
-                ->update('{{participant_attribute}}', $data, "participant_id = '" . $data['participant_id'] . "' AND attribute_id = " . $data['attribute_id']);
+                ->update(
+                    '{{participant_attribute}}',
+                    $data,
+                    "participant_id = :where_participant_id AND attribute_id = :where_attribute_id",
+                    [':where_participant_id' => $data['participant_id'], ':where_attribute_id' => $data['attribute_id']]
+                );
         } else {
             Yii::app()->db->createCommand()
                 ->insert('{{participant_attribute}}', $data);

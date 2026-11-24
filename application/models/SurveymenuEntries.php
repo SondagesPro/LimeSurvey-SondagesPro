@@ -399,7 +399,7 @@ class SurveymenuEntries extends LSActiveRecord
             ),
             array(
                 'name' => 'data',
-                'value' => '$data->data ? "<i class=\'fa fa-info-circle bigIcons\' title=\'".$data->data."\'></i>"
+                'value' => '$data->data ? CHtml::tag("i", array("class" => "fa fa-info-circle bigIcons", "title" => $data->data), "")
                 : ( $data->getdatamethod ? gT("GET data method:")."<br/>".CHtml::encode($data->getdatamethod) : "")',
                 'type' => 'raw',
                 'filter' => false,

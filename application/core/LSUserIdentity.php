@@ -129,6 +129,7 @@ class LSUserIdentity extends CUserIdentity
     protected function postLogin()
     {
         $user = $this->getUser();
+        Yii::app()->session['password_fingerprint'] = $user->getPasswordFingerprint();
         App()->user->login($this);
 
         // Check for default password

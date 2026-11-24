@@ -3,7 +3,7 @@ $bInherit = (!empty($aTemplateConfiguration['sid']) || !empty($aTemplateConfigur
 
 
 
-    $dropdown_options['font'] = ($bInherit ? '<option value="inherit">' . gT("Inherit") . ' [' . gT("inherited value:") . ' ' . (isset($oParentOptions['font']) ? $oParentOptions['font'] : '') . ']</option>' : '');
+    $dropdown_options['font'] = ($bInherit ? '<option value="inherit">' . gT("Inherit") . ' [' . gT("inherited value:") . ' ' . CHtml::encode(isset($oParentOptions['font']) && is_scalar($oParentOptions['font']) ? $oParentOptions['font'] : '') . ']</option>' : '');
     // background file
     $backgroundImageFile = '';
     $backgroundfileInheritPreview  = '';
@@ -13,7 +13,7 @@ $bInherit = (!empty($aTemplateConfiguration['sid']) || !empty($aTemplateConfigur
             if ($optgroup != ''){
                 $backgroundImageFile .=  '</optgroup>';
             }
-            $backgroundImageFile .= '<optgroup label="' . $image['group'] . '">';
+            $backgroundImageFile .= '<optgroup label="' . CHtml::encode($image['group']) . '">';
             $optgroup = $image['group'];
         }
 
@@ -24,7 +24,7 @@ $bInherit = (!empty($aTemplateConfiguration['sid']) || !empty($aTemplateConfigur
             $backgroundfileInheritPreview = $image['preview'];
         }
 
-        $backgroundImageFile .=  '<option data-lightbox-src="' . $image['preview'] . '" value="' . $image['filepath'] . '">' . $image['filename'] . '</option>';
+        $backgroundImageFile .=  '<option data-lightbox-src="' . CHtml::encode($image['preview']) . '" value="' . CHtml::encode($image['filepath']) . '">' . CHtml::encode($image['filename']) . '</option>';
     }
 
     $aOptionAttributes['optionAttributes']['backgroundimagefile']['dropdownoptions'] = $backgroundImageFile;
@@ -38,7 +38,7 @@ $bInherit = (!empty($aTemplateConfiguration['sid']) || !empty($aTemplateConfigur
             if ($optgroup != ''){
                 $brandlogo .=  '</optgroup>';
             }
-            $brandlogo .= '<optgroup label="' . $image['group'] . '">';
+            $brandlogo .= '<optgroup label="' . CHtml::encode($image['group']) . '">';
             $optgroup = $image['group'];
         }
 
@@ -49,7 +49,7 @@ $bInherit = (!empty($aTemplateConfiguration['sid']) || !empty($aTemplateConfigur
             $logofileInheritPreview  = $image['preview'];
         }
 
-        $brandlogo .=  '<option data-lightbox-src="' . $image['preview'] . '" value="' . $image['filepath'] . '">' . $image['filename'] . '</option>';
+        $brandlogo .=  '<option data-lightbox-src="' . CHtml::encode($image['preview']) . '" value="' . CHtml::encode($image['filepath']) . '">' . CHtml::encode($image['filename']) . '</option>';
     }
 
     $aOptionAttributes['optionAttributes']['brandlogofile']['dropdownoptions'] = $brandlogo;
@@ -95,6 +95,7 @@ $bInherit = (!empty($aTemplateConfiguration['sid']) || !empty($aTemplateConfigur
                     $iCount = 0;
                     foreach($aOptionAttributes['optionAttributes'] as $attributeKey => $attribute){
                         $sParentOption =  array_key_exists($attributeKey, $oParentOptions) ? $oParentOptions[$attributeKey] : '';
+                        $sParentOptionText = is_scalar($sParentOption) ? (string) $sParentOption : '';
                         if ($attributeKey === 'ajaxmode') {
                             continue;
                         }
@@ -142,9 +143,9 @@ $bInherit = (!empty($aTemplateConfiguration['sid']) || !empty($aTemplateConfigur
                             } elseif ($attribute['type'] == 'colorpicker'){
                                 echo '<div class="input-group">
                                     <div class="input-group-addon style__colorpicker">
-                                        <input type="color" name="' . $attributeKey . '_picker" data-value="' . $sParentOption . '" class="selector__colorpicker-inherit-value"/>
+                                        <input type="color" name="' . $attributeKey . '_picker" data-value="' . CHtml::encode($sParentOptionText) . '" class="selector__colorpicker-inherit-value"/>
                                     </div>
-                                    <input type="text" name="' . $attributeKey . '" data-inheritvalue="' . $sParentOption . '" value="inherit" class="selector_option_value_field selector__color-picker form-control simple_edit_options_' . $attributeKey . '" id="' . $attributeKey . '" />';
+                                    <input type="text" name="' . $attributeKey . '" data-inheritvalue="' . CHtml::encode($sParentOptionText) . '" value="inherit" class="selector_option_value_field selector__color-picker form-control simple_edit_options_' . $attributeKey . '" id="' . $attributeKey . '" />';
                                     if ($bInherit && isset($sParentOption)){
                                         echo '<div class="input-group-addon">
                                             <button class="btn btn-default btn-xs selector__reset-colorfield-to-inherit"><i class="fa fa-refresh"></i></button>
@@ -166,7 +167,7 @@ $bInherit = (!empty($aTemplateConfiguration['sid']) || !empty($aTemplateConfigur
                                 }
                                 $classValue = implode(' ', $classes);
                                 echo ' <div class="col-sm-12">
-                                <select class="' . $classValue . '" data-parent="' . $attribute['parent'] . '" data-inheritvalue=\'' . ($attributeKey == 'font' && isset($sPackagesToLoad) ? $sPackagesToLoad : $sParentOption) . '\' id="simple_edit_options_' . $attributeKey . '" name="' . $attributeKey . '"  >';
+                                <select class="' . $classValue . '" data-parent="' . $attribute['parent'] . '" data-inheritvalue=\'' . CHtml::encode($attributeKey == 'font' && isset($sPackagesToLoad) ? $sPackagesToLoad : $sParentOption) . '\' id="simple_edit_options_' . $attributeKey . '" name="' . $attributeKey . '"  >';
                                 if ($bInherit){
 
                                     $dataAttributes = '';
@@ -180,10 +181,10 @@ $bInherit = (!empty($aTemplateConfiguration['sid']) || !empty($aTemplateConfigur
                                     }
 
                                     if ($category === 'Images') {
-                                        $dataAttributes = 'data-lightbox-src="' . $lightboxSrc . '"';
+                                        $dataAttributes = 'data-lightbox-src="' . CHtml::encode($lightboxSrc) . '"';
                                     }
 
-                                    echo '<option ' . $dataAttributes . ' value="inherit">' . gT("Inherit") . ' [' . gT("inherited value:") . ' ' . $inheritedValue . ']</option>';
+                                    echo '<option ' . $dataAttributes . ' value="inherit">' . gT("Inherit") . ' [' . gT("inherited value:") . ' ' . CHtml::encode($inheritedValue) . ']</option>';
                                 }
                                 // dropdown options from config.xml file
                                 echo $aOptionAttributes['optionAttributes'][$attributeKey]['dropdownoptions'];
@@ -193,14 +194,14 @@ $bInherit = (!empty($aTemplateConfiguration['sid']) || !empty($aTemplateConfigur
                                 echo ' <div class="col-sm-12 input-group">
                                 <select class="selector_option_value_field form-control simple_edit_options_checkicon" data-parent="' . $attribute['parent'] . '" id="simple_edit_options_' . $attributeKey . '" name="' . $attributeKey . '" >';
                                 if ($bInherit){
-                                    echo '<option value="inherit">' . gT("Inherit") . ' [' . gT("inherited value:") . ' ' . (isset($sParentOption) ? $sParentOption : '') . ']</option>';
+                                    echo '<option value="inherit">' . gT("Inherit") . ' [' . gT("inherited value:") . ' ' . CHtml::encode($sParentOptionText) . ']</option>';
                                 }
                                 // dropdown options from config.xml file
                                 echo $aOptionAttributes['optionAttributes'][$attributeKey]['dropdownoptions'];
                                 echo '</select>
                                         <div class="input-group-addon selector__' . $attributeKey . '-preview">
-                                        ( <i class="fa" data-inheritvalue="' . $sParentOption . '" style=" background-color: #328637; color: white; width: 16px; height: 16px;  padding: 3px; font-size: 11px; ">
-                                            &#x' . $sParentOption . ';
+                                        ( <i class="fa" data-inheritvalue="' . CHtml::encode($sParentOptionText) . '" style=" background-color: #328637; color: white; width: 16px; height: 16px;  padding: 3px; font-size: 11px; ">
+                                            &#x' . CHtml::encode($sParentOptionText) . ';
                                         </i> )
                                     </div>
                                     </div>';
@@ -209,7 +210,7 @@ $bInherit = (!empty($aTemplateConfiguration['sid']) || !empty($aTemplateConfigur
 
                             } elseif ($attribute['type'] == 'duration'){
                                 echo '<div class="col-sm-12">
-                                            <input type="text" class="form-control selector-numerical-input selector_option_value_field selector_radio_childfield" data-parent="' . $attribute['parent'] . '" id="simple_edit_options_' . $attributeKey . '" name="' . $attributeKey .'" title="' . gT("inherited value:") . ' ' . $sParentOption . '" />
+                                            <input type="text" class="form-control selector-numerical-input selector_option_value_field selector_radio_childfield" data-parent="' . $attribute['parent'] . '" id="simple_edit_options_' . $attributeKey . '" name="' . $attributeKey .'" title="' . gT("inherited value:") . ' ' . CHtml::encode($sParentOptionText) . '" />
                                         </div>';
                             }
                             

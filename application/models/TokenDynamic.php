@@ -923,7 +923,7 @@ class TokenDynamic extends LSActiveRecord
         $gridButtons['viewparticipant'] = array(
             'label' => '<span class="sr-only">' . gT('View this participant in the central participants database') . '</span><span class="icon-cpdb" aria-hidden="true"></span>',
             'imageUrl' => false,
-            'url' => 'App()->createUrl("admin/participants/sa/displayParticipants",array("#" => json_encode(["searchcondition"=>"participant_id||equal||".$data->participant_id],JSON_FORCE_OBJECT)))',
+            'url' => 'App()->createUrl("admin/participants/sa/displayParticipants",array("#" => json_encode(["searchcondition"=>"participant_id||equal||".$data->participant_id],JSON_FORCE_OBJECT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)))',
             'options' => array(
                 'class' => "btn btn-default btn-sm btn-participant",
                 'data-toggle' => "tooltip",

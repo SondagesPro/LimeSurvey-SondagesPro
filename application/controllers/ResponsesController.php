@@ -102,7 +102,7 @@ class ResponsesController extends LSBaseController
             App()->loadHelper('export');
             $quexml = quexml_export($surveyId, $sBrowseLanguage, $id);
             $quexmlpdf->create($quexmlpdf->createqueXML($quexml));
-            $quexmlpdf->Output("$surveyId-$id-queXML.pdf", 'D');
+            $quexmlpdf->write_out("$surveyId-$id-queXML.pdf");
         } else {
             App()->user->setFlash('error', gT("You do not have permission to access this page."));
             $this->redirect(['surveyAdministration/view', 'surveyid' => $surveyId]);
@@ -846,6 +846,9 @@ class ResponsesController extends LSBaseController
      */
     public function actionTime(int $surveyId): void
     {
+        if (!Permission::model()->hasSurveyPermission($surveyId, 'responses', 'read')) {
+            throw new CHttpException(403, gT("You do not have permission to access this page."));
+        }
         $aData = $this->getData($surveyId);
 
         $aData['columns'] = [
